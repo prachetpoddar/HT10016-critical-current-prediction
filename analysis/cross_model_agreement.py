@@ -37,6 +37,7 @@ script prints a running total and stops if --max-spend is exceeded.
 import argparse, base64, csv, glob, io, json, os, sys, time
 
 MODEL = "claude-sonnet-5"
+DPI = 130
 CACHE = "phase_3_p22_cohort_b_v2_vision_cache"
 PROV = "provenance_table_fitcohort_full.csv"
 OUT = "audit/cross_model_agreement.csv"
@@ -84,12 +85,46 @@ def fitted_cohort_ids():
     return ids
 
 
+def find_jc_h_pages(pdf_path, max_pages=4):
+    """Page selection copied from phase_3_p22_elsevier_cohort_b_pilot_v2.py so the
+    second reader is shown the same pages as the first. Sending the first N pages
+    instead shows the reader the front matter and produces spurious disagreement."""
+    import fitz, re
+    doc = fitz.open(str(pdf_path))
+    n_total = doc.page_count
+    scores = []
+    for i, page in enumerate(doc):
+        t = (page.get_text("text") or "").lower()
+        s = 0
+        if re.search(r"fig\.?\s*\d", t): s += 1
+        if "critical current" in t or " jc " in t or "jc(" in t: s += 3
+        if "field dependence" in t or "magnetic field" in t: s += 2
+        if "vs h" in t or "vs. h" in t or "vs b" in t or "vs. b" in t: s += 2
+        if "j_c(h)" in t or "jc(h)" in t or "jc(b)" in t: s += 3
+        if "in-field" in t or "in field" in t: s += 1
+        if "m-h loop" in t or "magnetization hysteresis" in t: s += 2
+        if "bean model" in t or "bean-livingston" in t or "critical-state" in t: s += 2
+        if "squid" in t or "vsm" in t: s += 1
+        if "magneto-optical" in t or "mo imaging" in t or "faraday" in t: s += 2
+        if "scanning hall" in t: s += 1
+        if ("a/cm" in t or "ma/cm" in t): s += 1
+        if "single crystal" in t or "thin film" in t: s += 1
+        scores.append((i, s))
+    doc.close()
+    scores.sort(key=lambda x: -x[1])
+    top = sorted([i for i, s in scores[:max_pages] if s > 0])
+    if not top:
+        top = list(range(min(3, n_total)))
+    return top
+
+
 def page_images(path, n_pages):
     import fitz
+    idxs = find_jc_h_pages(path, max_pages=max(1, n_pages))
     doc = fitz.open(path)
     out = []
-    for i in range(min(n_pages, doc.page_count)):
-        pix = doc.load_page(i).get_pixmap(dpi=150)
+    for i in idxs[:max(1, n_pages)]:
+        pix = doc.load_page(i).get_pixmap(dpi=DPI)
         out.append(base64.b64encode(pix.tobytes("png")).decode())
     doc.close()
     return out
@@ -210,8 +245,9 @@ def main():
                 model=args.model, max_tokens=800,
                 messages=[{"role": "user", "content": content}])
             txt = "".join(b.text for b in msg.content if b.type == "text").strip()
-            txt = txt[txt.find("{"): txt.rfind("}") + 1]
-            second = json.loads(txt)
+            if "{" not in txt or "}" not in txt:
+                raise ValueError("no JSON object in reply: " + txt[:80])
+            second = json.loads(txt[txt.find("{"): txt.rfind("}") + 1])
             agree = compare(first.get("assessment", {}), second)
             n_ok = sum(1 for v in agree.values() if v)
             cost = (msg.usage.input_tokens * 3 + msg.usage.output_tokens * 15) / 1e6
