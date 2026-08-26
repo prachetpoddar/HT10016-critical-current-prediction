@@ -120,7 +120,7 @@ def find_jc_h_pages(pdf_path, max_pages=4):
 
 def page_images(path, n_pages):
     import fitz
-    idxs = find_jc_h_pages(path, max_pages=max(1, n_pages))
+    idxs = find_jc_h_pages(path, max_pages=MAX_PAGES)
     doc = fitz.open(path)
     out = []
     for i in idxs[:max(1, n_pages)]:
@@ -152,12 +152,26 @@ def norm(v):
     return v
 
 
+def _formula_key(v):
+    """Loose compound comparison: notation differs between readers for the same
+    material, e.g. FeTe0.5Se0.5 against Fe1-x(MWCNT)xTe0.5Se0.5."""
+    if not isinstance(v, str):
+        return v
+    keep = "".join(c for c in v.lower() if c.isalnum())
+    for junk in ("delta", "x", "mwcnt", "doped", "sample"):
+        keep = keep.replace(junk, "")
+    return keep
+
+
 def compare(a, b):
     """Field-level agreement between the two readers."""
     res = {}
     for f in FIELDS:
         x, y = norm(a.get(f)), norm(b.get(f))
-        if isinstance(x, float) and isinstance(y, float):
+        if f == "primary_compound":
+            kx, ky = _formula_key(x), _formula_key(y)
+            res[f] = bool(kx and ky and (kx in ky or ky in kx)) or kx == ky
+        elif isinstance(x, float) and isinstance(y, float):
             res[f] = abs(x - y) <= max(0.05 * max(abs(x), abs(y)), 0.1)
         else:
             res[f] = (x == y)
@@ -242,11 +256,16 @@ def main():
                        for b in imgs]
             content.append({"type": "text", "text": PROMPT})
             msg = client.messages.create(
-                model=args.model, max_tokens=800,
+                model=args.model, max_tokens=2000,
                 messages=[{"role": "user", "content": content}])
             txt = "".join(b.text for b in msg.content if b.type == "text").strip()
+            if txt.startswith("```"):
+                txt = txt.split("```")[1]
+                if txt.startswith("json"):
+                    txt = txt[4:]
             if "{" not in txt or "}" not in txt:
-                raise ValueError("no JSON object in reply: " + txt[:80])
+                raise ValueError("stop_reason=%s, no JSON in reply: %s"
+                                 % (msg.stop_reason, txt[:100]))
             second = json.loads(txt[txt.find("{"): txt.rfind("}") + 1])
             agree = compare(first.get("assessment", {}), second)
             n_ok = sum(1 for v in agree.values() if v)
