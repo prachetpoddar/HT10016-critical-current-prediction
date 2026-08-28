@@ -261,6 +261,24 @@ def norm(v):
     return v
 
 
+# Readers differ in typography, not in chemistry: U+2212 against a hyphen,
+# subscript digits against ASCII, a trailing parenthesised name or doping note.
+# Comparing those as raw strings measures the font, so they are folded first.
+DASHES = dict.fromkeys(map(ord, "\u2212\u2013\u2014\u2010\u2011"), "-")
+SUBS = str.maketrans("\u2080\u2081\u2082\u2083\u2084\u2085\u2086\u2087\u2088\u2089",
+                     "0123456789")
+PAREN_NOTE = re.compile(r"\((?:[A-Z][A-Z0-9-]{2,}|[^()]*=[^()]*|[^()]*doped[^()]*)\)",
+                        re.I)
+
+
+def fold(s):
+    if not isinstance(s, str):
+        return s
+    s = s.translate(DASHES).translate(SUBS)
+    s = PAREN_NOTE.sub("", s)
+    return re.sub(r"[\s\-\u00b7]", "", s).lower()
+
+
 ACRONYM = re.compile(r"\(\s*[A-Z][A-Z0-9-]{2,}\s*\)")
 
 
@@ -274,7 +292,7 @@ def elements(s):
     if not isinstance(s, str) or not s.strip():
         return None
     s = re.sub(r"\((MWCNT|SWCNT|CNT)\)", "(C)", s, flags=re.I)
-    s = strip_acronym(s)
+    s = strip_acronym(s).translate(DASHES).translate(SUBS)
     s = re.sub(r"[0-9.\-+()\[\]\s]", "", s)
     s = s.replace("x", "").replace("y", "").replace("z", "").replace("δ", "")
     return frozenset(e for e in ELEMENT.findall(s) if e not in NOT_ELEMENTS)
@@ -290,8 +308,7 @@ def compound_relation(a, b):
     adjudicated rather than averaged."""
     if not isinstance(a, str) or not isinstance(b, str) or not a.strip() or not b.strip():
         return "missing"
-    ca = re.sub(r"[\s\-]", "", strip_acronym(a)).lower()
-    cb = re.sub(r"[\s\-]", "", strip_acronym(b)).lower()
+    ca, cb = fold(strip_acronym(a)), fold(strip_acronym(b))
     if ca == cb:
         return "exact"
     ea, eb = elements(a), elements(b)

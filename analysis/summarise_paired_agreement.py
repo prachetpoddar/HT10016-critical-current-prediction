@@ -6,7 +6,16 @@ Turns audit/paired_extraction_agreement.csv into the numbers the response letter
 needs, and lists the cases a person has to adjudicate rather than averaging them
 away.
 """
-import csv, json, statistics, collections
+import csv, json, os, statistics, collections, importlib.util
+
+# Recompute the compound comparison from the stored replies rather than trusting
+# the flag written at run time, so a fix to the folding rules can be applied
+# without paying for the run again.
+_spec = importlib.util.spec_from_file_location(
+    "_paired", os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            "paired_extraction_agreement.py"))
+_paired = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_paired)
 
 SRC = "audit/paired_extraction_agreement.csv"
 OUT = "audit/paired_extraction_agreement_summary.json"
@@ -18,6 +27,13 @@ NUMERIC = ["T_min_K", "T_max_K", "H_min_T", "H_max_T"]
 allrows = list(csv.DictReader(open(SRC)))
 tv = lambda s: str(s).strip().lower() == "true"
 rows = [r for r in allrows if not r["error"]]
+for r in rows:
+    rel = _paired.compound_relation(r["a__primary_compound"], r["b__primary_compound"])
+    r["compound_relation"] = rel
+    r["agree__primary_compound"] = str(rel == "exact")
+    n_ok = sum(1 for f in FIELDS if str(r["agree__%s" % f]).strip().lower() == "true")
+    r["n_fields_agree"] = n_ok
+    r["agreement_fraction"] = round(n_ok / len(FIELDS), 4)
 oos = [r for r in allrows if r["error"].startswith("out_of_scope")]
 unavail = [r for r in allrows if r["error"] and not r["error"].startswith("out_of_scope")]
 
