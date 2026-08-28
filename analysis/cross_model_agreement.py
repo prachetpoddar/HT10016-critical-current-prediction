@@ -304,7 +304,13 @@ def main():
             row.update({f"agree__{f}": agree[f] for f in FIELDS})
             row.update({f"second__{f}": second.get(f) for f in FIELDS})
         except Exception as exc:
-            row["error"] = type(exc).__name__ + ": " + str(exc)[:160]
+            detail = str(exc)
+            if "authentication_error" in detail or "invalid x-api-key" in detail:
+                fh.close()
+                sys.exit("\nANTHROPIC_API_KEY was rejected by the API. Nothing was "
+                         "charged and no rows were kept for this paper onward. "
+                         "Re-export the key and run again.")
+            row["error"] = type(exc).__name__ + ": " + detail[:160]
             time.sleep(2)
         w.writerow(row); fh.flush()
         if i % 25 == 0:
