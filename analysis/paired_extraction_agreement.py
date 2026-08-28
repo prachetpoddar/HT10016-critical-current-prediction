@@ -54,6 +54,7 @@ PILOT = "phase_3_p22_elsevier_cohort_b_pilot_v2.py"
 PROV = "provenance_table_fitcohort_full.csv"
 CACHE = "phase_3_p22_cohort_b_v2_vision_cache"
 ARXIV_DIR = "audit/arxiv_pdfs"
+REPLY_DIR = "audit/paired_replies"
 OUT = "audit/paired_extraction_agreement.csv"
 
 MODEL_A = "gpt-4o-2024-08-06"
@@ -201,6 +202,13 @@ def parse_json(txt):
     return json.loads(txt[txt.find("{"): txt.rfind("}") + 1])
 
 
+def save_reply(ident, reader, txt):
+    os.makedirs(REPLY_DIR, exist_ok=True)
+    safe = re.sub(r"[^A-Za-z0-9._-]", "_", ident)
+    path = os.path.join(REPLY_DIR, "%s.%s.txt" % (safe, reader))
+    open(path, "w").write(txt)
+
+
 def read_anthropic(client, model, system, imgs):
     content = [{"type": "image", "source": {"type": "base64",
                 "media_type": "image/png", "data": b}} for b in imgs]
@@ -210,7 +218,8 @@ def read_anthropic(client, model, system, imgs):
     txt = "".join(b.text for b in msg.content if b.type == "text")
     if not txt.strip():
         raise ValueError("empty reply, stop_reason=%s" % msg.stop_reason)
-    return parse_json(txt), msg.usage.input_tokens, msg.usage.output_tokens
+    return (parse_json(txt), msg.usage.input_tokens, msg.usage.output_tokens,
+            "stop_reason=%s\n%s" % (msg.stop_reason, txt))
 
 
 def read_openai(client, model, system, imgs):
@@ -222,8 +231,9 @@ def read_openai(client, model, system, imgs):
         response_format={"type": "json_object"},
         messages=[{"role": "system", "content": system},
                   {"role": "user", "content": content}])
-    return (parse_json(r.choices[0].message.content),
-            r.usage.prompt_tokens, r.usage.completion_tokens)
+    body = r.choices[0].message.content
+    return (parse_json(body), r.usage.prompt_tokens, r.usage.completion_tokens,
+            "finish_reason=%s\n%s" % (r.choices[0].finish_reason, body))
 
 
 # ------------------------------------------------------------- comparison
@@ -251,10 +261,20 @@ def norm(v):
     return v
 
 
+ACRONYM = re.compile(r"\(\s*[A-Z][A-Z0-9-]{2,}\s*\)")
+
+
+def strip_acronym(s):
+    """Drop a parenthesised all-caps name such as (BSCCO) or (YBCO). Parentheses
+    carrying stoichiometry, as in Ba(Fe0.93Co0.07)2As2, are left alone."""
+    return ACRONYM.sub("", s).strip() if isinstance(s, str) else s
+
+
 def elements(s):
     if not isinstance(s, str) or not s.strip():
         return None
     s = re.sub(r"\((MWCNT|SWCNT|CNT)\)", "(C)", s, flags=re.I)
+    s = strip_acronym(s)
     s = re.sub(r"[0-9.\-+()\[\]\s]", "", s)
     s = s.replace("x", "").replace("y", "").replace("z", "").replace("δ", "")
     return frozenset(e for e in ELEMENT.findall(s) if e not in NOT_ELEMENTS)
@@ -270,8 +290,8 @@ def compound_relation(a, b):
     adjudicated rather than averaged."""
     if not isinstance(a, str) or not isinstance(b, str) or not a.strip() or not b.strip():
         return "missing"
-    ca = re.sub(r"[\s\-]", "", a).lower()
-    cb = re.sub(r"[\s\-]", "", b).lower()
+    ca = re.sub(r"[\s\-]", "", strip_acronym(a)).lower()
+    cb = re.sub(r"[\s\-]", "", strip_acronym(b)).lower()
     if ca == cb:
         return "exact"
     ea, eb = elements(a), elements(b)
@@ -426,8 +446,10 @@ def main():
             imgs = page_images(path, idxs)
             row.update(n_pages=len(idxs), pages=" ".join(str(i) for i in idxs),
                        pdf_n_pages=n_total)
-            a, ain, aout = read_openai(oai, args.model_a, system, imgs)
-            b, bin_, bout = read_anthropic(ant, args.model_b, system, imgs)
+            a, ain, aout, araw = read_openai(oai, args.model_a, system, imgs)
+            save_reply(ident, "a", araw)
+            b, bin_, bout, braw = read_anthropic(ant, args.model_b, system, imgs)
+            save_reply(ident, "b", braw)
             c = cost(args.model_a, ain, aout) + cost(args.model_b, bin_, bout)
             spend += c
             agree = compare(a, b)
