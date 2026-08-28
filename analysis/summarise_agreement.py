@@ -40,10 +40,17 @@ def block(sub, label):
     }
 
 
+# Some PDFs in the archive were completed after the first pass ran, so the two
+# readers were not always shown the same document. Those papers are reported
+# separately and are not part of the headline rate.
+same = [r for r in rows if str(r.get("pdf_changed", "")).strip().lower() != "true"]
+moved = [r for r in rows if str(r.get("pdf_changed", "")).strip().lower() == "true"]
+
 summary = {
     "model_second_reader": rows[0]["model"] if rows else None,
-    "fitted_cohort": block([r for r in rows if tv(r["in_fitted_cohort"])], "fitted_cohort"),
-    "full_archive": block(rows, "full_archive"),
+    "fitted_cohort": block([r for r in same if tv(r["in_fitted_cohort"])], "fitted_cohort"),
+    "full_archive": block(same, "full_archive"),
+    "pdf_changed_since_first_pass": block(moved, "pdf_changed"),
     "errors": {"n": len(errs),
                "kinds": dict(collections.Counter(e["error"].split(":")[0] for e in errs))},
 }

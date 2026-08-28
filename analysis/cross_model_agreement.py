@@ -47,21 +47,41 @@ MAX_PAGES = 4
 FIELDS = ["jc_h_sweep_present", "jc_t_sweep_present", "primary_scan_direction",
           "primary_compound", "T_min_K", "T_max_K", "H_min_T", "H_max_T"]
 
-PROMPT = """You are reading pages from a superconductivity paper to record what
-measurements it contains. Answer only from what is printed on these pages.
+PROMPT = """Using the task definition you were given, report what these pages
+contain. Answer only from what is printed on them.
 
 Return a single JSON object with exactly these keys:
-  jc_h_sweep_present     true if a figure plots critical current density against magnetic field
-  jc_t_sweep_present     true if a figure plots critical current density against temperature
+  jc_h_sweep_present     true if the paper presents Jc as a function of magnetic field,
+                         by any of the three accepted methodologies
+  jc_t_sweep_present     true if the paper presents Jc as a function of temperature
   primary_scan_direction one of "H", "T", "both", "neither"
   primary_compound       the compound formula as printed, or null
   T_min_K, T_max_K       temperature range of the Jc data in kelvin, or null
   H_min_T, H_max_T       field range of the Jc data in tesla, converting from kOe or gauss
                          if the printed axis uses those units, or null
 
-"No such data in this paper" is a correct and expected answer. If a quantity is
-not shown on these pages, return null for it rather than inferring a value.
-Return the JSON object and nothing else."""
+If a quantity is not shown on these pages, return null for it rather than
+inferring a value. Return the JSON object and nothing else."""
+
+
+PILOT = "phase_3_p22_elsevier_cohort_b_pilot_v2.py"
+
+# The first pass defined the extraction task in VISION_SYSTEM_PROMPT_V2. That
+# definition is not neutral: it states that Jc(H) reconstructed from M-H loops by
+# a Bean-type critical-state model, and Jc(H) reconstructed from magneto-optical
+# or scanning Hall-probe imaging, both count as a Jc(H) sweep. A second reader
+# given a plainer instruction marks those papers "no Jc(H) figure" and the run
+# then measures the difference between two prompts rather than between two
+# models. The task definition is therefore read out of the first pass script and
+# handed to the second reader verbatim.
+def system_prompt():
+    import re as _re
+    if os.path.exists(PILOT):
+        m = _re.search(r'VISION_SYSTEM_PROMPT_V2 = """(.*?)"""', open(PILOT).read(), _re.S)
+        if m:
+            return m.group(1)
+    sys.exit("cannot read VISION_SYSTEM_PROMPT_V2 from %s; run from the folder "
+             "that holds the first pass script" % PILOT)
 
 
 def find_pdfs():
@@ -225,11 +245,13 @@ def main():
         sys.exit("ANTHROPIC_API_KEY is not set. Export it and re-run.")
     import anthropic
     client = anthropic.Anthropic()
+    system = system_prompt()
 
     new = not os.path.exists(OUT)
     fh = open(OUT, "a", newline="")
     cols = (["paper", "in_fitted_cohort", "model", "n_pages", "cost_usd",
-             "n_fields_compared", "n_fields_agree", "agreement_fraction", "error"]
+             "n_fields_compared", "n_fields_agree", "agreement_fraction",
+             "pdf_pages_first_pass", "pdf_pages_now", "pdf_changed", "error"]
             + [f"agree__{f}" for f in FIELDS]
             + [f"second__{f}" for f in FIELDS])
     w = csv.DictWriter(fh, fieldnames=cols)
@@ -245,18 +267,23 @@ def main():
         n_pages = int(first.get("n_pages_provided") or 1)
         row = dict(paper=key, in_fitted_cohort=key in cohort, model=args.model,
                    n_pages=n_pages, cost_usd="", n_fields_compared="",
-                   n_fields_agree="", agreement_fraction="", error="")
+                   n_fields_agree="", agreement_fraction="",
+                   pdf_pages_first_pass=first.get("n_pages_total"),
+                   pdf_pages_now="", pdf_changed="", error="")
         if not pdf:
             row["error"] = "pdf_not_found"
             w.writerow(row); fh.flush(); continue
         try:
+            import fitz as _f
+            _d = _f.open(pdf); row["pdf_pages_now"] = _d.page_count; _d.close()
+            row["pdf_changed"] = (row["pdf_pages_now"] != first.get("n_pages_total"))
             imgs = page_images(pdf, min(n_pages, MAX_PAGES))
             content = [{"type": "image",
                         "source": {"type": "base64", "media_type": "image/png", "data": b}}
                        for b in imgs]
             content.append({"type": "text", "text": PROMPT})
             msg = client.messages.create(
-                model=args.model, max_tokens=2000,
+                model=args.model, max_tokens=2000, system=system,
                 messages=[{"role": "user", "content": content}])
             txt = "".join(b.text for b in msg.content if b.type == "text").strip()
             if txt.startswith("```"):
