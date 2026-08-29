@@ -1,0 +1,33 @@
+# Environment for reproducing the analysis in this repository.
+#
+# The analysis scripts were written against NumPy 1.x. A base environment
+# carrying NumPy 2.x cannot run them: `from numpy import Inf` was removed in
+# NumPy 2.0, and a SciPy built against the 1.x ABI raises
+# "numpy.dtype size changed, may indicate binary incompatibility" on import.
+# Both faults appear at import time, before any analysis runs, so the failure is
+# immediate rather than silent.
+#
+# The versions below are pinned to a mutually compatible set rather than left to
+# resolve, so that a reader regenerating a table gets the same numbers rather
+# than numbers that differ through library versions alone.
+#
+#     conda env create -f environment.yml
+#     conda activate ht10016
+#
+# pymupdf, anthropic and openai are needed only by the extraction audit scripts
+# (paired_extraction_agreement.py, audit_archive_integrity.py and the rest); the
+# fitting and aggregation chain needs only numpy, scipy and pandas.
+
+name: ht10016
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy=1.26
+  - scipy=1.11
+  - pandas=2.1
+  - pip
+  - pip:
+      - pymupdf==1.24.9
+      - anthropic
+      - openai
