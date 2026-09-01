@@ -13,7 +13,7 @@ identifier,compound,substructure_family,sample_form,Tc_anchor_K,Tc_provenance,Hc
 10.1016/j.mtcomm.2022.103433,FeSeTe,iron_chalcogenide_11,not recorded,14.5,paper-reported (v3.2.1 / Cohort A vision pass),,literature catalog (substructure reference; no per-paper extraction),3,Cohort A only (β_T partial)
 10.1016/j.physb.2025.417755,FeSeTe,iron_chalcogenide_11,not recorded,14.5,paper-reported (v3.2.1 / Cohort A vision pass),,literature catalog (substructure reference; no per-paper extraction),80,Cohort A only (β_T partial)
 10.1016/j.physc.2010.03.003,FeTe0.61Se0.39,iron_chalcogenide_11,single_crystal,14.0,paper-reported (Cohort B extraction),53.3,Tier_1_extrapolated_to_low_T_anchor_10.0K,28,Cohort A+B (non-fittable compound)
-10.1038/s41598-022-24044-5,FeSe0.5Te0.5,iron_chalcogenide_11,thin_film,14.0,paper-reported (Cohort B extraction),18.0,Tier_1_extrapolated_to_low_T_anchor_14.0K,161,Cohort B only (β_H partial)
+10.1038/s41598-022-24044-5,FeSe0.5Te0.5,iron_chalcogenide_11,wire,14.0,paper-reported (Cohort B extraction),18.0,Tier_1_extrapolated_to_low_T_anchor_14.0K,161,Cohort B only (β_H partial)
 10.1088/0953-2048_29_3_035013,FeSe0.5Te0.5,iron_chalcogenide_11,thin_film,14.0,paper-reported (Cohort B extraction),47.0,Tier_3_literature_default,94,Cohort B only (β_H partial)
 10.1016/j.physc.2016.05.023,FeSe1-xSx,iron_chalcogenide_11,single_crystal,9.0,paper-reported (Cohort B extraction),30.0,Tier_3_literature_default,60,Cohort B only (β_H partial)
 10.1016/j.cjph.2024.09.042,FeSeTe,iron_chalcogenide_11,single_crystal,14.0,paper-reported (Cohort B extraction),47.0,Tier_3_literature_default,47,Cohort B only (β_H partial)
