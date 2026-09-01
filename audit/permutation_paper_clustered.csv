@@ -1,10 +1,10 @@
-scope,n,eta2,perm_p_naive,perm_p_paper_clustered,note
-aggregate,74,0.3533764798549841,0.0,0.1433,37 papers
-conventional_AlB2,15,0.11588555873921876,0.21225,0.66595,4 papers
-cuprate_BSCCO,11,0.06203853181538411,0.47625,1.0,4 papers
-cuprate_LSCO,5,,,,single form
-cuprate_RBCO,3,,,,single form
-iron_chalcogenide_11,13,0.7265601084076827,0.00825,0.07025,9 papers
-iron_pnictide_1111,7,0.011455887834422853,0.9055,0.9055,7 papers
-iron_pnictide_122,16,0.5987850365044769,0.0444,0.2413,8 papers
-other_unclassified,4,0.9840546163506041,0.33075,0.331,3 papers
+scope,n,eta2,perm_p_naive,perm_p_paper_clustered
+aggregate,71,0.35467539002258663,0.0,0.0993
+conventional_AlB2,15,0.11588555873921876,0.21225,0.66595
+cuprate_BSCCO,11,0.06203853181538411,0.47625,1.0
+cuprate_LSCO,5,,,
+cuprate_RBCO,3,,,
+iron_chalcogenide_11,12,0.7610203952101795,0.00785,0.06885
+iron_pnictide_1111,6,0.14325086349308602,0.79955,0.79955
+iron_pnictide_122,16,0.5987850365044769,0.0444,0.2413
+other_unclassified,3,0.988045867902489,0.33445,1.0

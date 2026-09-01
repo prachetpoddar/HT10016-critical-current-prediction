@@ -56,6 +56,27 @@ LABEL_FIX = dict(
     reason="the paper describes a thin film on a buffered substrate, not a wire",
 )
 
+# Sample-form relabels, each read from the source paper's own description of what
+# it made. These were found by verifying the CHECK-verdict extractions against
+# their PDFs; two of them sat in families previously described as clean.
+FORM_FIXES = [
+    dict(token="j.physc.2009.05.098", old="thin_film", new="polycrystal",
+         citation="Physica C 469 (2009) 915",
+         reason="the paper states 'We have prepared two kinds of polycrystalline "
+                "samples of iron-oxypnictide superconductors'. The recorded Jc is "
+                "the intragranular value from magneto-optical imaging of those "
+                "polycrystals, not a thin-film measurement"),
+    dict(token="j.physc.2011.02.004", old="unknown", new="polycrystal",
+         citation="Physica C 471 (2011) 258",
+         reason="the abstract reads 'The magnetization of the PrFeAsO0.60F0.12 "
+                "polycrystalline sample has been measured'"),
+    dict(token="j.jallcom.2023.170384", old="unknown", new="single_crystal",
+         citation="J. Alloys Compd. 958 (2023) 170384",
+         reason="titled 'Emergence of superconductivity in single-crystalline "
+                "LaFeAsO under simultaneous Sm and P substitution'; measurements "
+                "are on single-crystalline samples"),
+]
+
 
 def read(path):
     with open(path, newline="") as fh:
@@ -83,7 +104,13 @@ def main():
             continue
         scaled = relabelled = 0
         for r in rows:
-            if RECORD not in "\x1f".join(str(v) for v in r.values()):
+            blob = "\x1f".join(str(v) for v in r.values())
+            for fx in FORM_FIXES:
+                if fx["token"] in blob and r.get(fx["column"] if "column" in fx
+                                                else "sample_form") == fx["old"]:
+                    r["sample_form"] = fx["new"]
+                    relabelled += 1
+            if RECORD not in blob:
                 continue
             c = UNIT_FIX["column"]
             if c in cols:
@@ -119,6 +146,9 @@ def main():
         print("nothing matched; the deposit is already corrected")
     print("\n   units : %s" % UNIT_FIX["reason"])
     print("   label : %s" % LABEL_FIX["reason"])
+    for fx in FORM_FIXES:
+        print("   form  : %-24s %s -> %s" % (fx["token"], fx["old"], fx["new"]))
+        print("           %s" % fx["citation"])
     if report and not args.dry_run:
         print("\nbackups: %s" % backup)
     if args.dry_run:

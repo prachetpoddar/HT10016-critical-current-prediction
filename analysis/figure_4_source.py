@@ -108,28 +108,77 @@ def _strip_isotherm_suffix(sid: str) -> str:
                   flags=re.IGNORECASE).strip()
 
 
+# The MAGLAB identifiers put the isotherm in the paper_id and cannot be parsed
+# reliably by pattern, because the specimen token is itself sometimes numeric:
+# MAGLAB_11_6K is specimen "11" at 6 K, while MAGLAB_11_4_2K is specimen "11" at
+# 4.2 K, and no regex distinguishes "11 at 6 K" from "11.6 K" without knowing
+# which tokens name a material. A first attempt at a general pattern read
+# MAGLAB_11_6K as 11.6 K and produced a bare "MAGLAB" group. The set is ten
+# records and closed, so it is enumerated rather than guessed.
+#
+# MAGLAB_Co122_4_2K and MAGLAB_Co122_4_2K_zero are the same film at the same
+# temperature under different anchor fields, 1 T and self-field, so they are one
+# specimen here.
+MAGLAB_SPECIMEN = {
+    "MAGLAB_11_4_2K": "MAGLAB_11",
+    "MAGLAB_11_6K": "MAGLAB_11",
+    "MAGLAB_Co122_4_2K": "MAGLAB_Co122",
+    "MAGLAB_Co122_4_2K_zero": "MAGLAB_Co122",
+    "MAGLAB_La1111_4_2K": "MAGLAB_La1111",
+    "MAGLAB_Nd1111_10K": "MAGLAB_Nd1111",
+    "MAGLAB_Nd1111_4_2K": "MAGLAB_Nd1111",
+    "MAGLAB_Ni122_4_2K": "MAGLAB_Ni122",
+    "MAGLAB_P122_4_2K": "MAGLAB_P122",
+    "MAGLAB_Sm1111_4_2K": "MAGLAB_Sm1111",
+}
+
+
+def _specimen_key(pid: str) -> str:
+    """Map an identifier to the physical specimen it measured.
+
+    For DOI-style identifiers this is the identifier itself. For the MAGLAB
+    records, which encode the isotherm in the identifier and carry
+    sample_id='unspecified', it is the enumerated specimen above. Stripping only
+    sample_id left all ten counted as independent physical samples, which is the
+    opposite of what aggregate_per_physical_sample documents.
+    """
+    if not isinstance(pid, str):
+        return str(pid)
+    return MAGLAB_SPECIMEN.get(pid, pid)
+
+
 def aggregate_per_physical_sample(df: pd.DataFrame) -> pd.DataFrame:
     """Collapse multi-isotherm same-sample records to one row per physical sample.
 
     The Path 3 per-paper anchor table contains one row per
     (paper, sample, isotherm-T) measurement. Many rows are multi-isotherm
-    measurements of the same physical sample, with sample_id encoding the
-    isotherm temperature as a `_<num>K` suffix. This collapses such rows to
-    one record per physical sample by averaging log10_Jc_anchor within
-    (substructure, paper_id, stripped_sample_id, sample_form) groups.
+    measurements of the same physical sample, with the isotherm temperature
+    encoded as a `_<num>K` suffix on either sample_id or, for the MAGLAB
+    records, on paper_id. Both are stripped before grouping, and rows are
+    collapsed by averaging log10_Jc_anchor within
+    (substructure, stripped_paper_id, stripped_sample_id, sample_form) groups.
+
+    Note on what the average means: where a sample was measured across a wide
+    temperature range the mean of log10_Jc_anchor is not a physical anchor, it
+    is the mean of values spanning that range. One record here collapses
+    isotherms from 2 K to 40 K, a span of 2.4 dex. That is a property of the
+    anchor definition rather than of this function, but a caller treating the
+    result as a single-temperature quantity would be wrong to.
 
     Substructure filtering is NOT applied here — callers filter downstream.
     """
     df = df.copy()
     df["sample_id_stripped"] = df["sample_id"].apply(_strip_isotherm_suffix)
+    df["paper_id_stripped"] = df["paper_id"].apply(_specimen_key)
     agg = df.groupby(
-        ["substructure", "paper_id", "sample_id_stripped", "sample_form"],
+        ["substructure", "paper_id_stripped", "sample_id_stripped", "sample_form"],
         as_index=False,
     ).agg(
         log10_Jc_anchor=("log10_Jc_anchor", "mean"),
         n_isotherms=("log10_Jc_anchor", "count"),
     )
-    agg.rename(columns={"sample_id_stripped": "sample_id"}, inplace=True)
+    agg.rename(columns={"sample_id_stripped": "sample_id",
+                        "paper_id_stripped": "paper_id"}, inplace=True)
     return agg
 
 
