@@ -1,0 +1,4 @@
+axis,substructure,n_compounds,n_fits,n_papers,loo_mae,loo_median_residual,frac_bootstrap_below_threshold,bootstrap_valid,bootstrap_degenerate
+temperature,iron_chalcogenide_11,4,32,4,0.21497577312400068,0.16070364367947326,0.5344478216818642,1974,26
+temperature,iron_pnictide_122,3,198,13,1.0922036634530738,0.7711286046267329,0.38105046343975285,1942,58
+temperature,iron_pnictide_1111,4,76,6,1.7210731477929757,1.099871079328262,0.09127382146439318,1994,6

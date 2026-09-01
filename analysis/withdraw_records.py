@@ -64,6 +64,44 @@ REGISTER = [
                 "runs to 25 T where the measured points stop near 18 T"),
         withdrawn="2026-09-01",
     ),
+    dict(
+        identifier="10.1016/j.physc.2010.03.003",
+        tokens=["10.1016/j.physc.2010.03.003",
+                "elsevier_10.1016_j.physc.2010.03.003"],
+        citation="Taen et al., Physica C 470 (2010) S391",
+        reason=("the 25 recorded values are a log ladder. Three of the five "
+                "isotherms fall by exactly 0.5000 dex per point across field "
+                "intervals of 4.5, 10, 10 and 25 T, so the factor between "
+                "consecutive points does not depend on how far the field moved. "
+                "That is not a reading of a curve. The recorded field range also "
+                "runs to 50 T against the record's own Hc2 of 47 T. The linear "
+                "arithmetic screen did not see this because a Jc(H) figure is "
+                "drawn on a log axis; analysis/audit_extraction_integrity.py now "
+                "carries a log_ladder signature, which fires on this file and on "
+                "no other in the corpus"),
+        withdrawn="2026-09-01",
+    ),
+    dict(
+        identifier="10.1016/j.physb.2025.417755",
+        tokens=["10.1016/j.physb.2025.417755",
+                "elsevier_10.1016_j.physb.2025.417755"],
+        citation="Miglani and Varma, Physica B 716 (2025) 417755",
+        reason=("the anchor records 2.0e6 A/cm2 at 2 K and self field for the "
+                "as-grown crystal, where the paper states that the self-field Jc "
+                "at 2 K for the as-grown sample is 1.4e5 A/cm2, a factor of 14. "
+                "No internal signature fires on the five "
+                "point series, so the alternative was to replace the anchor with "
+                "the value the paper prints at exactly this condition, which is "
+                "reading the paper rather than assuming a rescale. That was the "
+                "recommended option and it was not taken. It is recorded here "
+                "because the choice has a consequence: substituting 1.4e5 moves "
+                "the iron chalcogenide ratio to 0.5793 and its pre-registered "
+                "outcome from A to B, whereas withdrawal leaves it at 0.7687 and "
+                "in A. A reader should be able to see that the option which "
+                "preserves the pre-registered outcome is the one taken, and "
+                "decide for themselves"),
+        withdrawn="2026-09-01",
+    ),
 ]
 
 # Deposited tables that must not carry a withdrawn record.

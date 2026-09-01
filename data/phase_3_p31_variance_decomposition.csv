@@ -1,10 +1,10 @@
 scope,substructure,n_papers,n_sample_forms,total_var,between_sf_var,within_sf_var,ratio_between_total,note
-aggregate_all,ALL,71,5,0.8712975769747089,0.30902780793923923,0.5622697690354697,0.35467539002258625,derived from phase_3_p31_jc_anchor_per_paper.csv via analysis/figure_4_source.py (aggregate_per_physical_sample + compute_variance_decomposition); regenerated 2026-09-01 by analysis/withdraw_records.py
+aggregate_all,ALL,69,5,0.8669525375887451,0.29553057782973985,0.5714219597590053,0.3408843794975201,derived from phase_3_p31_jc_anchor_per_paper.csv via analysis/figure_4_source.py (aggregate_per_physical_sample + compute_variance_decomposition); regenerated 2026-09-01 by analysis/withdraw_records.py
 per_substructure,conventional_AlB2,15,2,0.08209051972532246,0.009513105745561933,0.07257741397976053,0.11588555873921974,
 per_substructure,cuprate_BSCCO,11,2,1.3925795904446217,0.08639359322725322,1.3061859972173684,0.0620385318153841,
 per_substructure,cuprate_LSCO,5,1,0.00915195258917131,,,,single sample_form; no decomposition
 per_substructure,cuprate_RBCO,3,1,0.0008605679645531265,,,,single sample_form; no decomposition
-per_substructure,iron_chalcogenide_11,12,3,0.29655212060768926,0.2256822120252805,0.07086990858240877,0.7610203952101795,
+per_substructure,iron_chalcogenide_11,10,3,0.2921619220904893,0.22459682614961438,0.06756509594087493,0.7687409246987756,
 per_substructure,iron_pnictide_1111,6,3,0.7675766260769454,0.10995601448263204,0.6576206115943134,0.14325086349308602,
 per_substructure,iron_pnictide_122,16,4,0.18863949365595478,0.11295450609496697,0.07568498756098781,0.5987850365044772,
 per_substructure,other_unclassified,3,2,0.6861904500869729,0.6779876388025827,0.008202811284390155,0.988045867902489,
