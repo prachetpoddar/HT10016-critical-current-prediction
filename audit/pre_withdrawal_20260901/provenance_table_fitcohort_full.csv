@@ -1,4 +1,5 @@
 identifier,compound,substructure_family,sample_form,Tc_anchor_K,Tc_provenance,Hc2_anchor_T,Hc2_provenance,n_Jc_points,contribution_flag
+10.1016/S0011-2275(97)00151-3,Nb3Sn,conventional_A15,wire,18.0,paper-reported (Cohort B extraction),31.6,Tier_1_direct_match_at_4.2K_term_Bc2,12,fully fittable
 10.1016/j.physc.2013.04.060,MgB(2-x)Cx_x_0_0386,conventional_AlB2,wire,39.0,paper-reported (Cohort B extraction),10.5,Tier_1_direct_match_at_4.2K_term_H_irr_Birr,64,Cohort B only (β_H partial)
 10.1016/j.jallcom.2023.170146,MgB2,conventional_AlB2,bulk,39.0,paper-reported (Cohort B extraction),5.0,Tier_1_direct_match_at_10.0K_term_H_irr_Birr,177,fully fittable
 10.1016/j.matchemphys.2023.128348,MgB2,conventional_AlB2,bulk,39.0,paper-reported (Cohort B extraction),3.0,Tier_1_direct_match_at_20.0K_term_H_irr_Birr,20,fully fittable
