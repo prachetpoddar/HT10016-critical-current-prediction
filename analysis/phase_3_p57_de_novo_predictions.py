@@ -44,7 +44,10 @@ import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
-PREP = HERE
+# In the deposit the tables live in data/ rather than beside this script, which
+# is the same path defect that stopped figure_4_source.py running on a clean
+# checkout. Prefer data/ and fall back to the script directory.
+PREP = HERE.parent / "data" if (HERE.parent / "data").is_dir() else HERE
 REPO = HERE.parent.parent.parent
 # Extraction CSV directory lives at <REPO>/data_agent2/v3_2_2B_extension (no
 # 'kappa_pipeline' intermediate); align with p56b.EXT_B which is canonical.
@@ -57,8 +60,9 @@ H1B = PREP / "h1b_per_paper_form3_fits.csv"
 SUBSTEP_C = PREP / "phase_3_p54_substep_C_new_form3_fits.csv"
 
 # p56 / p56b modules (re-used for candidate generation + Hc2 lookup)
-P56 = PREP / "phase_3_p56_de_novo_candidate_list.py"
-P56B = PREP / "phase_3_p56b_hc2_infrastructure_sweep.py"
+# Python modules stay beside this script; only the tables moved to data/.
+P56 = HERE / "phase_3_p56_de_novo_candidate_list.py"
+P56B = HERE / "phase_3_p56b_hc2_infrastructure_sweep.py"
 
 # Outputs
 OUT_PREDICTIONS = PREP / "phase_3_p57_de_novo_predictions.csv"
