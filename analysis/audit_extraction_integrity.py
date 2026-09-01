@@ -31,6 +31,16 @@ Six signatures, in rough order of how hard they are to explain innocently:
                       a generated ramp, most clearly when the field spacing is
                       itself uneven (0, 1, 10, 20, 50 T).
 
+  log_ladder          log10(Jc) falls in exactly equal steps across four or more
+                      points. This is the same defect as arithmetic expressed on
+                      the axis a Jc(H) figure is actually drawn on, and the
+                      linear test cannot see it: a series at 10^6.5, 10^6.0,
+                      10^5.5, 10^5.0, 10^4.5 has five different absolute steps
+                      and one log step. A constant factor per point requires the
+                      factor to be independent of how far the field moved, so
+                      the signature is strongest, and here is only reported, when
+                      the field spacing is uneven.
+
   shifted_series      Two series differ by a constant offset at every point.
                       One series copied and displaced.
 
@@ -110,6 +120,27 @@ def is_arithmetic(jc):
     return len(set(d)) == 1 and d[0] != 0
 
 
+def log_ladder(pts):
+    """Exactly equal log10(Jc) steps against uneven field spacing.
+
+    Returns (step, n) or None. Uneven field spacing is required because an
+    evenly sampled field axis over a short range can give near-equal log steps
+    from a genuine exponential decay, whereas a constant factor per point across
+    intervals of 4.5 T and 25 T cannot be read off any real curve.
+    """
+    if len(pts) < MIN_SERIES:
+        return None
+    h = [x for x, _j in pts]
+    lj = [math.log10(j) for _h, j in pts]
+    d = [round(lj[i + 1] - lj[i], 4) for i in range(len(lj) - 1)]
+    if len(set(d)) != 1 or abs(d[0]) < 1e-9:
+        return None
+    hs = [round(h[i + 1] - h[i], 4) for i in range(len(h) - 1)]
+    if len(set(hs)) == 1:
+        return None
+    return d[0], len(pts)
+
+
 def grid_step(jc):
     """Largest step g such that every value is an integer multiple of g.
 
@@ -165,6 +196,10 @@ def audit_file(path):
         if is_arithmetic(jc):
             findings.append(("arithmetic", "%s step %+g over %d pts"
                              % (_k(k), jc[1] - jc[0], len(jc))))
+        lad = log_ladder(pts)
+        if lad:
+            findings.append(("log_ladder", "%s step %+.4f dex over %d pts, "
+                             "uneven field spacing" % (_k(k), lad[0], lad[1])))
         if len(jc) >= MIN_SERIES:
             g, rel = grid_step(jc)
             if rel >= 0.20:
@@ -197,7 +232,8 @@ def audit_file(path):
     tier_a = "duplicate_series" in kinds
     tier_b = any(k == "shifted_series" for k, _ in findings) or \
         any(k == "arithmetic" and int(d.rsplit(" ", 2)[-2]) >= 5
-            for k, d in findings if k == "arithmetic")
+            for k, d in findings if k == "arithmetic") or \
+        "log_ladder" in kinds
     tier_c = (round_frac >= ROUND_FAIL and len(vals) >= MIN_N_FOR_ROUND) or \
         "grid_quantized" in kinds
     if tier_a or tier_b:
