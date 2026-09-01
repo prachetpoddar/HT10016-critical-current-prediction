@@ -41,9 +41,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
-PREP = HERE.parent
-JC_ANCHOR_CSV = PREP / "phase_3_p31_jc_anchor_per_paper.csv"
-OUT = HERE / "figure_4_variance_decomposition.png"
+ROOT = HERE.parent
+# The anchor table and the figure live in data/ and figures/, not beside this
+# script. The previous PREP = HERE.parent form resolved to the repository root
+# and made load_cohort() and main() raise FileNotFoundError on a clean checkout,
+# so the deposited figure could not be regenerated from the deposited data.
+JC_ANCHOR_CSV = ROOT / "data" / "phase_3_p31_jc_anchor_per_paper.csv"
+OUT = ROOT / "figures" / "figure_4_variance_decomposition.png"
 
 plt.rcParams.update({
     "font.family": "Helvetica",
@@ -310,8 +314,15 @@ def panel_one_substructure(ax, sub_df: pd.DataFrame, sub: str,
 
     # Cosmetics
     ax.set_xticks(list(x_positions.values()))
+    # SAMPLE_FORM_DISPLAY already carries the line breaks. The 122 panel packs
+    # four forms into the same width the others use for two or three, and at a
+    # fixed 10 pt the second lines of "Poly-/crystal" and "Single/crystal" ran
+    # into each other and rendered as "crystalcrystal". Scale the tick font with
+    # the number of forms rather than wrapping, which would only add a third
+    # line to labels that are already two.
+    tick_fs = 10 if len(present_forms) <= 3 else 8.5
     ax.set_xticklabels([SAMPLE_FORM_DISPLAY[sf] for sf in present_forms],
-                       rotation=0, fontsize=10)
+                       rotation=0, fontsize=tick_fs, linespacing=1.2)
     ax.set_xlim(-0.6, len(present_forms) - 0.4)
     ax.set_ylim(y_min, y_max)
     ax.set_title(SUB_LABELS[sub])

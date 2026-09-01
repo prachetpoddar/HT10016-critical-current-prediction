@@ -18,13 +18,58 @@ exists only in the text.
     audit/     reporting-layer screens and robustness checks
     figures/   figure source artwork as published
 
+## Verifying this deposit
+
+    python analysis/verify_deposit.py
+
+prints the cohort counts, the per-substructure classification, and a set of
+consistency checks, exiting non-zero if any fails. Run it before trusting any
+number here. It exists because this deposit has twice shipped disagreeing with
+itself: a withdrawal that was applied to the source tables and not to the
+derived decomposition, and a unit correction that reached two fields out of
+four. Both are invisible to an author reading the prose and obvious to a reader
+running the code.
+
+Current cohort, computed rather than quoted:
+
+| quantity | value |
+|---|---:|
+| papers contributing Jc anchor rows | 37 |
+| physical samples after aggregation | 71 |
+| anchor rows | 107 |
+| distinct compounds | 35 |
+| substructure families | 8 |
+| sample forms | 5 |
+
+## Withdrawn and corrected records
+
+Two records are withdrawn, both on source-verification grounds, and both
+documented with their reason in `audit/withdrawn_records.csv`:
+
+- `10.1016/0921-4534(94)00021-2` recorded a compound and a 134 K anchor that do
+  not appear in the source paper.
+- `10.1016/S0011-2275(97)00151-3` recorded Kramer currents in A^0.5 T^0.25 as
+  critical current densities. That is a different physical quantity, not a
+  mis-scaled one.
+
+Corrections applied, each traced to the source paper's own description:
+`10.1038/s41598-022-24044-5` units and sample form; `10.1016/j.physc.2009.05.098`,
+`10.1016/j.physc.2011.02.004` and `10.1016/j.jallcom.2023.170384` sample form.
+`analysis/withdraw_records.py` and `analysis/apply_unit_corrections.py` apply
+these and regenerate everything downstream in the same run.
+
+`audit/extraction_integrity.csv` reports a screen over every per-paper
+extraction, and `audit/permutation_paper_clustered.csv` reports the sample-form
+permutation test under a null that permutes at the paper level rather than the
+record level. Both are read in the Supplemental Material.
+
 ## data/
 
 | file | rows | what one row is |
 |---|---:|---|
-| `phase_3_p31_jc_anchor_per_paper.csv` | 110 | one critical-current anchor, per paper per sample per isotherm |
-| `phase_3_p31_variance_decomposition.csv` | 12 | the sample-form variance decomposition, per substructure |
-| `phase_3_form3_fits_partial_cohortB_v2.csv` | 186 | one field-axis Form 3 fit, with both critical-field values and the provenance tier |
+| `phase_3_p31_jc_anchor_per_paper.csv` | 107 | one critical-current anchor, per paper per sample per isotherm |
+| `phase_3_p31_variance_decomposition.csv` | 9 | the sample-form variance decomposition, per substructure |
+| `phase_3_form3_fits_partial_cohortB_v2.csv` | 180 | one field-axis Form 3 fit, with both critical-field values and the provenance tier |
 | `phase_3_p44_post_UCLA_beta_T_fits.csv` | 419 | one temperature-axis Form 3 fit |
 | `phase_3_p47_compound_leave_out_MAE.csv` | — | compound leave-one-out validation results |
 | `phase_3_p57_de_novo_predictions.csv` | 2151 | one candidate at one grid point, with its refusal code or its prediction |
