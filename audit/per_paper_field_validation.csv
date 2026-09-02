@@ -1,2 +1,3 @@
-statistic,n_fits,n_papers,mae,ci_lower_95,ci_upper_95,bootstrap_iterations,seed
-per_paper_leave_one_out_beta_H,88,15,1.1410552793850266,0.86449897641569,1.5032794624886772,5000,20260901
+statistic,n_fits_scored,n_papers,mae,ci_lower_95,ci_upper_95,bootstrap_iterations,seed
+per_paper_leave_one_out_beta_H_stage2_conditioned,68,15,1.0532847268878291,0.9126699409397507,1.198105798579512,5000,20260901
+per_paper_leave_one_out_beta_H_pooled_median,88,15,1.1410552793850266,0.86449897641569,1.5032794624886772,5000,20260901

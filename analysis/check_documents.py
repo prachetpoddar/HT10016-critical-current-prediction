@@ -65,9 +65,21 @@ MARKERS = [
     "was ", "were ", "before", "historical", "used to", "prior to",
     "corrected", "correction", "falls to", "falls from", "changes from",
     "in place of", "replaced",
+    # Retraction markers. A sentence that attributes a claim to a past revision
+    # of these documents is reporting it, not making it, and the retraction is
+    # the point of the sentence. Only past-tense attributions are listed: "we
+    # report" stays a current claim and is not exempt.
+    "we described", "we said", "we stated", "we reported", "that was wrong",
+    "we withdraw it", "an intermediate revision",
 ]
 
 # value that must not be stated as current  ->  what replaced it
+#
+# Write these so they can actually match. A trailing \b after a per-cent sign
+# never fires, because neither '%' nor the space after it is a word character,
+# and three patterns here were dead for that reason while a stale 25.1% sat in
+# Table III through four revisions. self_test() below asserts every pattern is
+# capable of matching its own literal text.
 SUPERSEDED = {
     r"\b69 (?:source )?papers\b": "65 papers",
     r"\b43 (?:distinct )?compounds\b": "40 compounds",
@@ -80,26 +92,76 @@ SUPERSEDED = {
     r"\b107 per-paper anchor\b": "105 anchor records",
     r"\b0\.3547\b": "0.3409 aggregate ratio",
     r"\bratio is 0\.73\b": "0.77 for iron chalcogenide 11-type",
-    r"\bexplains 76%\b": "77%",
+    r"\bexplains 76%": "77%",
     r"\b123 (?:compounds|of the 183)\b": "85 dispatched compounds",
     r"\b0\.641 for iron chalcogenide\b": "1.093",
     r"\b1\.094\b": "1.093, the value rounded from 1.09349",
-    r"1\.093 for iron chalcogenide": "unvalidatable, three compounds",
-    r"1\.092 across three compounds": "unvalidatable, three compounds",
-    r"not present anywhere in the workflow": "the cohort-A extractions were located",
     r"\b3\.07 at this cohort scope\b": "3.13",
-    r"\b0\.994 in .H\b": "1.141",
+    r"\b0\.994 in .H\b": "1.053 under the conditioned predictor",
+    r"1\.141 in .H": "1.053 under the conditioned predictor",
     r"\b97 fits\b": "88 fits",
     r"\b2151\b": "2097 candidate-grid tuples",
     r"\b239 candidate records\b": "233 candidate records",
     r"\b185 distinct compounds\b": "183 distinct compounds",
-    r"\b25\.1%\b": "25.8%",
-    r"\b10\.5%\b": "9.9%",
+    r"\b25\.1%": "25.8%",
+    r"\b10\.5%": "9.9%",
     r"\b92% of (?:bootstrap )?resamples\b": "withdrawn, not restated",
     r"\b23-fold\b": "16-fold",
     r"cannot be reproduced": "no unreproducible value may remain",
     r"does not reproduce": "no unreproducible value may remain",
+    # Retracted descriptions. Each of these called a component of the workflow
+    # absent or unreproducible, and each was wrong: the component was found on a
+    # second search. They are listed here so no revision restores them.
+    r"not present anywhere in the workflow": "the cohort-A extractions were located",
+    r"cohort we cannot reconstruct": "the 99-fit cohort reconstructs and reproduces",
+    r"no filter over the deposited fit file reproduces": "the cohort is 99 fits, not 97",
+    r"unvalidatable at this cohort size": "fails the threshold; K counts anchor "
+                                          "measurements, not compounds",
+    r"anchor-count rule of Sec\. II\.D, which needs three anchors": "K counts "
+                                          "anchor measurements supplied per query",
 }
+
+
+def literal_probe(pattern):
+    """The plainest text the pattern is meant to catch, for the self-test.
+
+    Alternations and optional groups collapse to their first branch, escapes are
+    unescaped, and word boundaries are dropped. This is not a general regex
+    inverter; it only has to produce one string the pattern ought to match.
+    """
+    t = pattern
+    t = re.sub(r"\(\?:([^()|]*)\|[^()]*\)", r"\1", t)   # (?:a|b)  -> a
+    t = re.sub(r"\(\?:([^()]*)\)\?", r"\1", t)           # (?:a)?   -> a
+    t = re.sub(r"\(\?:([^()]*)\)", r"\1", t)             # (?:a)    -> a
+    t = t.replace(r"\b", "")
+    t = re.sub(r"\\(.)", r"\1", t)                      # \.       -> .
+    t = t.replace("?", "")
+    return t
+
+
+def self_test():
+    """Refuse to run with a pattern that cannot fire. Returns a failure count.
+
+    Each pattern is searched for inside the plainest sentence it is supposed to
+    catch. A pattern that misses its own text matches nothing in any document,
+    which is worse than having no pattern at all: the check reports a pass. Three
+    patterns here ended in a per-cent sign followed by a word boundary, which can
+    never match because neither the sign nor the space after it is a word
+    character, and a stale 25.1% sat in Table III through four revisions.
+    """
+    bad = 0
+    for pat, repl in SUPERSEDED.items():
+        try:
+            rx = re.compile(pat, re.I)
+        except re.error as e:
+            print("   BROKEN PATTERN  %-46s %s" % (pat, e))
+            bad += 1
+            continue
+        probe = "the value %s appears here." % literal_probe(pat)
+        if not rx.search(probe):
+            print("   MATCHES NOTHING %-46s probe: %r" % (pat, probe))
+            bad += 1
+    return bad
 
 
 def sentences(text):
@@ -158,6 +220,13 @@ def main():
     ap.add_argument("--list", action="store_true",
                     help="print every hit, marked or not")
     args = ap.parse_args()
+
+    # A check whose patterns cannot fire reports a pass, which is the worst
+    # answer it could give, so the patterns are tested before the documents are.
+    dead = self_test()
+    if dead:
+        sys.exit("%d pattern(s) in SUPERSEDED cannot match anything; fix them "
+                 "before trusting this check" % dead)
 
     if args.files:
         paths = sorted(args.files)

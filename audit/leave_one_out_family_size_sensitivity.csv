@@ -1,4 +1,4 @@
-axis,substructure,n_compounds,gate_on_family,gate_on_available_anchors,refused_on_family,refused_on_available_anchors
+axis,substructure,n_compounds,mae_train_at_least_2,mae_train_at_least_3,no_fold_at_least_2,no_fold_at_least_3
 T,iron_chalcogenide_11,4,0.21497577312400068,0.21497577312400068,False,False
 T,iron_other,2,,,True,True
 T,iron_pnictide_1111,4,1.7210731477929757,1.7210731477929757,False,False

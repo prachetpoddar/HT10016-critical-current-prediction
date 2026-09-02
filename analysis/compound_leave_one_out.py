@@ -30,14 +30,27 @@ produced a wrong number here first.
   overwrote that file, so a second run reported the unreproduced 1111 row as
   matching the deposit exactly.
 
-  It no longer preserves a row it cannot reproduce. An earlier version carried
-  the deposited iron_pnictide_1111 field-axis value of 3.0656 through unchanged
-  because this protocol returns 3.1289. Keeping a number the deposited code
-  does not produce is exactly the defect a provenance paper cannot ship, so the
-  generator's value is now written and the deposited one is recorded below as
-  history. The same applies to the per-paper Stage 2 validation, whose original
-  97-fit cohort cannot be rebuilt from the deposited fit file: it is recomputed
-  on the cohort that does exist rather than quoted from one that does not.
+  It writes the value this cohort supports, and says what the superseded one
+  was computed on. The deposited iron_pnictide_1111 field-axis value of 3.0656
+  is not unreproducible, and an earlier version of this docstring said it was.
+  It is in phase_3_p50_compound_loo_bootstrap.csv, and it reproduces to every
+  digit from the fit table as that table stood before 2026-09-01. What moved it
+  to 3.1289 is the three sample_form corrections of that date, two of which land
+  in this family: jallcom.2023.170384 from unknown to single_crystal and
+  physc.2009.05.098 from thin_film to polycrystal, each read off the source
+  paper's own description of its samples. The field-axis predictor conditions on
+  sample form, so relabelling two of the family's three compounds changes which
+  fits pool together. Both readings exceed the screening threshold, so the
+  family's status does not turn on which is quoted; only the number does.
+
+  The same holds for the per-paper Stage 2 validation. Its cohort is 99 fits,
+  not the 97 the supplement quoted, and it rebuilds exactly: the 95 physicality-
+  ok fits of the pre-correction Cohort B v2 table plus the four FeSe-pure
+  field-axis fits added post-AC from jallcom.2024.173999, giving 5 substructures
+  and 18 papers. Rebuilt that way it returns 0.9944, which is the deposited
+  0.994. It is superseded here because the Nb3Sn withdrawal removed its fifth
+  substructure and the sample-form corrections moved the rest, not because it
+  could not be found.
 
   It does not report a single bootstrap fraction. Resamples are stratified by
   how many distinct compounds survive, because the strata are not equivalent: a
@@ -45,22 +58,20 @@ produced a wrong number here first.
   For iron_pnictide_1111 that stratum supplies most of the resamples that clear
   the threshold, so a pooled fraction is carried by its weakest stratum.
 
-The anchor-count gate. Sec. II.D requires at least K = 3 anchor compounds
-available for a prediction. At dispatch the candidate sits outside the fitted
-family, so all n of the family's compounds are available to it. In a
-leave-one-out the held-out compound is inside the family, so only n - 1 are,
-and the gate is n - 1 >= 3. That is the reading the manuscript adopts, and it
-is the one under which the validation and the dispatch apply the same rule to
-the same quantity.
-
-It has teeth. Three of the seven family-axis pairs have exactly three
-compounds, which leaves two anchors for each held-out compound and therefore no
-admissible leave-one-out: iron chalcogenide 11-type and iron pnictide 1111-type
-on the field axis, and iron pnictide 122-type on the temperature axis. Those
-three are not failures, they are unvalidatable at this cohort size, and the
-manuscript reports them as such rather than quoting an error computed under a
-rule it does not accept. Both readings remain in the output so the size of the
-difference is visible.
+The anchor-count gate is not a bound on family size, and this script no longer
+applies one. Sec. II.D of the manuscript reads "at least K = 3 anchor compounds
+are available within the family", and an earlier version of this script took
+that literally and refused any family-axis pair with fewer than four compounds.
+The implementation says otherwise. kappa_pipeline/predictor/constants.py sets
+K_MIN = 1, K_MAX = 5, K_RECOMMENDED = 3, and validators.py enforces those
+against len(anchors), where monotonic.py defines an Anchor as a single measured
+(temperature_K, field_T, log_Jc) triple for the compound being predicted. K is
+therefore the number of measured points supplied with a query, not a count of
+compounds in a family, and it places no bound on family size at all. Fig. 4
+says the same thing independently: it evaluates K = 3 across three held-out
+cuprates, which a family-size reading would forbid. The manuscript sentence is
+the error, and it is corrected there. Families are reported against the
+screening threshold alone, which is the rule the paper pre-registered.
 
     python analysis/compound_leave_one_out.py --dry-run
     python analysis/compound_leave_one_out.py --reproduce   # assert on the snapshot
@@ -77,9 +88,20 @@ import pandas as pd
 
 DATA = "data"
 SNAPSHOT = os.path.join("audit", "pre_withdrawal_20260901")
+# The fit table as it stood before the three sample_form corrections of
+# 2026-09-01. Every deposited field-axis value reproduces from it exactly,
+# including the superseded iron_pnictide_1111 3.0656 that reproduces from no
+# later snapshot. Keeping it is what turns "that number does not reproduce" into
+# "that number was computed on these labels, and here they are".
+SNAPSHOT_PRE_FORM = os.path.join("audit", "pre_sample_form_correction_20260901")
+# The fit table before the Nb3Sn withdrawal, which is the only snapshot in which
+# the Stage 2 per-paper cohort still has its fifth substructure. Together with
+# data/phase_3_p54_substep_C_new_form3_fits.csv it rebuilds that cohort exactly.
+SNAPSHOT_PRE_NB3SN = os.path.join("audit", "pre_nb3sn_withdrawal_20260901")
+STAGE2_COHORT = (99, 18, 5, 86, 0.994)   # fits, papers, substructures, scored, MAE
 OUT_H = os.path.join(DATA, "phase_3_p47_compound_leave_out_MAE.csv")
 OUT_T = os.path.join("audit", "temperature_axis_leave_one_out.csv")
-OUT_G = os.path.join("audit", "leave_one_out_anchor_gate.csv")
+OUT_G = os.path.join("audit", "leave_one_out_family_size_sensitivity.csv")
 OUT_P = os.path.join("audit", "per_paper_field_validation.csv")
 
 FAMILIES_H = ["conventional_AlB2", "iron_chalcogenide_11",
@@ -119,14 +141,28 @@ def load(base):
     return bt, ok
 
 
-def per_paper_validation(f, iters, seed):
+def per_paper_validation(f, iters, seed, conditioned=True):
     """Leave-one-paper-out on the field exponent, with a percentile bootstrap.
 
-    The supplement previously quoted 0.994 with a 95% interval of [0.495, 1.661]
-    on a cohort described as 97 fits. The deposited fit file yields 88 fits that
-    pass physicality, and no filter over it reconstructs 97, so that figure is
-    not quoted any more. This recomputes the same quantity on the cohort the
-    deposit actually contains.
+    Two predictors, because they are not the same quantity and an earlier
+    revision reported one as the successor of the other.
+
+      conditioned=True   Stage 2 as the paper defines it: predict each held-out
+                         fit by the median exponent of the fits from other
+                         papers that share its substructure AND its sample form.
+                         A fit with no such pool is unscorable and is dropped,
+                         which is what the original run did.
+      conditioned=False  the pooled predictor: one median over every fit from
+                         every other paper, ignoring family and form. Every fit
+                         is scorable, so this scores more fits on a weaker rule.
+
+    This matters because the supplement previously replaced a conditioned 0.994
+    with a pooled 1.141 and described the second as the first recomputed on a
+    new cohort. It is a different predictor as well as a different cohort, and
+    comparing the two is the cohort-mismatch error the main text corrects
+    elsewhere. On the deposited 88-fit cohort the conditioned predictor gives
+    1.053 over the 68 fits it can score and the pooled one gives 1.141 over 88.
+    Both are deposited, each labelled with its predictor.
     """
     res = []
     for p in f.arxiv_id.unique():
@@ -134,12 +170,20 @@ def per_paper_validation(f, iters, seed):
         test = f[f.arxiv_id == p]
         if train.empty:
             continue
-        res.extend((test.beta - train.beta.median()).abs().values)
+        if not conditioned:
+            res.extend((test.beta - train.beta.median()).abs().values)
+            continue
+        for _i, row in test.iterrows():
+            pool = train[(train.substructure == row.substructure)
+                         & (train.sample_form == row.sample_form)]
+            if pool.empty:
+                continue
+            res.append(abs(row.beta - pool.beta.median()))
     res = np.asarray(res, dtype=float)
     rng = np.random.default_rng(seed)
     draws = res[rng.integers(0, len(res), size=(iters, len(res)))].mean(axis=1)
     return (float(res.mean()), float(np.percentile(draws, 2.5)),
-            float(np.percentile(draws, 97.5)), len(f), f.arxiv_id.nunique())
+            float(np.percentile(draws, 97.5)), len(res), f.arxiv_id.nunique())
 
 
 def loo(s, col, form_conditioned, min_train_compounds=0):
@@ -251,18 +295,31 @@ def run(base, iters, seed, verbose=True):
                   % (name, s.compound_formula.nunique(), len(s), mae, med,
                      dep, note))
 
-    mae_p, lo_p, hi_p, nfit, npap = per_paper_validation(f, 5000, seed)
-    out["per_paper"] = (mae_p, lo_p, hi_p, nfit, npap)
+    cond = per_paper_validation(f, 5000, seed, conditioned=True)
+    pool = per_paper_validation(f, 5000, seed, conditioned=False)
+    out["per_paper"] = cond
+    out["per_paper_pooled"] = pool
     if verbose:
-        print("\nper-paper leave-one-out on the field exponent\n")
-        print("   %d fits from %d papers   MAE %.3f   95%% interval [%.3f, %.3f]"
-              % (nfit, npap, mae_p, lo_p, hi_p))
+        print("\nper-paper leave-one-out on the field exponent, %d papers\n"
+              % cond[4])
+        print("   %-34s %5s %8s   %s" % ("predictor", "fits", "MAE", "95% interval"))
+        for label, r in [("Stage 2, substructure and form", cond),
+                         ("pooled median, no conditioning", pool)]:
+            print("   %-34s %5d %8.4f   [%.3f, %.3f]"
+                  % (label, r[3], r[0], r[1], r[2]))
+        print("   the two are different predictors; the Stage 2 row is the one "
+              "that succeeds the deposited 0.994")
 
-    # Both readings of the anchor-count gate.
+    # Family-size sensitivity. This is NOT the anchor-count rule of Sec. II.D,
+    # which counts measured points supplied with a query and bounds nothing
+    # here. It answers a different and still fair question: would any family's
+    # reported error survive a requirement that its training pool retain two or
+    # three distinct compounds? Reported so a reader can see the size of the
+    # restriction the paper does not impose.
     if verbose:
-        print("\nanchor-count gate, both readings of Sec. II.D\n")
+        print("\nfamily-size sensitivity, not a rule the paper applies\n")
         print("   %-22s %-4s %-4s %14s %16s"
-              % ("substructure", "axis", "n", "gate on family", "gate on anchors"))
+              % ("substructure", "axis", "n", "train n>=2", "train n>=3"))
     for axis, d, col, fc in [("T", bt, "beta_T", False), ("H", f, "beta", True)]:
         for name in sorted(set(d.substructure.dropna())):
             s = d[d.substructure == name]
@@ -273,16 +330,87 @@ def run(base, iters, seed, verbose=True):
             a_anc, _m, fo_anc, _r = loo(s, col, fc, min_train_compounds=3)
             out["gate"].append(dict(
                 axis=axis, substructure=name, n_compounds=n,
-                gate_on_family=a_fam if fo_fam else np.nan,
-                gate_on_available_anchors=a_anc if fo_anc else np.nan,
-                refused_on_family=fo_fam == 0,
-                refused_on_available_anchors=fo_anc == 0))
+                mae_train_at_least_2=a_fam if fo_fam else np.nan,
+                mae_train_at_least_3=a_anc if fo_anc else np.nan,
+                no_fold_at_least_2=fo_fam == 0,
+                no_fold_at_least_3=fo_anc == 0))
             if verbose:
                 print("   %-22s %-4s %-4d %14s %16s"
                       % (name, axis, n,
                          "%.4f" % a_fam if fo_fam else "refused",
                          "%.4f" % a_anc if fo_anc else "refused"))
     return out
+
+
+def substructure_from_formula(c):
+    """The formula-to-family map the original Path delta run used.
+
+    Kept separate from the paper-id map used elsewhere in this script because it
+    is what the superseded Stage 2 cohort was built with, and reconstructing a
+    superseded value means using the rule that produced it rather than the rule
+    that replaced it.
+    """
+    c = c or ""
+    if "Nb3Sn" in c or "V3Si" in c or "V3Ga" in c:
+        return "conventional_A15"
+    if "MgB2" in c or "MgB(2-x)Cx" in c:
+        return "conventional_AlB2"
+    if ("FeTe" in c or "FeSe" in c) and "FeAs" not in c:
+        return "iron_chalcogenide_11"
+    if "FeAsO" in c:
+        return "iron_pnictide_1111"
+    if "Fe2As2" in c or "BaFe" in c or "(Fe" in c:
+        return "iron_pnictide_122"
+    return "other_unclassified"
+
+
+def reconstruct_stage2():
+    """Rebuild the per-paper Stage 2 cohort the supplement previously reported.
+
+    The supplement described that cohort as 97 fits and said no filter over the
+    deposited fit file reproduces it. Both statements were wrong. It is 99 fits,
+    and it does not come from one file: it is the 95 physicality-passing fits of
+    the fit table as it stood before the Nb3Sn withdrawal, plus the four FeSe
+    field-axis fits added afterwards, which live in a separate deposited table.
+    Looking for it inside the current fit file alone could not have found it.
+
+    Rebuilt this way it gives 5 substructures, 18 papers, 86 scored fits and a
+    mean absolute error of 0.9944, which is the reported 0.994. That makes the
+    figure superseded rather than untraceable, and it locates what superseded
+    it: the withdrawal removed the fifth substructure and the sample-form
+    corrections moved the conditioning.
+    """
+    src = os.path.join(SNAPSHOT_PRE_NB3SN,
+                       "phase_3_form3_fits_partial_cohortB_v2.csv")
+    new = os.path.join(DATA, "phase_3_p54_substep_C_new_form3_fits.csv")
+    if not (os.path.exists(src) and os.path.exists(new)):
+        print("\n   Stage 2 cohort cannot be rebuilt; a snapshot is missing")
+        return ["stage2 cohort snapshot"]
+    a = pd.read_csv(src)
+    a = a[a.physicality == "ok"]
+    b = pd.read_csv(new)
+    b = b[(b.physicality == "ok") & (b.fixed_axis == "T")]
+    c = pd.concat([a, b], ignore_index=True)
+    c["substructure"] = c.compound_formula.map(substructure_from_formula)
+    res = []
+    for _i, row in c.iterrows():
+        pool = c[(c.arxiv_id != row.arxiv_id)
+                 & (c.substructure == row.substructure)
+                 & (c.sample_form == row.sample_form)]
+        if pool.empty:
+            continue
+        res.append(abs(row.beta - pool.beta.median()))
+    got = (len(c), c.arxiv_id.nunique(), c.substructure.nunique(),
+           len(res), round(float(np.mean(res)), 3))
+    print("\nrebuilding the superseded per-paper Stage 2 cohort\n")
+    print("   %-34s %s" % ("fits, papers, substructures", got[:3]))
+    print("   %-34s %d scored, MAE %.4f" % ("Stage 2 conditioned predictor",
+                                            got[3], float(np.mean(res))))
+    if got != STAGE2_COHORT:
+        print("   expected %s, got %s" % (STAGE2_COHORT, got))
+        return ["stage2 cohort"]
+    print("   matches the reported cohort and value exactly")
+    return []
 
 
 def reproduce():
@@ -307,12 +435,37 @@ def reproduce():
               % (name, got, dep, "matches" if ok else "DIFFERS"))
         if not ok:
             bad.append("temperature %s" % name)
+
+    # The superseded row, sourced. It does not reproduce from the snapshot above
+    # because that snapshot postdates the sample-form corrections, and the
+    # field-axis predictor conditions on sample form. It reproduces exactly from
+    # the snapshot that precedes them, along with every other deposited value,
+    # which locates the change precisely rather than leaving the row unexplained.
+    if os.path.isdir(SNAPSHOT_PRE_FORM):
+        print("\nasserting the superseded row against %s\n" % SNAPSHOT_PRE_FORM)
+        r0 = run(SNAPSHOT_PRE_FORM, iters=1, seed=20260901, verbose=False)
+        for name, (dep, _med) in DEPOSITED_H.items():
+            got = r0["field"][name][0]
+            ok = abs(got - dep) < 1e-9
+            print("   field  %-22s %.10f vs %.10f   %s"
+                  % (name, got, dep, "exact" if ok else "DIFFERS"))
+            if not ok:
+                bad.append("pre-sample-form %s" % name)
+    else:
+        print("\n   %s not present; the superseded row cannot be sourced"
+              % SNAPSHOT_PRE_FORM)
+
+
+    bad += reconstruct_stage2()
+
     if bad:
         print("\nreproduction FAILED for: %s" % ", ".join(bad))
         return 1
-    print("\nevery documented reproduction claim holds on the pre-withdrawal "
-          "snapshot; the one superseded row still differs, which is why the "
-          "generator's value is what ships.")
+    print("\nEvery documented reproduction claim holds. On the pre-withdrawal "
+          "snapshot the iron_pnictide_1111 field-axis row differs, and on the "
+          "snapshot taken before the sample-form corrections every deposited "
+          "value including that one reproduces exactly. The corrections are "
+          "therefore what moved it, and the generator's value is what ships.")
     return 0
 
 
@@ -353,10 +506,16 @@ def main():
                 loo_median_residual=med))
     pd.DataFrame(trows).to_csv(OUT_T, index=False)
     pd.DataFrame(r["gate"]).to_csv(OUT_G, index=False)
-    m, lo, hi, nf, np_ = r["per_paper"]
-    pd.DataFrame([dict(statistic="per_paper_leave_one_out_beta_H", n_fits=nf,
-                       n_papers=np_, mae=m, ci_lower_95=lo, ci_upper_95=hi,
-                       bootstrap_iterations=5000, seed=args.seed)]).to_csv(OUT_P, index=False)
+    prows = []
+    for stat, key in [("per_paper_leave_one_out_beta_H_stage2_conditioned",
+                       "per_paper"),
+                      ("per_paper_leave_one_out_beta_H_pooled_median",
+                       "per_paper_pooled")]:
+        m, lo, hi, nf, np_ = r[key]
+        prows.append(dict(statistic=stat, n_fits_scored=nf, n_papers=np_, mae=m,
+                          ci_lower_95=lo, ci_upper_95=hi,
+                          bootstrap_iterations=5000, seed=args.seed))
+    pd.DataFrame(prows).to_csv(OUT_P, index=False)
     print("\nwritten to %s, %s, %s and %s" % (OUT_H, OUT_T, OUT_G, OUT_P))
     return 0
 
