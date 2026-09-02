@@ -1592,13 +1592,13 @@
            style="font-size:7.12589px;font-family:Helvetica;text-anchor:middle;fill:#333333"
            x="422.34802"
            y="317.71213"
-           id="text300">3 testable substructures</text></g><g
+           id="text300">1 dispatched substructure</text></g><g
          id="text_53"
          transform="matrix(0.96463136,0,0,1.0003618,7.836439,3.6739325)"><text
            style="font-size:7.12589px;font-family:Helvetica;text-anchor:middle;fill:#333333"
            x="422.34802"
            y="324.66013"
-           id="text301">80.7% Hc2 coverage</text></g><g
+           id="text301">85 of 183 dispatched</text></g><g
          id="text_54"
          transform="matrix(0.96463136,0,0,1.0003618,8.8783221,3.2587269)"><text
            style="font-size:7.12589px;font-family:Helvetica;text-anchor:middle;fill:#333333"

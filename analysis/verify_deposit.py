@@ -57,6 +57,9 @@ MANUSCRIPT = dict(
     field_axis_fits_ok=88,           # Table I, "Field-axis partial fits passing physicality"
     field_axis_ok_papers=15,
     candidate_compounds=183,         # Table I, "Candidate compounds evaluated"
+    dispatched_compounds=85,         # Table IV, combined "dispatched"
+    dispatch_tuples=2097,
+    emitted_targets=256,
 )
 
 failures = []
@@ -190,6 +193,9 @@ def main():
         field_axis_fits_ok=len(fh_ok),
         field_axis_ok_papers=fh_ok.arxiv_id.nunique(),
         candidate_compounds=p57.compound_formula.nunique(),
+        dispatched_compounds=p57[p57.refusal_flag.fillna("") == ""].compound_formula.nunique(),
+        dispatch_tuples=len(p57),
+        emitted_targets=int((p57.refusal_flag.fillna("") == "").sum()),
     )
     for k, want in MANUSCRIPT.items():
         got = computed[k]

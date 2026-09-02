@@ -1,0 +1,2 @@
+statistic,n_fits,n_papers,mae,ci_lower_95,ci_upper_95,bootstrap_iterations,seed
+per_paper_leave_one_out_beta_H,88,15,1.1410552793850266,0.86449897641569,1.5032794624886772,5000,20260901

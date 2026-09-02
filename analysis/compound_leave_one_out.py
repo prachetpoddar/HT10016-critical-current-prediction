@@ -30,12 +30,14 @@ produced a wrong number here first.
   overwrote that file, so a second run reported the unreproduced 1111 row as
   matching the deposit exactly.
 
-  It does not overwrite a row it cannot reproduce. The iron_pnictide_1111
-  field-axis row is not reproduced by this protocol (3.1289 against the
-  deposited 3.0656, and a median residual of 1.937 against 1.062, a gap too
-  large to be a scope difference). That row is carried through unchanged and
-  the recomputed value is written to the audit file instead, so Table III keeps
-  the number whose provenance is known rather than one this script invented.
+  It no longer preserves a row it cannot reproduce. An earlier version carried
+  the deposited iron_pnictide_1111 field-axis value of 3.0656 through unchanged
+  because this protocol returns 3.1289. Keeping a number the deposited code
+  does not produce is exactly the defect a provenance paper cannot ship, so the
+  generator's value is now written and the deposited one is recorded below as
+  history. The same applies to the per-paper Stage 2 validation, whose original
+  97-fit cohort cannot be rebuilt from the deposited fit file: it is recomputed
+  on the cohort that does exist rather than quoted from one that does not.
 
   It does not report a single bootstrap fraction. Resamples are stratified by
   how many distinct compounds survive, because the strata are not equivalent: a
@@ -71,6 +73,7 @@ SNAPSHOT = os.path.join("audit", "pre_withdrawal_20260901")
 OUT_H = os.path.join(DATA, "phase_3_p47_compound_leave_out_MAE.csv")
 OUT_T = os.path.join("audit", "temperature_axis_leave_one_out.csv")
 OUT_G = os.path.join("audit", "leave_one_out_anchor_gate.csv")
+OUT_P = os.path.join("audit", "per_paper_field_validation.csv")
 
 FAMILIES_H = ["conventional_AlB2", "iron_chalcogenide_11",
               "iron_pnictide_1111", "iron_pnictide_122"]
@@ -88,9 +91,9 @@ DEPOSITED_H = {
 DEPOSITED_T = {"iron_chalcogenide_11": 0.261, "iron_pnictide_122": 1.092,
                "iron_pnictide_1111": 1.721}
 
-# Rows this protocol does not reproduce, and which are therefore carried
-# through from the deposit rather than replaced.
-NOT_REPRODUCED_H = {"iron_pnictide_1111"}
+# Values the deposit carried before this generator existed, kept only so the
+# printout can show what changed. Nothing is written from them.
+SUPERSEDED_H = {"iron_pnictide_1111": 3.065635459082229}
 
 
 def load(base):
@@ -107,6 +110,29 @@ def load(base):
         # of every family silently, so it is surfaced rather than filtered.
         print("   warning: %d field-axis 'ok' fits have no family label" % unmapped)
     return bt, ok
+
+
+def per_paper_validation(f, iters, seed):
+    """Leave-one-paper-out on the field exponent, with a percentile bootstrap.
+
+    The supplement previously quoted 0.994 with a 95% interval of [0.495, 1.661]
+    on a cohort described as 97 fits. The deposited fit file yields 88 fits that
+    pass physicality, and no filter over it reconstructs 97, so that figure is
+    not quoted any more. This recomputes the same quantity on the cohort the
+    deposit actually contains.
+    """
+    res = []
+    for p in f.arxiv_id.unique():
+        train = f[f.arxiv_id != p]
+        test = f[f.arxiv_id == p]
+        if train.empty:
+            continue
+        res.extend((test.beta - train.beta.median()).abs().values)
+    res = np.asarray(res, dtype=float)
+    rng = np.random.default_rng(seed)
+    draws = res[rng.integers(0, len(res), size=(iters, len(res)))].mean(axis=1)
+    return (float(res.mean()), float(np.percentile(draws, 2.5)),
+            float(np.percentile(draws, 97.5)), len(f), f.arxiv_id.nunique())
 
 
 def loo(s, col, form_conditioned, min_train_compounds=0):
@@ -212,11 +238,18 @@ def run(base, iters, seed, verbose=True):
         out["field"][name] = (mae, med, s.compound_formula.nunique(), len(s))
         if verbose:
             dep = DEPOSITED_H.get(name, (float("nan"),))[0]
-            note = "   not reproduced, deposited row kept" \
-                if name in NOT_REPRODUCED_H else ""
+            note = "   supersedes the deposited %.4f" % SUPERSEDED_H[name] \
+                if name in SUPERSEDED_H else ""
             print("   %-22s %5d %5d %9.4f %10.4f   %9.4f%s"
                   % (name, s.compound_formula.nunique(), len(s), mae, med,
                      dep, note))
+
+    mae_p, lo_p, hi_p, nfit, npap = per_paper_validation(f, 5000, seed)
+    out["per_paper"] = (mae_p, lo_p, hi_p, nfit, npap)
+    if verbose:
+        print("\nper-paper leave-one-out on the field exponent\n")
+        print("   %d fits from %d papers   MAE %.3f   95%% interval [%.3f, %.3f]"
+              % (nfit, npap, mae_p, lo_p, hi_p))
 
     # Both readings of the anchor-count gate.
     if verbose:
@@ -255,7 +288,7 @@ def reproduce():
     for name, (dep, dep_med) in DEPOSITED_H.items():
         got, got_med = r["field"][name][0], r["field"][name][1]
         exact = abs(got - dep) < 1e-9 and abs(got_med - dep_med) < 1e-9
-        expected = name not in NOT_REPRODUCED_H
+        expected = name not in SUPERSEDED_H
         print("   field  %-22s %.10f vs %.10f   %s"
               % (name, got, dep, "exact" if exact else "DIFFERS"))
         if exact != expected:
@@ -270,8 +303,9 @@ def reproduce():
     if bad:
         print("\nreproduction FAILED for: %s" % ", ".join(bad))
         return 1
-    print("\nevery documented reproduction claim holds, and the one documented "
-          "non-reproduction still does not.")
+    print("\nevery documented reproduction claim holds on the pre-withdrawal "
+          "snapshot; the one superseded row still differs, which is why the "
+          "generator's value is what ships.")
     return 0
 
 
@@ -297,8 +331,6 @@ def main():
         if name not in r["field"]:
             continue
         mae, med, nc, nf = r["field"][name]
-        if name in NOT_REPRODUCED_H:
-            mae, med = DEPOSITED_H[name]
         hrows.append(dict(substructure=name, n_compounds=nc, n_fits=nf,
                           compound_loo_mae=mae, compound_loo_median_residual=med))
     pd.DataFrame(hrows).to_csv(OUT_H, index=False)
@@ -314,7 +346,11 @@ def main():
                 loo_median_residual=med))
     pd.DataFrame(trows).to_csv(OUT_T, index=False)
     pd.DataFrame(r["gate"]).to_csv(OUT_G, index=False)
-    print("\nwritten to %s, %s and %s" % (OUT_H, OUT_T, OUT_G))
+    m, lo, hi, nf, np_ = r["per_paper"]
+    pd.DataFrame([dict(statistic="per_paper_leave_one_out_beta_H", n_fits=nf,
+                       n_papers=np_, mae=m, ci_lower_95=lo, ci_upper_95=hi,
+                       bootstrap_iterations=5000, seed=args.seed)]).to_csv(OUT_P, index=False)
+    print("\nwritten to %s, %s, %s and %s" % (OUT_H, OUT_T, OUT_G, OUT_P))
     return 0
 
 
