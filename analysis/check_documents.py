@@ -31,6 +31,10 @@ import os
 import re
 import sys
 
+# A superseded value may appear when its sentence marks it as historical, either
+# by carrying one of these phrases or by naming the replacement value alongside
+# it. The second rule is the stronger one and catches corrections phrased as
+# "from X to Y", which is how most of them read.
 MARKERS = [
     "earlier version", "an earlier", "previously", "no longer", "superseded",
     "withdrawn", "we withdraw", "rather than", "against the", "instead of",
@@ -125,7 +129,13 @@ def main():
                 for pat, repl in SUPERSEDED.items():
                     if not re.search(pat, s, re.I):
                         continue
-                    marked = any(m in s.lower() for m in MARKERS)
+                    # A sentence that names the superseded value and its
+                    # replacement together is a correction, which is the
+                    # clearest form a historical mention can take.
+                    new_num = re.match(r"([\d.]+)", repl)
+                    paired = bool(new_num) and re.search(
+                        r"\b%s\b" % re.escape(new_num.group(1)), s)
+                    marked = paired or any(m in s.lower() for m in MARKERS)
                     if marked:
                         hits_marked += 1
                         if args.list:

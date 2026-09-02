@@ -63,6 +63,16 @@ CODE_FAMILY = "family_fails_field_axis_validation"
 VALUE_COLS = ["predicted_log_Jc", "predicted_log_Jc_lower_95",
               "predicted_log_Jc_upper_95"]
 
+# The gate is non-destructive. A refused target's value is moved into a
+# withheld_ column rather than deleted, so the dispatch emits nothing while the
+# value the model would have produced stays auditable. Sec. 16 of the
+# Supplemental Material reports that withheld set, labelled as what it is: a
+# projection outside the validated window, not a prediction. Deleting it would
+# have made the paper's own scope boundary unfalsifiable, and would have thrown
+# away the evidence for what the framework covers if the cohort grows.
+WITHHELD_COLS = {c: "withheld_" + c.replace("predicted_", "")
+                 for c in VALUE_COLS}
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -114,15 +124,23 @@ def main():
     if not args.dry_run:
         if not os.path.exists(PRED + ".pre_field_gate"):
             shutil.copy2(PRED, PRED + ".pre_field_gate")
+        for src, dst in WITHHELD_COLS.items():
+            if dst not in d.columns:
+                d[dst] = pd.NA
+            d.loc[fires | fires_fam, dst] = d.loc[fires | fires_fam, src]
+        d["withheld_reduced_field"] = pd.NA
+        d.loc[fires | fires_fam, "withheld_reduced_field"] = h_red[fires | fires_fam]
         d.loc[fires, VALUE_COLS] = pd.NA
         d.loc[fires, "refusal_flag"] = CODE
         d.loc[fires_fam, VALUE_COLS] = pd.NA
         d.loc[fires_fam, "refusal_flag"] = CODE_FAMILY
         d.to_csv(PRED, index=False)
         os.makedirs("audit", exist_ok=True)
-        rep = d.assign(h_reduced=h_red)[fires | fires_fam][
+        rep = d[fires | fires_fam][
             ["compound_formula", "substructure", "Tc_anchor_K", "Hc2_T_anchor",
-             "T_K", "H_T", "h_reduced", "refusal_flag"]]
+             "T_K", "H_T", "withheld_reduced_field", "refusal_flag",
+             "withheld_log_Jc", "withheld_log_Jc_lower_95",
+             "withheld_log_Jc_upper_95"]]
         rep.to_csv(AUDIT, index=False)
         print("\nwritten: %s  (backup at %s.pre_field_gate)" % (PRED, PRED))
         print("audit  : %s  (%d refused targets)" % (AUDIT, len(rep)))

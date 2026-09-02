@@ -1,0 +1,5 @@
+family,reason,n_targets,n_compounds,reduced_field_min,reduced_field_max,withheld_log_Jc_median,withheld_log_Jc_min,withheld_log_Jc_max,median_interval_width_dex
+Iron chalcogenide 11-type,reduced field below 0.3,248,29,0.0021,0.1667,5.929,5.706,9.497,0.239
+Iron chalcogenide 11-type,family fails the field axis,40,17,0.3125,0.3125,5.769,5.583,5.837,0.23
+Iron pnictide 122-type,reduced field below 0.3,294,9,0.0017,0.1,4.979,4.387,5.746,0.243
+MgB2-class,reduced field below 0.3,512,85,0.0065,0.0645,4.966,4.472,6.0,0.607
