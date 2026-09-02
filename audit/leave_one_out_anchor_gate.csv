@@ -1,0 +1,9 @@
+axis,substructure,n_compounds,gate_on_family,gate_on_available_anchors,refused_on_family,refused_on_available_anchors
+T,iron_chalcogenide_11,4,0.21497577312400068,0.21497577312400068,False,False
+T,iron_other,2,,,True,True
+T,iron_pnictide_1111,4,1.7210731477929757,1.7210731477929757,False,False
+T,iron_pnictide_122,3,1.0922036634530738,,False,True
+H,conventional_AlB2,7,0.7531793918356584,0.7531793918356584,False,False
+H,iron_chalcogenide_11,3,1.0934874826615542,,False,True
+H,iron_pnictide_1111,3,3.1289129665510473,,False,True
+H,iron_pnictide_122,5,0.9728593350331054,0.9728593350331054,False,False

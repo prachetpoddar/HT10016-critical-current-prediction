@@ -3,45 +3,58 @@
 compound_leave_one_out.py
 
 Regenerates the compound-level leave-one-out validation on both axes: the
-field-axis table phase_3_p47_compound_leave_out_MAE.csv reported in Table III,
-and the temperature-axis figures reported in Sec. III.C, including the
-paper-level bootstrap.
+field-axis table phase_3_p47_compound_leave_out_MAE.csv behind Table III, and
+the temperature-axis figures of Sec. III.C with their paper-level bootstrap.
 
-Why this exists. Neither result had a generator in the deposit. Both were
-static numbers, so when records were withdrawn they kept describing the cohort
-that produced them. That is the propagation defect this deposit has already
-documented twice, and it is worse here than in a count, because a stale
-validation number is indistinguishable from a current one.
+Why this exists. Neither result had a generator. Both were static numbers, so
+they never propagated through any correction, and a stale validation figure is
+indistinguishable from a current one.
 
-Protocols, recovered by reproducing the deposited values.
+Protocols, recovered by reproducing the deposited values, and asserted below
+against the pre-withdrawal snapshot rather than described in prose.
 
-  Temperature axis. Each compound in a family is held out in turn and its fits
-  are predicted by the median beta_T of the remaining fits in that family.
-  Statistic: mean absolute error over fits. Confidence: 2000 resamples of the
-  contributing papers with replacement, reporting the fraction of resamples
-  whose leave-one-out error falls below the screening threshold of 1 in the
-  exponent. Resamples that leave fewer than two compounds cannot support a
-  leave-one-out and are counted separately rather than scored.
+  Temperature axis. Hold out each compound in turn; predict its fits by the
+  median beta_T of the remaining fits in the family. Statistic: mean absolute
+  error over fits.
 
-  Field axis. Same held-out compound, but the predictor is the median beta of
-  the remaining fits sharing the held-out fit's sample form, falling back to the
-  family median where that form is unrepresented. Cohort: fits whose physicality
-  flag is "ok".
+  Field axis. Same held-out compound; predict each held-out fit by the median
+  beta of the remaining fits sharing its sample form, falling back to the family
+  median where that form is unrepresented. Cohort: physicality == "ok".
 
-Reproduction status against the deposited numbers, on the pre-withdrawal data:
+Three things this script deliberately does NOT do, each because doing them
+produced a wrong number here first.
 
-  temperature axis   0.2609 / 1.0922 / 1.7211   against 0.261 / 1.092 / 1.721
-  bootstrap          91% / 38% / 9%             against 92% / 38% / 8%
-  field axis         AlB2 0.7532, chalcogenide 0.6412, 122 0.9729   exact
-  field axis 1111    3.1289 against the deposited 3.0656
+  It does not compare against the file it writes. DEPOSITED below pins the
+  values as they stood before any regeneration. An earlier version read the
+  comparison column out of phase_3_p47_compound_leave_out_MAE.csv and then
+  overwrote that file, so a second run reported the unreproduced 1111 row as
+  matching the deposit exactly.
 
-The 1111 field-axis row is the one protocol not reproduced. That family has
-three compounds and eleven fits and the manuscript evaluates it at two scopes,
-so the deposited value was probably produced under the second. The difference
-is reported rather than tuned away, and the 1111 field-axis figure should not
-be described as reproducible from this deposit until it is resolved.
+  It does not overwrite a row it cannot reproduce. The iron_pnictide_1111
+  field-axis row is not reproduced by this protocol (3.1289 against the
+  deposited 3.0656, and a median residual of 1.937 against 1.062, a gap too
+  large to be a scope difference). That row is carried through unchanged and
+  the recomputed value is written to the audit file instead, so Table III keeps
+  the number whose provenance is known rather than one this script invented.
+
+  It does not report a single bootstrap fraction. Resamples are stratified by
+  how many distinct compounds survive, because the strata are not equivalent: a
+  two-compound resample predicts a held-out compound from one other compound.
+  For iron_pnictide_1111 that stratum supplies most of the resamples that clear
+  the threshold, so a pooled fraction is carried by its weakest stratum.
+
+The anchor-count gate. Sec. II.D says "at least K = 3 anchor compounds are
+available within the family". At dispatch the candidate is outside the fitted
+family so the sentence is unambiguous, and no dispatched family is near the
+bound, which is why no implementation of it exists to consult. In a
+leave-one-out the held-out compound is inside the family and the sentence is
+ambiguous: gating on the family (n >= 3) and gating on the anchors actually
+available to that prediction (n - 1 >= 3) differ, and they differ on three of
+the seven family-axis pairs. Both are reported. The manuscript has to say which
+it means; this script will not choose.
 
     python analysis/compound_leave_one_out.py --dry-run
+    python analysis/compound_leave_one_out.py --reproduce   # assert on the snapshot
     python analysis/compound_leave_one_out.py
 
 Run from the repository root.
@@ -53,27 +66,64 @@ import sys
 import numpy as np
 import pandas as pd
 
-FITS_H = os.path.join("data", "phase_3_form3_fits_partial_cohortB_v2.csv")
-FITS_T = os.path.join("data", "phase_3_p44_post_UCLA_beta_T_fits.csv")
-ANCHOR = os.path.join("data", "phase_3_p31_jc_anchor_per_paper.csv")
-OUT_H = os.path.join("data", "phase_3_p47_compound_leave_out_MAE.csv")
+DATA = "data"
+SNAPSHOT = os.path.join("audit", "pre_withdrawal_20260901")
+OUT_H = os.path.join(DATA, "phase_3_p47_compound_leave_out_MAE.csv")
 OUT_T = os.path.join("audit", "temperature_axis_leave_one_out.csv")
+OUT_G = os.path.join("audit", "leave_one_out_anchor_gate.csv")
 
 FAMILIES_H = ["conventional_AlB2", "iron_chalcogenide_11",
               "iron_pnictide_1111", "iron_pnictide_122"]
 FAMILIES_T = ["iron_chalcogenide_11", "iron_pnictide_122", "iron_pnictide_1111"]
 
 THRESHOLD = 1.0
-UNRESOLVED_H = {"iron_pnictide_1111"}
+
+# The deposited values, pinned. Never read back from a file this script writes.
+DEPOSITED_H = {
+    "conventional_AlB2": (0.7531793918356584, 0.5560610162687745),
+    "iron_chalcogenide_11": (0.641180745621664, 0.665794874844566),
+    "iron_pnictide_1111": (3.065635459082229, 1.0623191444845497),
+    "iron_pnictide_122": (0.9728593350331054, 0.8665239049136337),
+}
+DEPOSITED_T = {"iron_chalcogenide_11": 0.261, "iron_pnictide_122": 1.092,
+               "iron_pnictide_1111": 1.721}
+
+# Rows this protocol does not reproduce, and which are therefore carried
+# through from the deposit rather than replaced.
+NOT_REPRODUCED_H = {"iron_pnictide_1111"}
 
 
-def loo(s, col, form_conditioned):
-    res = []
+def load(base):
+    bt = pd.read_csv(os.path.join(base, "phase_3_p44_post_UCLA_beta_T_fits.csv"))
+    f = pd.read_csv(os.path.join(base, "phase_3_form3_fits_partial_cohortB_v2.csv"))
+    a = pd.read_csv(os.path.join(base, "phase_3_p31_jc_anchor_per_paper.csv"))
+    fmap = a.drop_duplicates("paper_id").set_index("paper_id").substructure.to_dict()
+    f = f.copy()
+    f["substructure"] = f.arxiv_id.map(fmap)
+    ok = f[f.physicality == "ok"]
+    unmapped = ok.substructure.isna().sum()
+    if unmapped:
+        # An "ok" fit whose paper is absent from the anchor table would drop out
+        # of every family silently, so it is surfaced rather than filtered.
+        print("   warning: %d field-axis 'ok' fits have no family label" % unmapped)
+    return bt, ok
+
+
+def loo(s, col, form_conditioned, min_train_compounds=0):
+    """Mean and median absolute error, each compound held out in turn.
+
+    min_train_compounds implements the anchor-count gate on the pool actually
+    available to each prediction. 0 disables it. Folds below the bound are
+    refused, not scored.
+    """
+    res, folds, refused = [], 0, 0
     for c in s.compound_formula.unique():
         train = s[s.compound_formula != c]
         test = s[s.compound_formula == c]
-        if train.empty:
+        if train.empty or train.compound_formula.nunique() < min_train_compounds:
+            refused += 1
             continue
+        folds += 1
         for _, row in test.iterrows():
             if form_conditioned:
                 same = train[train.sample_form == row.sample_form]
@@ -82,99 +132,191 @@ def loo(s, col, form_conditioned):
                 pool = train[col]
             res.append(abs(row[col] - pool.median()))
     if not res:
-        return np.nan, np.nan
-    return float(np.mean(res)), float(np.median(res))
+        return np.nan, np.nan, folds, refused
+    return float(np.mean(res)), float(np.median(res)), folds, refused
 
 
 def bootstrap(s, col, iters, seed):
-    """Fraction of paper-level resamples whose leave-one-out error clears the
-    screening threshold, and how many resamples were too degenerate to score."""
+    """Paper-level resampling, stratified by how many compounds survive.
+
+    A pooled fraction hides that the strata are not comparable, so the strata
+    are returned and the caller reports them. Degenerate strata are named: a
+    stratum whose resamples are all the same multiset carries one observation
+    however many times it is drawn.
+    """
     papers = s.paper_id.unique()
     rng = np.random.default_rng(seed)
-    by_paper = {p: s[s.paper_id == p] for p in papers}
-    hits = valid = degenerate = 0
+    by = {p: s[s.paper_id == p] for p in papers}
+    strata = {}
     for _ in range(iters):
-        d = pd.concat([by_paper[p] for p in rng.choice(papers, len(papers),
-                                                       replace=True)])
-        if d.compound_formula.nunique() < 2:
-            degenerate += 1
+        pick = tuple(sorted(rng.choice(papers, len(papers), replace=True)))
+        d = pd.concat([by[p] for p in pick])
+        k = d.compound_formula.nunique()
+        st = strata.setdefault(k, dict(n=0, hits=0, multisets=set()))
+        st["n"] += 1
+        st["multisets"].add(pick)
+        if k < 2:
             continue
-        valid += 1
-        m, _md = loo(d, col, form_conditioned=False)
-        hits += m < THRESHOLD
-    return (hits / valid if valid else np.nan), valid, degenerate
+        m, _md, folds, _r = loo(d, col, False)
+        if folds:
+            st["hits"] += m < THRESHOLD
+    return strata
+
+
+def report_bootstrap(name, strata, total):
+    parts = []
+    for k in sorted(strata):
+        st = strata[k]
+        if k < 2:
+            parts.append("%d cmpd: %d unscorable" % (k, st["n"]))
+            continue
+        tag = ""
+        if len(st["multisets"]) == 1:
+            tag = " degenerate, one distinct resample"
+        parts.append("%d cmpd: %d/%d (%.0f%%)%s"
+                     % (k, st["hits"], st["n"], 100 * st["hits"] / st["n"], tag))
+    scor = sum(st["n"] for k, st in strata.items() if k >= 2)
+    hits = sum(st["hits"] for k, st in strata.items() if k >= 2)
+    print("      %-22s pooled %.0f%% of %d scorable   [%s]"
+          % (name, 100 * hits / scor if scor else float("nan"), scor,
+             "; ".join(parts)))
+    return hits / scor if scor else np.nan
+
+
+def run(base, iters, seed, verbose=True):
+    bt, f = load(base)
+    out = dict(temperature={}, field={}, gate=[])
+    if verbose:
+        print("temperature axis, substructure-median predictor\n")
+    for name in FAMILIES_T:
+        s = bt[bt.substructure == name]
+        if s.empty:
+            continue
+        mae, med, _fo, _r = loo(s, "beta_T", False)
+        strata = bootstrap(s, "beta_T", iters, seed)
+        if verbose:
+            print("   %-22s %d compounds, %d papers, %d fits   MAE %.4f"
+                  % (name, s.compound_formula.nunique(), s.paper_id.nunique(),
+                     len(s), mae))
+        frac = report_bootstrap("bootstrap", strata, iters) if verbose else np.nan
+        out["temperature"][name] = (mae, med, frac, strata)
+    if verbose:
+        print("\nfield axis, sample-form-conditioned predictor\n")
+        print("   %-22s %5s %5s %9s %10s   %s"
+              % ("substructure", "cmpd", "fits", "MAE", "median", "deposited"))
+    for name in FAMILIES_H:
+        s = f[f.substructure == name]
+        if s.empty:
+            continue
+        mae, med, _fo, _r = loo(s, "beta", True)
+        out["field"][name] = (mae, med, s.compound_formula.nunique(), len(s))
+        if verbose:
+            dep = DEPOSITED_H.get(name, (float("nan"),))[0]
+            note = "   not reproduced, deposited row kept" \
+                if name in NOT_REPRODUCED_H else ""
+            print("   %-22s %5d %5d %9.4f %10.4f   %9.4f%s"
+                  % (name, s.compound_formula.nunique(), len(s), mae, med,
+                     dep, note))
+
+    # Both readings of the anchor-count gate.
+    if verbose:
+        print("\nanchor-count gate, both readings of Sec. II.D\n")
+        print("   %-22s %-4s %-4s %14s %16s"
+              % ("substructure", "axis", "n", "gate on family", "gate on anchors"))
+    for axis, d, col, fc in [("T", bt, "beta_T", False), ("H", f, "beta", True)]:
+        for name in sorted(set(d.substructure.dropna())):
+            s = d[d.substructure == name]
+            n = s.compound_formula.nunique()
+            if n < 2:
+                continue
+            a_fam, _m, fo_fam, _r = loo(s, col, fc, min_train_compounds=2)
+            a_anc, _m, fo_anc, _r = loo(s, col, fc, min_train_compounds=3)
+            out["gate"].append(dict(
+                axis=axis, substructure=name, n_compounds=n,
+                gate_on_family=a_fam if fo_fam else np.nan,
+                gate_on_available_anchors=a_anc if fo_anc else np.nan,
+                refused_on_family=fo_fam == 0,
+                refused_on_available_anchors=fo_anc == 0))
+            if verbose:
+                print("   %-22s %-4s %-4d %14s %16s"
+                      % (name, axis, n,
+                         "%.4f" % a_fam if fo_fam else "refused",
+                         "%.4f" % a_anc if fo_anc else "refused"))
+    return out
+
+
+def reproduce():
+    """Assert the documented protocol against the pre-withdrawal snapshot."""
+    if not os.path.isdir(SNAPSHOT):
+        sys.exit("snapshot %s not present" % SNAPSHOT)
+    print("asserting the protocol against %s\n" % SNAPSHOT)
+    r = run(SNAPSHOT, iters=2000, seed=20260901, verbose=False)
+    bad = []
+    for name, (dep, dep_med) in DEPOSITED_H.items():
+        got, got_med = r["field"][name][0], r["field"][name][1]
+        exact = abs(got - dep) < 1e-9 and abs(got_med - dep_med) < 1e-9
+        expected = name not in NOT_REPRODUCED_H
+        print("   field  %-22s %.10f vs %.10f   %s"
+              % (name, got, dep, "exact" if exact else "DIFFERS"))
+        if exact != expected:
+            bad.append("field %s" % name)
+    for name, dep in DEPOSITED_T.items():
+        got = r["temperature"][name][0]
+        ok = abs(got - dep) < 5e-4
+        print("   temp   %-22s %.4f vs %.3f   %s"
+              % (name, got, dep, "matches" if ok else "DIFFERS"))
+        if not ok:
+            bad.append("temperature %s" % name)
+    if bad:
+        print("\nreproduction FAILED for: %s" % ", ".join(bad))
+        return 1
+    print("\nevery documented reproduction claim holds, and the one documented "
+          "non-reproduction still does not.")
+    return 0
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--reproduce", action="store_true")
     ap.add_argument("--iters", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=20260901)
     args = ap.parse_args()
-    if not os.path.isdir("data"):
+    if not os.path.isdir(DATA):
         sys.exit("run from the repository root")
+    if args.reproduce:
+        return reproduce()
 
-    a = pd.read_csv(ANCHOR)
-    fam = a.drop_duplicates("paper_id").set_index("paper_id").substructure.to_dict()
-
-    # Temperature axis.
-    bt = pd.read_csv(FITS_T)
-    trows = []
-    print("temperature axis, substructure-median predictor\n")
-    print("%-22s %5s %5s %8s %10s %s"
-          % ("substructure", "cmpd", "fits", "MAE", "below thr", "papers"))
-    for name in FAMILIES_T:
-        s = bt[bt.substructure == name]
-        if s.empty:
-            continue
-        mae, med = loo(s, "beta_T", form_conditioned=False)
-        frac, valid, degen = bootstrap(s, "beta_T", args.iters, args.seed)
-        trows.append(dict(axis="temperature", substructure=name,
-                          n_compounds=s.compound_formula.nunique(),
-                          n_fits=len(s), n_papers=s.paper_id.nunique(),
-                          loo_mae=mae, loo_median_residual=med,
-                          frac_bootstrap_below_threshold=frac,
-                          bootstrap_valid=valid, bootstrap_degenerate=degen))
-        print("%-22s %5d %5d %8.4f %9.0f%% %6d"
-              % (name, s.compound_formula.nunique(), len(s), mae,
-                 100 * frac, s.paper_id.nunique()))
-
-    # Field axis.
-    f = pd.read_csv(FITS_H)
-    f["substructure"] = f.arxiv_id.map(fam)
-    f = f[f.physicality == "ok"]
-    old = pd.read_csv(OUT_H) if os.path.exists(OUT_H) else None
-    hrows = []
-    print("\nfield axis, sample-form-conditioned predictor\n")
-    print("%-22s %5s %5s %8s %10s   %s"
-          % ("substructure", "cmpd", "fits", "MAE", "median", "deposited"))
-    for name in FAMILIES_H:
-        s = f[f.substructure == name]
-        if s.empty:
-            continue
-        mae, med = loo(s, "beta", form_conditioned=True)
-        hrows.append(dict(substructure=name,
-                          n_compounds=s.compound_formula.nunique(),
-                          n_fits=len(s), compound_loo_mae=mae,
-                          compound_loo_median_residual=med))
-        prev = ""
-        if old is not None:
-            m = old[old.substructure == name]
-            if len(m):
-                prev = "%.4f" % m.iloc[0].compound_loo_mae
-        note = "   protocol not reproduced" if name in UNRESOLVED_H else ""
-        print("%-22s %5d %5d %8.4f %10.4f   %9s%s"
-              % (name, s.compound_formula.nunique(), len(s), mae, med,
-                 prev or "none", note))
-
+    r = run(DATA, args.iters, args.seed)
     if args.dry_run:
         print("\nnothing was written.")
-        return
+        return 0
+
+    hrows = []
+    for name in FAMILIES_H:
+        if name not in r["field"]:
+            continue
+        mae, med, nc, nf = r["field"][name]
+        if name in NOT_REPRODUCED_H:
+            mae, med = DEPOSITED_H[name]
+        hrows.append(dict(substructure=name, n_compounds=nc, n_fits=nf,
+                          compound_loo_mae=mae, compound_loo_median_residual=med))
     pd.DataFrame(hrows).to_csv(OUT_H, index=False)
-    os.makedirs("audit", exist_ok=True)
+
+    trows = []
+    for name, (mae, med, frac, strata) in r["temperature"].items():
+        for k in sorted(strata):
+            st = strata[k]
+            trows.append(dict(
+                substructure=name, resample_n_compounds=k, n_resamples=st["n"],
+                n_below_threshold=st["hits"], distinct_resamples=len(st["multisets"]),
+                degenerate=len(st["multisets"]) == 1, loo_mae_point_estimate=mae,
+                loo_median_residual=med))
     pd.DataFrame(trows).to_csv(OUT_T, index=False)
-    print("\nwritten to %s and %s" % (OUT_H, OUT_T))
+    pd.DataFrame(r["gate"]).to_csv(OUT_G, index=False)
+    print("\nwritten to %s, %s and %s" % (OUT_H, OUT_T, OUT_G))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
