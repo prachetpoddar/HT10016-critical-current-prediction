@@ -45,19 +45,27 @@ AUDIT = os.path.join("audit", "field_window_gate.csv")
 H_MIN_REDUCED = 0.3
 CODE = "H_below_validated_reduced_field"
 
-# Second gate. Sec. III.C validates each family on each axis against a
-# screening threshold of 1 in the exponent, and Sec. III.E restricts dispatch to
-# families that pass. Applying that rule to the field axis on the corrected
-# cohort, iron chalcogenide 11-type is at 1.093 and iron pnictide 1111-type at
-# 3.13, so neither passes; MgB2-class at 0.753 and iron pnictide 122-type at
-# 0.973 do. The manuscript previously reported the chalcogenide value while
-# still labelling that family field-validated and dispatching it, which is the
-# contradiction this gate removes. The thresholds are read from the deposited
-# leave-one-out table rather than hardcoded, so a change in the cohort moves the
-# gate with it.
+# Second gate. Sec. III.E dispatches on an axis only where the family is
+# validated on that axis, and a family is validated only if a leave-one-out can
+# be run under the anchor-count rule of Sec. II.D, which needs three anchors
+# left after the held-out compound is removed, and only if the resulting error
+# clears the screening threshold of 1. Two things therefore block a field-axis
+# dispatch, and both are read from the deposit rather than hardcoded:
+#
+#   too few compounds to validate   fewer than four in the family, so a
+#                                   leave-one-out leaves fewer than three
+#                                   anchors and cannot be run at all
+#   validated and over threshold    a leave-one-out that runs and exceeds 1
+#
+# On the corrected cohort iron chalcogenide 11-type has three field-axis
+# compounds and falls in the first category; MgB2-class at 0.753 and iron
+# pnictide 122-type at 0.973 are validated and pass. The manuscript previously
+# quoted a chalcogenide field error while labelling the family field-validated
+# and dispatching it, which is the contradiction this gate removes.
 LOO = os.path.join(DATA, "phase_3_p47_compound_leave_out_MAE.csv")
 SCREENING_THRESHOLD = 1.0
-CODE_FAMILY = "family_fails_field_axis_validation"
+CODE_FAMILY = "family_field_axis_unvalidated"
+MIN_COMPOUNDS_TO_VALIDATE = 4   # K = 3 anchors must remain after holding one out
 
 # Columns the refusal blanks, matching what the existing refusal codes blank.
 VALUE_COLS = ["predicted_log_Jc", "predicted_log_Jc_lower_95",
@@ -86,8 +94,10 @@ def main():
     h_red = d.H_T / d.Hc2_T_anchor
 
     loo = pd.read_csv(LOO)
-    failing = set(loo.loc[loo.compound_loo_mae > SCREENING_THRESHOLD, "substructure"])
-    passing = set(loo.loc[loo.compound_loo_mae <= SCREENING_THRESHOLD, "substructure"])
+    too_few = set(loo.loc[loo.n_compounds < MIN_COMPOUNDS_TO_VALIDATE, "substructure"])
+    over = set(loo.loc[(loo.n_compounds >= MIN_COMPOUNDS_TO_VALIDATE)
+                       & (loo.compound_loo_mae > SCREENING_THRESHOLD), "substructure"])
+    failing = too_few | over
 
     fires = (d.refusal_flag == "") & h_red.notna() & (h_red < H_MIN_REDUCED)
     fires_fam = (d.refusal_flag == "") & ~fires & d.substructure.isin(failing)
@@ -98,14 +108,21 @@ def main():
     print("   tuples in the dispatch table            %5d" % len(d))
     print("   non-refused before the gate             %5d" % (d.refusal_flag == "").sum())
     print("   refused, reduced field below %.2f       %5d" % (H_MIN_REDUCED, fires.sum()))
-    print("   refused, family fails the field axis    %5d" % fires_fam.sum())
+    print("   refused, family not field-validated     %5d" % fires_fam.sum())
     print("   already carried the window code         %5d" % already)
     print("   non-refused after both gates            %5d"
           % ((d.refusal_flag == "").sum() - fires.sum() - fires_fam.sum()))
-    print("\n   field-axis validation, threshold %.1f" % SCREENING_THRESHOLD)
+    print("\n   field-axis validation, %d compounds needed, threshold %.1f"
+          % (MIN_COMPOUNDS_TO_VALIDATE, SCREENING_THRESHOLD))
     for _, r in loo.sort_values("compound_loo_mae").iterrows():
-        print("      %-24s %.4f   %s" % (r.substructure, r.compound_loo_mae,
-              "passes" if r.compound_loo_mae <= SCREENING_THRESHOLD else "FAILS, dispatch refused"))
+        if r.substructure in too_few:
+            state = "UNVALIDATABLE, %d compounds, dispatch refused" % r.n_compounds
+            val = "     n/a"
+        else:
+            state = ("passes" if r.compound_loo_mae <= SCREENING_THRESHOLD
+                     else "OVER THRESHOLD, dispatch refused")
+            val = "%8.4f" % r.compound_loo_mae
+        print("      %-24s %s   %s" % (r.substructure, val, state))
 
     survivors = d[(d.refusal_flag == "") & ~fires & ~fires_fam]
     print("\n   compounds keeping a field-axis target   %5d"

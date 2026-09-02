@@ -45,15 +45,22 @@ produced a wrong number here first.
   For iron_pnictide_1111 that stratum supplies most of the resamples that clear
   the threshold, so a pooled fraction is carried by its weakest stratum.
 
-The anchor-count gate. Sec. II.D says "at least K = 3 anchor compounds are
-available within the family". At dispatch the candidate is outside the fitted
-family so the sentence is unambiguous, and no dispatched family is near the
-bound, which is why no implementation of it exists to consult. In a
-leave-one-out the held-out compound is inside the family and the sentence is
-ambiguous: gating on the family (n >= 3) and gating on the anchors actually
-available to that prediction (n - 1 >= 3) differ, and they differ on three of
-the seven family-axis pairs. Both are reported. The manuscript has to say which
-it means; this script will not choose.
+The anchor-count gate. Sec. II.D requires at least K = 3 anchor compounds
+available for a prediction. At dispatch the candidate sits outside the fitted
+family, so all n of the family's compounds are available to it. In a
+leave-one-out the held-out compound is inside the family, so only n - 1 are,
+and the gate is n - 1 >= 3. That is the reading the manuscript adopts, and it
+is the one under which the validation and the dispatch apply the same rule to
+the same quantity.
+
+It has teeth. Three of the seven family-axis pairs have exactly three
+compounds, which leaves two anchors for each held-out compound and therefore no
+admissible leave-one-out: iron chalcogenide 11-type and iron pnictide 1111-type
+on the field axis, and iron pnictide 122-type on the temperature axis. Those
+three are not failures, they are unvalidatable at this cohort size, and the
+manuscript reports them as such rather than quoting an error computed under a
+rule it does not accept. Both readings remain in the output so the size of the
+difference is visible.
 
     python analysis/compound_leave_one_out.py --dry-run
     python analysis/compound_leave_one_out.py --reproduce   # assert on the snapshot
