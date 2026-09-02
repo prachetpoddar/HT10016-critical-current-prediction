@@ -31,6 +31,7 @@ import pandas as pd
 DATA = "data"
 ANCHOR = os.path.join(DATA, "phase_3_p31_jc_anchor_per_paper.csv")
 FITS_H = os.path.join(DATA, "phase_3_form3_fits_partial_cohortB_v2.csv")
+PROV = os.path.join(DATA, "provenance_table_fitcohort_full.csv")
 PRED = os.path.join(DATA, "phase_3_p57_de_novo_predictions.csv")
 WITHDRAWN = os.path.join("audit", "withdrawn_records.csv")
 
@@ -135,6 +136,46 @@ def table_s5(banned):
     return rows
 
 
+def table_s1(_banned):
+    """Provenance summary by substructure family, generated from the deposit.
+
+    Hand-maintained until now, and it showed: it still carried an "Iron other"
+    row for the two compounds since reclassified into their families, and stale
+    counts for the two families that received them, while its TOTAL row summed
+    correctly and so hid the fact.
+
+    The critical-field column is also renamed. It read "Paper-reported Hc2" and
+    counted every paper whose provenance string is not the substructure
+    literature catalog, which sweeps 13 Tier-3 literature defaults and 9 Tier-2
+    per-substructure ratios in under a heading that claims the paper reported
+    the value. Only 12 of the 65 papers carry a Tier-1 anchor read from the
+    source, and that is what the column now counts.
+    """
+    p = pd.read_csv(PROV)
+    rows, order = [], sorted(p.substructure_family.unique())
+    for fam in order:
+        g = p[p.substructure_family == fam]
+        rows.append(dict(
+            family=fam.replace("_", " ").replace("conventional AlB2", "MgB2-class"),
+            papers=g.identifier.nunique(),
+            fully_fittable=int((g.contribution_flag == "fully fittable").sum()),
+            cohort_a_only=int(g.contribution_flag.str.startswith("Cohort A only").sum()),
+            cohort_b_only=int(g.contribution_flag.str.startswith("Cohort B only").sum()),
+            cohort_ab_nonfittable=int(g.contribution_flag.str.startswith("Cohort A and B").sum()),
+            compounds=g.compound.nunique(),
+            tier1_hc2=int(g.Hc2_provenance.str.startswith("Tier_1").sum()),
+            points=int(pd.to_numeric(g.n_Jc_points, errors="coerce").sum())))
+    rows.append(dict(family="TOTAL", papers=p.identifier.nunique(),
+                     fully_fittable=int((p.contribution_flag == "fully fittable").sum()),
+                     cohort_a_only=int(p.contribution_flag.str.startswith("Cohort A only").sum()),
+                     cohort_b_only=int(p.contribution_flag.str.startswith("Cohort B only").sum()),
+                     cohort_ab_nonfittable=int(p.contribution_flag.str.startswith("Cohort A and B").sum()),
+                     compounds=p.compound.nunique(),
+                     tier1_hc2=int(p.Hc2_provenance.str.startswith("Tier_1").sum()),
+                     points=int(pd.to_numeric(p.n_Jc_points, errors="coerce").sum())))
+    return rows
+
+
 def table_s6(_banned):
     """Dispatch excerpt: one dispatched target and one of each refusal code, so
     the table shows the refusal vocabulary rather than only the successes."""
@@ -182,7 +223,8 @@ def main():
         sys.exit("run from the repository root")
     banned = withdrawn_tokens()
     print("withdrawn identifiers excluded from every table: %d\n" % (len(banned) // 2))
-    out = {"S4": table_s4(banned), "S5": table_s5(banned), "S6": table_s6(banned)}
+    out = {"S1": table_s1(banned), "S4": table_s4(banned),
+           "S5": table_s5(banned), "S6": table_s6(banned)}
     for name, rows in out.items():
         print("Table %s  (%d rows)" % (name, len(rows)))
         for r in rows:

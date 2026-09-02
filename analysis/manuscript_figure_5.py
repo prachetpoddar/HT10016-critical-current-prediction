@@ -29,7 +29,16 @@ LAB={"iron_chalcogenide_11":"Iron chalcogenide 11-type",
      "conventional_AlB2":r"MgB$_2$-class"}
 COL={"iron_chalcogenide_11":"#1B8A7A","iron_pnictide_122":"#D2691E","conventional_AlB2":"#6A5ACD"}
 ORDER=["iron_chalcogenide_11","iron_pnictide_122","conventional_AlB2"]
-HALF=0.194                      # half of the 0.39 dex median 95% interval
+# Half the median 95% interval width across the predictions the dispatch
+# actually emits. An earlier version used 0.194, half of 0.39 dex, which is the
+# median over the pre-gate population of 1671 rows carrying an emitted or a
+# withheld value. On the 256 rows the gate emits it is 0.825 dex. Recomputed
+# from the deposit rather than restated, so it moves with the cohort.
+import pandas as _pd, os as _os
+_p = _pd.read_csv(_os.path.join("data", "phase_3_p57_de_novo_predictions.csv"),
+                  low_memory=False)
+_e = _p[_p.refusal_flag.fillna("") == ""]
+HALF = float((_e.predicted_log_Jc_upper_95 - _e.predicted_log_Jc_lower_95).median()) / 2
 H_MIN_VALID=0.30                # field-axis applicability bound, Eq. (1)
 T_MAX_VALID=0.70                # temperature-axis applicability bound, Eq. (1)
 H_REF=0.50                      # reduced field for the left panel, inside the window

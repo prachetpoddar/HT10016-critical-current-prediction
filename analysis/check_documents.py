@@ -119,6 +119,16 @@ SUPERSEDED = {
     # absent or unreproducible, and each was wrong: the component was found on a
     # second search. They are listed here so no revision restores them.
     r"not present anywhere in the workflow": "the cohort-A extractions were located",
+    r"\b0\.39 dex": "0.825 dex across the emitted targets",
+    r"\b0\.19 dex": "0.41 dex",
+    r"factor of 5\.2": "6.2",
+    r"factor of 5\.1": "6.7 across 38 fits",
+    r"\b1\.092\b": "1.118 on the corrected 122-type cohort",
+    r"\b198 temperature-axis fits": "215",
+    r"nine substructure families": "seven in the frozen cohort",
+    r"nine populated families": "seven in the frozen cohort",
+    r"Iron other": "reclassified into iron chalcogenide 11 and iron pnictide 122",
+    r"44% of the cohort": "43%, three families of seven",
     r"error of 10\.10": "11.37 on the frozen seven-family cohort",
     r"\b1\.11, with 5 of 9": "0.71, with 6 of 7",
     r"\b44% of the substructure cohort": "43%, three families of seven",
