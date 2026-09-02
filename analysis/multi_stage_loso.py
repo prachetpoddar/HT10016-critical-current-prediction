@@ -73,10 +73,14 @@ both definitions without distinguishing them, which is itself worth reporting.
 
 KNOWN LIMITS OF THIS SCRIPT, STATED RATHER THAN LEFT TO BE FOUND
 
-  The descriptor max_chi_mean is still read from p18, which this docstring
-  calls stale for its targets. max_chi_mean is a fit-count-weighted mean and so
-  moved with the same withdrawals. Every Stage 1 figure here regresses a fresh
-  target on a stale x, and cannot be better than that until p18 is regenerated.
+  The descriptor is no longer read from p18. An earlier version of this script
+  regressed a freshly computed target on max_chi_mean taken straight out of the
+  table it calls stale, which is a fit-count-weighted mean and moved with the
+  same withdrawals. It is now recomputed from the deposited anchor table by the
+  same rule, the mean over a family's fits of each compound's max_chi, and
+  _check_descriptor asserts that the rule reproduces the deposited p18 value on
+  every family whose cohort did not change. Only the two families the
+  withdrawals touched differ, and the two withdrawn families are gone.
 
   Three of the seven families are cuprates whose targets sit at or near the
   fitter's ceiling of 30 and which share max_chi_mean = 3.44 exactly, with
@@ -163,18 +167,43 @@ def classify(formula):
     return SPELLING.get(formula, assign_substructure(formula))
 
 
+ANCHORS = os.path.join("data", "phase_3_p31_jc_anchor_per_paper.csv")
+# Families whose fit cohort the withdrawals and reclassification changed, and
+# which therefore must not match the deposited descriptor table.
+MOVED = {"iron_chalcogenide_11", "iron_pnictide_122"}
+
+
+def _check_descriptor(fam):
+    """The recomputation must reproduce p18 wherever the cohort did not move."""
+    if not os.path.exists(DESCRIPTORS):
+        return "p18 absent; descriptor recomputed without a cross-check"
+    d = pd.read_csv(DESCRIPTORS)
+    d = d[d.framing == "H_irr_or_empirical"].set_index("substructure")
+    same = bad = 0
+    for _i, r in fam.iterrows():
+        if r.substructure in MOVED or r.substructure not in d.index:
+            continue
+        if abs(float(d.loc[r.substructure, DESCRIPTOR]) - r[DESCRIPTOR]) < 1e-9:
+            same += 1
+        else:
+            bad += 1
+    assert not bad, "descriptor rule disagrees with p18 on %d unmoved families" % bad
+    return ("descriptor rule reproduces p18 on all %d families whose cohort did "
+            "not move" % same)
+
+
 def load(ok_only):
     f = pd.read_csv(FITS)
     f["substructure"] = f.compound_formula.apply(classify)
     if ok_only:
         f = f[f.physicality == "ok"]
-    d = pd.read_csv(DESCRIPTORS)
-    d = d[d.framing == "H_irr_or_empirical"][["substructure", DESCRIPTOR]]
-    chi = d.drop_duplicates("substructure").set_index("substructure")[DESCRIPTOR]
+    a = pd.read_csv(ANCHORS).drop_duplicates("compound_formula")
+    chi = a.set_index("compound_formula").max_chi
+    f = f.assign(_chi=f.compound_formula.map(chi))
     fam = (f.groupby("substructure")
-             .agg(target=("beta", "median"), n_fits=("beta", "size"))
+             .agg(target=("beta", "median"), n_fits=("beta", "size"),
+                  **{DESCRIPTOR: ("_chi", "mean")})
              .reset_index())
-    fam[DESCRIPTOR] = fam.substructure.map(chi)
     fam = fam.dropna(subset=[DESCRIPTOR]).reset_index(drop=True)
     return f, fam
 
@@ -302,7 +331,8 @@ def main():
     ap.add_argument("--json", default=None)
     args = ap.parse_args()
 
-    print(_check_classifier(pd.read_csv(FITS).compound_formula) + "\n")
+    print(_check_classifier(pd.read_csv(FITS).compound_formula))
+    print(_check_descriptor(load(False)[1]) + "\n")
     summary, frames = {}, []
     for ok_only, fams, title in [
             (False, None, "all fits, every family with a descriptor"),

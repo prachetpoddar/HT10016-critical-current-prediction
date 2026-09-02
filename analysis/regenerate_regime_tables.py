@@ -50,6 +50,8 @@ import numpy as np
 import pandas as pd
 
 ANCHORS = os.path.join("data", "phase_3_p31_jc_anchor_per_paper.csv")
+FITS = os.path.join("data", "phase_3_form3_fits_partial_cohortB_v2.csv")
+P18 = os.path.join("data", "phase_3_p18_substructure_descriptor_means.csv")
 DECOMP = os.path.join("data", "phase_3_p31_variance_decomposition.csv")
 SF_OUT = os.path.join("data", "phase_3_p31_jc_anchor_substructure_sampleform.csv")
 REGIME_OUT = os.path.join("data", "phase_3_p39_stage2_regime_classification.csv")
@@ -105,6 +107,40 @@ def regime_table(sf, decomp):
     return out
 
 
+def descriptor_means(a):
+    """Rebuild the H_irr_or_empirical rows of the descriptor table.
+
+    That framing still carried conventional_A15 and cuprate_HBCCO, both
+    withdrawn, and an iron_chalcogenide_11 row on the 56-fit pre-withdrawal
+    cohort. The other two framings are left untouched: nothing in the deposit
+    states how their rows were assembled, and rewriting them on a guess is the
+    error this revision keeps correcting.
+
+    The rule is recovered rather than assumed, and reproduces the deposited row
+    exactly for every family whose cohort did not move: n_papers is the fit
+    count, beta_H_median and beta_H_mean are over all fits, and each descriptor
+    mean is the mean over fits of the compound's value.
+    """
+    import sys as _s
+    _s.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from multi_stage_loso import classify
+    f = pd.read_csv(FITS)
+    f["substructure"] = f.compound_formula.apply(classify)
+    d = a.drop_duplicates("compound_formula").set_index("compound_formula")
+    for c in ("mean_chi", "max_chi", "var_chi", "ionic_fraction"):
+        f[c] = f.compound_formula.map(d[c])
+    g = f.groupby("substructure")
+    out = pd.DataFrame(dict(
+        framing="H_irr_or_empirical",
+        n_papers=g.beta.size(),
+        beta_H_mean=g.beta.mean(), beta_H_median=g.beta.median(),
+        mean_chi_mean=g.mean_chi.mean(), max_chi_mean=g.max_chi.mean(),
+        var_chi_mean=g.var_chi.mean(),
+        ionic_fraction_mean=g.ionic_fraction.mean(),
+        beta_T_mean=np.nan, beta_T_median=np.nan)).reset_index()
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
@@ -145,6 +181,15 @@ def main():
             shutil.copy2(p, os.path.join(backup, os.path.basename(p)))
     sf.to_csv(SF_OUT, index=False)
     out.to_csv(REGIME_OUT, index=False)
+    if os.path.exists(P18):
+        p18 = pd.read_csv(P18)
+        shutil.copy2(P18, os.path.join(backup, os.path.basename(P18)))
+        keep = p18[p18.framing != "H_irr_or_empirical"]
+        new = descriptor_means(a)[list(p18.columns)]
+        pd.concat([new, keep], ignore_index=True).to_csv(P18, index=False)
+        print("   descriptor table: H_irr_or_empirical rebuilt, %d rows -> %d; "
+              "other framings untouched"
+              % ((p18.framing == "H_irr_or_empirical").sum(), len(new)))
     print("\nwritten %s and %s\nbackups: %s" % (SF_OUT, REGIME_OUT, backup))
     return 0
 
