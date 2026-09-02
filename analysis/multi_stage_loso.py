@@ -100,7 +100,50 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from phase_3_p39_multi_stage_predictor import assign_substructure   # noqa: E402
+
+# The canonical classifier lives in phase_3_p39_multi_stage_predictor, but
+# importing that module pulls in scipy for a Spearman coefficient this script
+# never uses, and scipy is not installed everywhere this deposit is run. The
+# rules are mirrored here so the script runs anywhere pandas does, and
+# _check_classifier asserts the mirror against the original whenever the
+# original can be imported, so the two cannot drift silently.
+def _assign_local(c):
+    c = c or ""
+    if "Nb3Sn" in c or "V3Si" in c or "V3Ga" in c:
+        return "conventional_A15"
+    if "MgB2" in c or "MgB(2-x)Cx" in c:
+        return "conventional_AlB2"
+    if ("FeTe" in c or "FeSe" in c) and "FeAs" not in c:
+        return "iron_chalcogenide_11"
+    if "FeAsO" in c:
+        return "iron_pnictide_1111"
+    if "Fe2As2" in c or "BaFe" in c or "(Fe" in c:
+        return "iron_pnictide_122"
+    if "YBa" in c or "YBaCuO" in c or "REBCO" in c:
+        return "cuprate_RBCO"
+    if "Hg" in c and "Cu" in c and ("Ba" in c or "Sr" in c):
+        return "cuprate_HBCCO"
+    if "BSCCO" in c or "Bi-22" in c:
+        return "cuprate_BSCCO"
+    if "Bi" in c and "Sr" in c and "Cu" in c:
+        return "cuprate_BSCCO"
+    if "La" in c and "Cu" in c and "O" in c and "Ba" not in c:
+        return "cuprate_LSCO"
+    return "other_unclassified"
+
+
+def _check_classifier(formulas):
+    """Assert the mirror matches the canonical rules, where those can load."""
+    try:
+        from phase_3_p39_multi_stage_predictor import assign_substructure
+    except ImportError:
+        return "canonical classifier unavailable (scipy missing); mirror used"
+    bad = [c for c in set(formulas) if assign_substructure(c) != _assign_local(c)]
+    assert not bad, "mirrored classifier disagrees on %r" % bad[:5]
+    return "mirror verified against the canonical classifier on %d formulas" % len(set(formulas))
+
+
+assign_substructure = _assign_local
 
 FITS = os.path.join("data", "phase_3_form3_fits_partial_cohortB_v2.csv")
 DESCRIPTORS = os.path.join("data", "phase_3_p18_substructure_descriptor_means.csv")
@@ -259,6 +302,7 @@ def main():
     ap.add_argument("--json", default=None)
     args = ap.parse_args()
 
+    print(_check_classifier(pd.read_csv(FITS).compound_formula) + "\n")
     summary, frames = {}, []
     for ok_only, fams, title in [
             (False, None, "all fits, every family with a descriptor"),
