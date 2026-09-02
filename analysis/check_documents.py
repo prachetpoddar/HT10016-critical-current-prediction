@@ -113,6 +113,11 @@ SUPERSEDED = {
     # absent or unreproducible, and each was wrong: the component was found on a
     # second search. They are listed here so no revision restores them.
     r"not present anywhere in the workflow": "the cohort-A extractions were located",
+    # Table S5 rows that no longer exist. The tables are generated from the
+    # deposit but their introducing prose is not, which is how a description of
+    # withdrawn rows outlived the rows themselves.
+    r"Nb3Sn wire rows": "Table S5 no longer contains them",
+    r"Ba\(Fe,Ru\)2As2 row": "Table S5 no longer contains it",
     r"calibration screen has no deposited implementation": "the screen is deposited "
                                           "as the record-level tier table",
     r"derived from that fact rather than recomputed": "the split recomputes",
