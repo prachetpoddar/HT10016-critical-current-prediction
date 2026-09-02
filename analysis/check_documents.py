@@ -106,7 +106,13 @@ SUPERSEDED = {
     r"\b25\.1%": "25.8%",
     r"\b10\.5%": "9.9%",
     r"\b92% of (?:bootstrap )?resamples\b": "withdrawn, not restated",
-    r"\b23-fold\b": "16-fold",
+    r"\b23-fold\b": "withdrawn; no cross-stage ratio is carried",
+    r"\b16-fold\b": "withdrawn; Stages 2 and 3 were evaluated in sample",
+    r"\b4\.7-fold\b": "withdrawn with the 16-fold",
+    r"\b26\.8%": "45.2% on the matched three-compound cohort",
+    r"\b41\.8%": "45.2% on the matched three-compound cohort",
+    r"0\.927 .{0,40}three monotonic": "0.927 is the four-compound value; the "
+                                       "matched three give 0.694",
     r"cannot be reproduced": "no unreproducible value may remain",
     r"does not reproduce": "no unreproducible value may remain",
     # Retracted descriptions. Each of these called a component of the workflow
@@ -177,8 +183,15 @@ def self_test():
     return bad
 
 
+# Abbreviations that end in a period and never end a sentence in this package.
+# Splitting after them cuts "The 41.8% reduction in Sec." off from the clause
+# that marks it historical, and the check then reports a retraction as a live
+# claim, which is the false positive that sends an author to edit correct prose.
+ABBREV = r"(?<!\bSec\.)(?<!\bFig\.)(?<!\bEq\.)(?<!\bRef\.)(?<!\bTab\.)(?<!\bNo\.)(?<!\bcf\.)"
+
+
 def sentences(text):
-    return re.split(r"(?<=[.!?])\s+", text)
+    return re.split(ABBREV + r'(?<=[.!?])\s+(?=[A-Z0-9\u201c"\'(])', text)
 
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
