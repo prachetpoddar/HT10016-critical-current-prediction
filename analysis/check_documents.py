@@ -113,6 +113,8 @@ SUPERSEDED = {
     # absent or unreproducible, and each was wrong: the component was found on a
     # second search. They are listed here so no revision restores them.
     r"not present anywhere in the workflow": "the cohort-A extractions were located",
+    r"One row is one physical sample from one paper": "one row is one isotherm "
+                                          "record; 105 records are 69 samples",
     r"not reproducible from the deposited per-family cohorts": "0.409 dex is deposited",
     r"at least three anchor compounds are available within the family": "K counts "
                                           "measured points supplied per query",
