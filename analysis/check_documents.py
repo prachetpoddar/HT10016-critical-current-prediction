@@ -17,8 +17,16 @@ allowed is a superseded value stated as current. The test for the difference is
 whether its sentence carries one of the markers below, which is crude but is
 checkable by a reader and by a script, and which fails closed.
 
-    python analysis/check_documents.py --docs /path/to/folder
-    python analysis/check_documents.py --docs /path/to/folder --list
+Needs python-docx, which is imported as "docx" but installed as
+"pip install python-docx".
+
+    python analysis/check_documents.py --docs ~/Downloads
+    python analysis/check_documents.py --files a.docx b.docx c.docx
+    python analysis/check_documents.py --docs ~/Downloads --list
+
+By default a folder is filtered to the three documents of this package, since a
+download folder holds other people's papers and checking those produces noise.
+Pass --all to override that.
 
 Exit status is non-zero if any superseded value is stated as current, or if a
 current value cannot be found where it is expected.
@@ -31,10 +39,20 @@ import os
 import re
 import sys
 
+try:
+    import docx  # python-docx
+except ImportError:
+    sys.exit("this script needs python-docx:\n"
+             "    pip install python-docx\n"
+             "(the module is imported as 'docx' but the package is 'python-docx')")
+
 # A superseded value may appear when its sentence marks it as historical, either
 # by carrying one of these phrases or by naming the replacement value alongside
 # it. The second rule is the stronger one and catches corrections phrased as
 # "from X to Y", which is how most of them read.
+# Filename fragments that identify the three documents of this package.
+PACKAGE_NAMES = {"HT10016", "SUPPLEMENTAL", "SUPPLEMENT", "RESPONSE"}
+
 MARKERS = [
     "earlier version", "an earlier", "previously", "no longer", "superseded",
     "withdrawn", "we withdraw", "rather than", "against the", "instead of",
@@ -78,7 +96,7 @@ def sentences(text):
     return re.split(r"(?<=[.!?])\s+", text)
 
 
-def doc_text(path, response_only=True):
+def doc_text(path):
     """Blocks of text, with referee quotations marked so they are exempt.
 
     The response letter quotes each referee point verbatim before answering it,
@@ -86,15 +104,13 @@ def doc_text(path, response_only=True):
     wholly in italic, which is how it is identified here; its content is the
     referee's, not ours, and must not be edited to match our cohort.
     """
-    import docx
-    d = docx.Document(path)
     # Only the response letter quotes referees, so the exemption is confined to
     # it. Applying it document-wide would let an italic caption hide a stale
     # number, which is the failure mode this script exists to catch.
     is_response = "RESPONSE" in os.path.basename(path).upper()
-    d_ = docx.Document(path)
+    d = docx.Document(path)
     out = []
-    for p in d_.paragraphs:
+    for p in d.paragraphs:
         quoted = (is_response and len(p.text.strip()) > 40 and bool(p.runs)
                   and all(r.italic for r in p.runs if r.text.strip()))
         out.append((p.text, quoted))
@@ -107,15 +123,36 @@ def doc_text(path, response_only=True):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--docs", required=True,
+    ap.add_argument("--docs",
                     help="folder holding the manuscript, supplement and response")
+    ap.add_argument("--files", nargs="+",
+                    help="the documents to check, given explicitly")
+    ap.add_argument("--all", action="store_true",
+                    help="with --docs, check every .docx rather than only the "
+                         "three that make up this package")
     ap.add_argument("--list", action="store_true",
                     help="print every hit, marked or not")
     args = ap.parse_args()
 
-    paths = sorted(glob.glob(os.path.join(args.docs, "*.docx")))
+    if args.files:
+        paths = sorted(args.files)
+    elif args.docs:
+        paths = sorted(p for p in glob.glob(os.path.join(args.docs, "*.docx"))
+                       if not os.path.basename(p).startswith("~$"))
+        if not args.all:
+            # A folder such as Downloads holds other people's documents, and
+            # checking those produces noise at best and a traceback at worst.
+            paths = [p for p in paths
+                     if any(k in os.path.basename(p).upper()
+                            for k in PACKAGE_NAMES)]
+    else:
+        sys.exit("give --docs FOLDER or --files A.docx B.docx")
     if not paths:
-        sys.exit("no .docx found under %s" % args.docs)
+        where = args.docs or "the given files"
+        sys.exit("no package document found in %s.\n"
+                 "Expected a filename containing one of: %s\n"
+                 "Use --files to name them explicitly, or --all to check "
+                 "every .docx in the folder." % (where, ", ".join(sorted(PACKAGE_NAMES))))
 
     bad = 0
     for path in paths:
