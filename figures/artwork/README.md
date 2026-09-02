@@ -2,7 +2,15 @@
 
 These two are not produced by a script in `analysis/`. They are Inkscape
 drawings, and the `.svg` here is the source of record; the `.png` beside it is
-what the manuscript embeds, rendered at 3000 px wide.
+what the manuscript embeds, rendered at 3000 px wide and then cropped to its
+own content with a uniform margin.
+
+That crop matters for Figure 2. Its canvas carried 456 px of empty background
+on the right against 40 px on the left, so the drawing sat off-centre inside
+its own frame and looked off-centre on the page however the paragraph was
+aligned. Both PNGs are now trimmed to their content and re-padded evenly, and
+every figure's display extent in the manuscript is computed from the embedded
+pixel dimensions so nothing is stretched.
 
 `analysis/manuscript_figure_1.py` and `manuscript_figure_2.py` produce a
 different pair of figures in a plain matplotlib style. Those were carried in an
