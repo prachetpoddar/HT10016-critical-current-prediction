@@ -111,6 +111,7 @@ TARGETS = [
     "phase_3_form3_fits_partial_cohortB_v2.csv",
     "phase_3_p57_de_novo_predictions.csv",
     "phase_3_p47_compound_leave_out_MAE.csv",
+    "phase_3_p56_candidate_tier_assignment.csv",
     "phase_3_p44_post_UCLA_beta_T_fits.csv",
     "reduced_variable_scaling.csv",
 ]

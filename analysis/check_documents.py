@@ -113,6 +113,9 @@ SUPERSEDED = {
     # absent or unreproducible, and each was wrong: the component was found on a
     # second search. They are listed here so no revision restores them.
     r"not present anywhere in the workflow": "the cohort-A extractions were located",
+    r"calibration screen has no deposited implementation": "the screen is deposited "
+                                          "as the record-level tier table",
+    r"derived from that fact rather than recomputed": "the split recomputes",
     r"cohort we cannot reconstruct": "the 99-fit cohort reconstructs and reproduces",
     r"no filter over the deposited fit file reproduces": "the cohort is 99 fits, not 97",
     r"unvalidatable at this cohort size": "fails the threshold; K counts anchor "

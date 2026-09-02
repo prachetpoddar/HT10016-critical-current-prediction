@@ -1,5 +1,5 @@
 scope,substructure,n_papers,n_sample_forms,total_var,between_sf_var,within_sf_var,ratio_between_total,note
-aggregate_all,ALL,69,5,0.8669525375887451,0.29553057782973985,0.5714219597590053,0.3408843794975201,derived from phase_3_p31_jc_anchor_per_paper.csv via analysis/figure_4_source.py (aggregate_per_physical_sample + compute_variance_decomposition); regenerated 2026-09-01 by analysis/withdraw_records.py
+aggregate_all,ALL,69,5,0.8669525375887451,0.29553057782973985,0.5714219597590053,0.3408843794975201,derived from phase_3_p31_jc_anchor_per_paper.csv via analysis/figure_4_source.py (aggregate_per_physical_sample + compute_variance_decomposition); regenerated 2026-09-02 by analysis/withdraw_records.py
 per_substructure,conventional_AlB2,15,2,0.08209051972532246,0.009513105745561933,0.07257741397976053,0.11588555873921974,
 per_substructure,cuprate_BSCCO,11,2,1.3925795904446217,0.08639359322725322,1.3061859972173684,0.0620385318153841,
 per_substructure,cuprate_LSCO,5,1,0.00915195258917131,,,,single sample_form; no decomposition

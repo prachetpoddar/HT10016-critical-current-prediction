@@ -60,6 +60,11 @@ MANUSCRIPT = dict(
     dispatched_compounds=85,         # Table IV, combined "dispatched"
     dispatch_tuples=2097,
     emitted_targets=256,
+    candidate_records=233,           # Supplement Sec. 12, record-level counts
+    calibration_retained=212,
+    calibration_refused=21,
+    calibration_high_confidence=82,
+    calibration_graded_confidence=130,
 )
 
 failures = []
@@ -182,6 +187,8 @@ def main():
     fh_ok = fh[fh.physicality == "ok"]
     p57 = pd.read_csv(os.path.join(DATA, "phase_3_p57_de_novo_predictions.csv"),
                       low_memory=False)
+    tiers = pd.read_csv(os.path.join(
+        DATA, "phase_3_p56_candidate_tier_assignment.csv"))
     computed = dict(
         papers_contributing_anchor_rows=a.paper_id.nunique(),
         physical_samples=len(agg),
@@ -196,6 +203,11 @@ def main():
         dispatched_compounds=p57[p57.refusal_flag.fillna("") == ""].compound_formula.nunique(),
         dispatch_tuples=len(p57),
         emitted_targets=int((p57.refusal_flag.fillna("") == "").sum()),
+        candidate_records=len(tiers),
+        calibration_retained=int((tiers.tier != "refused_calibration_domain").sum()),
+        calibration_refused=int((tiers.tier == "refused_calibration_domain").sum()),
+        calibration_high_confidence=int((tiers.tier == "high_confidence").sum()),
+        calibration_graded_confidence=int((tiers.tier == "graded_confidence").sum()),
     )
     for k, want in MANUSCRIPT.items():
         got = computed[k]
