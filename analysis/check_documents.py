@@ -49,8 +49,15 @@ import zipfile
 # by carrying one of these phrases or by naming the replacement value alongside
 # it. The second rule is the stronger one and catches corrections phrased as
 # "from X to Y", which is how most of them read.
-# Filename fragments that identify the three documents of this package.
-PACKAGE_NAMES = {"HT10016", "SUPPLEMENTAL", "SUPPLEMENT", "RESPONSE"}
+# The package is three documents, one per role. A working folder accumulates
+# every revision of each, so matching on the name alone selects thirty files and
+# reports the same stale value thirty times, which buries the one copy that
+# matters. Each role therefore resolves to a single file: the most recently
+# modified match. The others are named in the output so the choice is visible
+# and can be overridden with --files.
+ROLES = [("manuscript", ("HT10016",), ("SUPPLEMENT", "RESPONSE")),
+         ("supplement", ("SUPPLEMENTAL", "SUPPLEMENT"), ()),
+         ("response", ("RESPONSE",), ())]
 
 MARKERS = [
     "earlier version", "an earlier", "previously", "no longer", "superseded",
@@ -151,22 +158,35 @@ def main():
     if args.files:
         paths = sorted(args.files)
     elif args.docs:
-        paths = sorted(p for p in glob.glob(os.path.join(args.docs, "*.docx"))
+        found = sorted(p for p in glob.glob(os.path.join(args.docs, "*.docx"))
                        if not os.path.basename(p).startswith("~$"))
-        if not args.all:
-            # A folder such as Downloads holds other people's documents, and
-            # checking those produces noise at best and a traceback at worst.
-            paths = [p for p in paths
-                     if any(k in os.path.basename(p).upper()
-                            for k in PACKAGE_NAMES)]
+        if args.all:
+            paths = found
+        else:
+            paths, skipped = [], []
+            for role, want, avoid in ROLES:
+                cands = [p for p in found
+                         if any(k in os.path.basename(p).upper() for k in want)
+                         and not any(k in os.path.basename(p).upper() for k in avoid)]
+                if not cands:
+                    continue
+                cands.sort(key=os.path.getmtime, reverse=True)
+                paths.append(cands[0])
+                skipped.extend(cands[1:])
+                print("%-11s %s   (newest of %d)"
+                      % (role, os.path.basename(cands[0]), len(cands)))
+            if skipped:
+                print("\n%d older revision(s) not checked. Pass --files to name "
+                      "documents explicitly, or --all to check every .docx here."
+                      % len(skipped))
     else:
         sys.exit("give --docs FOLDER or --files A.docx B.docx")
     if not paths:
         where = args.docs or "the given files"
         sys.exit("no package document found in %s.\n"
-                 "Expected a filename containing one of: %s\n"
+                 "Expected a filename containing HT10016, SUPPLEMENTAL or RESPONSE.\n"
                  "Use --files to name them explicitly, or --all to check "
-                 "every .docx in the folder." % (where, ", ".join(sorted(PACKAGE_NAMES))))
+                 "every .docx in the folder." % where)
 
     bad = 0
     for path in paths:
