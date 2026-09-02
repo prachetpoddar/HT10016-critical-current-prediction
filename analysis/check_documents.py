@@ -113,6 +113,9 @@ SUPERSEDED = {
     # absent or unreproducible, and each was wrong: the component was found on a
     # second search. They are listed here so no revision restores them.
     r"not present anywhere in the workflow": "the cohort-A extractions were located",
+    r"not reproducible from the deposited per-family cohorts": "0.409 dex is deposited",
+    r"at least three anchor compounds are available within the family": "K counts "
+                                          "measured points supplied per query",
     # Table S5 rows that no longer exist. The tables are generated from the
     # deposit but their introducing prose is not, which is how a description of
     # withdrawn rows outlived the rows themselves.

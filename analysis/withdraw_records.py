@@ -257,15 +257,38 @@ def main():
           % ", ".join(sorted(vd[vd.scope == "per_substructure"].substructure)))
     print()
 
-    if manifest and not args.dry_run:
+    if not args.dry_run:
+        # The register, not a log of this run. An earlier version wrote only the
+        # rows cut on the run that happened to execute, and because the script
+        # is idempotent a later run cut nothing for the two withdrawals that had
+        # already propagated and dropped them from the file. The response letter
+        # says all four withdrawals and their reasons are deposited here, and a
+        # reader can check that in one command, so every registered identifier is
+        # written on every run whether or not it still had rows to remove.
         os.makedirs(AUDIT, exist_ok=True)
         mpath = os.path.join(AUDIT, "withdrawn_records.csv")
+        cut_now = {}
+        for m in manifest:
+            cut_now.setdefault(m["identifier"], []).append(m)
+        rows = []
+        for rec in REGISTER:
+            hits = cut_now.get(rec["identifier"], [])
+            if hits:
+                for m in hits:
+                    rows.append(dict(m, status="removed on this run"))
+            else:
+                rows.append(dict(identifier=rec["identifier"],
+                                 citation=rec["citation"], source_file="",
+                                 withdrawn=rec["withdrawn"],
+                                 reason=rec["reason"], row="",
+                                 status="already absent from every table"))
         with open(mpath, "w", newline="") as fh:
-            w = csv.DictWriter(fh, fieldnames=list(manifest[0]))
+            w = csv.DictWriter(fh, fieldnames=list(rows[0]))
             w.writeheader()
-            for m in manifest:
-                w.writerow(m)
-        print("manifest: %s  (%d rows)" % (mpath, len(manifest)))
+            for r in rows:
+                w.writerow(r)
+        print("register: %s  (%d rows, %d identifiers)"
+              % (mpath, len(rows), len(REGISTER)))
         print("backups : %s" % backup)
 
     print("\nleft alone on purpose:")
