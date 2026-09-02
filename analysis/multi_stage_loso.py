@@ -347,8 +347,17 @@ def main():
 
     print("\nNo reading of Stage 2, on any cohort, reaches even a two-fold "
           "improvement on Stage 1, and the published comparison claims sixteen.")
+    # Round on write. np.polyfit goes through whatever LAPACK the host provides,
+    # so stage1_abs differs in the fifteenth significant digit between machines
+    # and the deposited file comes back modified from a clean checkout on a
+    # different BLAS. Ten decimals is seven more than any of these quantities is
+    # reported to, and it makes the artifact reproducible rather than merely
+    # correct.
     os.makedirs("audit", exist_ok=True)
-    pd.concat(frames).to_csv(OUT, index=False)
+    out = pd.concat(frames)
+    num = out.select_dtypes("number").columns
+    out[num] = out[num].round(10)
+    out.to_csv(OUT, index=False)
     print("written to %s" % OUT)
     if args.json:
         with open(args.json, "w") as fh:
