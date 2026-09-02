@@ -42,6 +42,23 @@ ANCHOR = os.path.join(DATA, "phase_3_p31_jc_anchor_per_paper.csv")
 DERIVED = os.path.join(DATA, "phase_3_p31_variance_decomposition.csv")
 BANDS = "A > 0.7 | B 0.3-0.7 | C < 0.3"
 
+# What the manuscript prints, pinned here so that a cohort change which is not
+# carried into the text fails loudly rather than sitting in a table nobody
+# recomputes. Every earlier version of this deposit disagreed with its own
+# manuscript on at least one of these.
+MANUSCRIPT = dict(
+    papers_contributing_anchor_rows=35,
+    physical_samples=69,
+    anchor_rows=105,
+    fitted_curve_papers=65,          # Table I, "Papers contributing fitted curves"
+    fitted_curve_compounds=40,       # Table I, "Distinct compounds with fitted curves"
+    extracted_points=4247,           # Table I, "Critical-current data points extracted"
+    temperature_axis_fits=414,       # Table I, "Temperature-axis partial fits"
+    field_axis_fits_ok=88,           # Table I, "Field-axis partial fits passing physicality"
+    field_axis_ok_papers=15,
+    candidate_compounds=183,         # Table I, "Candidate compounds evaluated"
+)
+
 failures = []
 
 
@@ -155,6 +172,29 @@ def main():
     check("no sample_form is the placeholder 'unknown'",
           "unknown" not in set(a.sample_form),
           "a form label must name a form, not the absence of one")
+
+    prov = pd.read_csv(os.path.join(DATA, "provenance_table_fitcohort_full.csv"))
+    bt = pd.read_csv(os.path.join(DATA, "phase_3_p44_post_UCLA_beta_T_fits.csv"))
+    fh = pd.read_csv(os.path.join(DATA, "phase_3_form3_fits_partial_cohortB_v2.csv"))
+    fh_ok = fh[fh.physicality == "ok"]
+    p57 = pd.read_csv(os.path.join(DATA, "phase_3_p57_de_novo_predictions.csv"),
+                      low_memory=False)
+    computed = dict(
+        papers_contributing_anchor_rows=a.paper_id.nunique(),
+        physical_samples=len(agg),
+        anchor_rows=len(a),
+        fitted_curve_papers=prov.identifier.nunique(),
+        fitted_curve_compounds=prov.compound.nunique(),
+        extracted_points=int(pd.to_numeric(prov.n_Jc_points, errors="coerce").sum()),
+        temperature_axis_fits=len(bt),
+        field_axis_fits_ok=len(fh_ok),
+        field_axis_ok_papers=fh_ok.arxiv_id.nunique(),
+        candidate_compounds=p57.compound_formula.nunique(),
+    )
+    for k, want in MANUSCRIPT.items():
+        got = computed[k]
+        check("manuscript %s" % k.replace("_", " "), got == want,
+              "deposit %d, manuscript %d" % (got, want))
 
     withdrawn = os.path.join("audit", "withdrawn_records.csv")
     if os.path.exists(withdrawn):
