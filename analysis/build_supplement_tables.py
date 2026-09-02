@@ -146,6 +146,16 @@ def table_s6(_banned):
     rows = []
     for _, r in pd.concat(picks).iterrows():
         emitted = r.refusal_flag == ""
+        # A refusal acts on a prediction target, not on a candidate, so a row
+        # can carry a reason code for the field axis and still carry the
+        # temperature-axis value the remaining gates allow: 321 of the 540
+        # Hc2-unavailable rows do. An earlier version of this generator printed
+        # "none" for every refused row, so the worked example contradicted both
+        # the file it excerpts and the paragraph introducing it. The value is
+        # now shown whenever the file carries one.
+        has = pd.notna(r.predicted_log_Jc)
+        has_ci = pd.notna(r.predicted_log_Jc_lower_95) and pd.notna(
+            r.predicted_log_Jc_upper_95)
         rows.append(dict(
             candidate=r.compound_formula,
             anchors="%.1f K / %s" % (r.Tc_anchor_K,
@@ -155,10 +165,10 @@ def table_s6(_banned):
                 "sample_form_conditional_median:", "Stage 2, ").replace(
                 "substructure_aggregate_median", "Stage 3, aggregate"),
             t="%.1f" % r.T_K, h="%.1f" % r.H_T,
-            log_jc="%.3f" % r.predicted_log_Jc if emitted else "none",
+            log_jc="%.3f" % r.predicted_log_Jc if has else "none",
             interval=("%.3f to %.3f" % (r.predicted_log_Jc_lower_95,
                                         r.predicted_log_Jc_upper_95))
-            if emitted else "none",
+            if has_ci else "none",
             refusal="none" if emitted else REFUSAL_PROSE.get(
                 r.refusal_flag, r.refusal_flag)))
     return rows
