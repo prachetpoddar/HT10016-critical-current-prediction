@@ -174,23 +174,36 @@ def main():
     if args.dry_run:
         print("\nnothing was written.")
         return 0
+    # Back up once and never again. This script is idempotent on its outputs,
+    # so a second run would copy the already-regenerated file over the record of
+    # what preceded it and the backup would quietly stop being a backup. The
+    # deposit has lost an audit trail this way once already, in the field-window
+    # gate, and the rule is the same here: a pre-state file is written only if
+    # it does not exist.
     backup = os.path.join("audit", "pre_regime_regeneration_20260902")
     os.makedirs(backup, exist_ok=True)
-    for p in (SF_OUT, REGIME_OUT):
-        if os.path.exists(p):
-            shutil.copy2(p, os.path.join(backup, os.path.basename(p)))
+
+    def keep(src):
+        dst = os.path.join(backup, os.path.basename(src))
+        if os.path.exists(src) and not os.path.exists(dst):
+            shutil.copy2(src, dst)
+            return True
+        return False
+
+    kept = [os.path.basename(x) for x in (SF_OUT, REGIME_OUT, P18) if keep(x)]
     sf.to_csv(SF_OUT, index=False)
     out.to_csv(REGIME_OUT, index=False)
     if os.path.exists(P18):
         p18 = pd.read_csv(P18)
-        shutil.copy2(P18, os.path.join(backup, os.path.basename(P18)))
-        keep = p18[p18.framing != "H_irr_or_empirical"]
-        new = descriptor_means(a)[list(p18.columns)]
-        pd.concat([new, keep], ignore_index=True).to_csv(P18, index=False)
+        other = p18[p18.framing != "H_irr_or_empirical"]
+        fresh = descriptor_means(a)[list(p18.columns)]
+        pd.concat([fresh, other], ignore_index=True).to_csv(P18, index=False)
         print("   descriptor table: H_irr_or_empirical rebuilt, %d rows -> %d; "
               "other framings untouched"
-              % ((p18.framing == "H_irr_or_empirical").sum(), len(new)))
-    print("\nwritten %s and %s\nbackups: %s" % (SF_OUT, REGIME_OUT, backup))
+              % ((p18.framing == "H_irr_or_empirical").sum(), len(fresh)))
+    print("\nwritten %s and %s" % (SF_OUT, REGIME_OUT))
+    print("backups: %s   %s" % (backup, ("wrote " + ", ".join(kept)) if kept
+                                else "already present, left untouched"))
     return 0
 
 
