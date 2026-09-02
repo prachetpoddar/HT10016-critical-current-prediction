@@ -483,7 +483,7 @@
              id="tspan50"
              x="52.006767"
              y="112.49968"
-             style="font-style:normal;font-size:7px;fill:#1a1a1a;stroke-width:1.11069">186 v3.2.2B fits</tspan></text></g><g
+             style="font-style:normal;font-size:7px;fill:#1a1a1a;stroke-width:1.11069">175 v3.2.2B fits</tspan></text></g><g
          id="patch_35"
          transform="translate(3,1.5)"><path
            d="m 111.85512,94.285984 h 5.15019 v -3.523819 h -5.15019 z"
@@ -551,7 +551,7 @@
            x="135.39417"
            y="101.02449"><tspan
              style="font-size:7px;fill:#1a1a1a"
-             id="tspan373">Magpie descriptors;</tspan></text><text
+             id="tspan373">max χ descriptor;</tspan></text><text
            style="font-size:7px;font-family:Helvetica;fill:#444444"
            id="text66"
            x="110.80697"
@@ -1243,7 +1243,7 @@
              id="tspan8"
              style="fill:#000000;fill-opacity:1;stroke-width:0;stroke-dasharray:none"
              x="253.03352"
-             y="158.68173">5 refusal conditions</tspan></text><text
+             y="158.68173">7 refusal conditions</tspan></text><text
            xml:space="preserve"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.08959px;font-family:Helvetica;-inkscape-font-specification:Helvetica;writing-mode:lr-tb;direction:ltr;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:square;stroke-dasharray:none;paint-order:markers stroke fill"
            x="246.68707"
@@ -1254,7 +1254,7 @@
              id="tspan9"
              style="stroke-width:0"
              x="246.68707"
-             y="166.40158">(substructure, Tc range,</tspan></text><text
+             y="166.40158">(reduced field, Hc2, T&gt;Tc, family</tspan></text><text
            xml:space="preserve"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.08959px;font-family:Helvetica;-inkscape-font-specification:Helvetica;writing-mode:lr-tb;direction:ltr;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:square;stroke-dasharray:none;paint-order:markers stroke fill"
            x="245.70917"
@@ -1265,7 +1265,7 @@
              id="tspan14"
              style="stroke-width:0"
              x="245.70917"
-             y="175.14893">K_min, precision, OOD)</tspan></text></g><g
+             y="175.14893">threshold, K_min, monotonic, OOD)</tspan></text></g><g
          id="line2d_3"><path
            d="M 245.540818 220.607275  L 245.814673 220.605525  L 246.088529 220.602325  L 246.362384 220.59665  L 246.63624 220.586895  L 246.910096 220.570638  L 247.183951 220.544386  L 247.457807 220.503314  L 247.731662 220.441085  L 248.005518 220.349821  L 248.279374 220.220323  L 248.553229 220.042666  L 248.827085 219.807203  L 249.10094 219.506016  L 249.374796 219.134681  L 249.648652 218.694156  L 249.922507 218.192446  L 250.196363 217.64566  L 250.470218 217.07807  L 250.744074 216.520917  L 251.01793 216.009894  L 251.291785 215.581518  L 251.565641 215.268879  L 251.839496 215.097431  L 252.113352 215.081575  L 252.387208 215.222656  L 252.661063 215.508781  L 252.934919 215.916471  L 253.208774 216.41384  L 253.48263 216.964706  L 253.756486 217.532895  L 254.030341 218.086032  L 254.304197 218.598314  L 254.578052 219.051966  L 254.851908 219.437419  L 255.125764 219.752428  L 255.399619 220.000487  L 255.673475 220.188965  L 255.94733 220.327292  L 256.221186 220.425433  L 256.495042 220.492791  L 256.768897 220.537537  L 257.042753 220.566321  L 257.316608 220.584258  L 257.590464 220.59509  L 257.86432 220.601429  L 258.138175 220.605027  L 258.412031 220.607007  L 258.685886 220.608063  L 258.959742 220.60861  L 259.233598 220.608885  L 259.507453 220.609019  L 259.781309 220.609082  L 260.055164 220.609111  L 260.32902 220.609124  L 260.602876 220.60913  L 260.876731 220.609132  L 261.150587 220.609133  L 261.424442 220.609134  L 261.698298 220.609134  "
            clip-path="url(#pf404119c26)"
@@ -1531,9 +1531,9 @@
            style="font-weight:700;font-size:8.474px;font-family:Helvetica;text-anchor:middle;fill:#333333"
            x="420.91531"
            y="106.32143"
-           id="text247">16× MAE reduction</text></g><g
+           id="text247">validation scope</text></g><g
          id="text_45"
-         transform="matrix(1.0469698,0,0,1.0773935,-18.842549,-18.876937)"><!-- Stage 1 LOSO 10.10 dex $\to$ --><g
+         transform="matrix(1.0469698,0,0,1.0773935,-18.842549,-18.876937)"><!-- Stage 1 LOSO 11.37 dex $\to$ --><g
            style="fill:#333333"
            transform="translate(377.79303,115.39575)"
            id="g270"><text
@@ -1543,9 +1543,9 @@
                x="-1.4327061"
                y="-0.84375"
                style="font-size:6.59089px;font-family:Helvetica;fill:#333333"
-               id="tspan247">Stage 1 LOSO 10.10</tspan></text></g></g><g
+               id="tspan247">Stage 1 LOSO 11.37</tspan></text></g></g><g
          id="text_46"
-         transform="matrix(1.0469698,0,0,1.0773935,-17.146029,-17.856437)"><!-- Stage 2 LOSO 0.43 dex $\beta_H$ --><g
+         transform="matrix(1.0469698,0,0,1.0773935,-17.146029,-17.856437)"><!-- Stage 2 within-family scope --><g
            style="fill:#333333"
            transform="translate(377.17303,120.52882)"
            id="g294"><text
@@ -1556,7 +1556,7 @@
                x="-4.2981181"
                y="1.940748"
                style="font-size:6.59089px;font-family:Helvetica;fill:#333333"
-               id="tspan271">Stage 2 LOSO 0.43 βH</tspan></text></g></g><g
+               id="tspan271">Stage 2: within-family scope</tspan></text></g></g><g
          id="text_47"
          transform="matrix(0.97117886,0,0,1.0002943,3.4449445,-0.0691001)"><text
            style="font-weight:700;font-size:9.13122px;font-family:Helvetica;text-anchor:middle;fill:#333333"
