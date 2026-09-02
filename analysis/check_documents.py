@@ -17,8 +17,11 @@ allowed is a superseded value stated as current. The test for the difference is
 whether its sentence carries one of the markers below, which is crude but is
 checkable by a reader and by a script, and which fails closed.
 
-Needs python-docx, which is imported as "docx" but installed as
-"pip install python-docx".
+Depends on nothing outside the standard library. A .docx is a zip holding an
+XML part, and the three things this script needs from it, paragraph text, table
+cell text and whether a run is italic, are all in that part. An earlier version
+imported python-docx and could not run in the environment it was written for,
+which for a consistency checker is the same as not existing.
 
     python analysis/check_documents.py --docs ~/Downloads
     python analysis/check_documents.py --files a.docx b.docx c.docx
@@ -39,12 +42,8 @@ import os
 import re
 import sys
 
-try:
-    import docx  # python-docx
-except ImportError:
-    sys.exit("this script needs python-docx:\n"
-             "    pip install python-docx\n"
-             "(the module is imported as 'docx' but the package is 'python-docx')")
+import xml.etree.ElementTree as ET
+import zipfile
 
 # A superseded value may appear when its sentence marks it as historical, either
 # by carrying one of these phrases or by naming the replacement value alongside
@@ -96,6 +95,9 @@ def sentences(text):
     return re.split(r"(?<=[.!?])\s+", text)
 
 
+W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+
+
 def doc_text(path):
     """Blocks of text, with referee quotations marked so they are exempt.
 
@@ -103,21 +105,33 @@ def doc_text(path):
     and those quotations name the numbers being corrected. A quotation is set
     wholly in italic, which is how it is identified here; its content is the
     referee's, not ours, and must not be edited to match our cohort.
+
+    Every paragraph in the document is read, including those inside tables,
+    which is what the check wants: a stale number in a table cell is as wrong as
+    one in a sentence.
     """
     # Only the response letter quotes referees, so the exemption is confined to
     # it. Applying it document-wide would let an italic caption hide a stale
     # number, which is the failure mode this script exists to catch.
     is_response = "RESPONSE" in os.path.basename(path).upper()
-    d = docx.Document(path)
+    try:
+        with zipfile.ZipFile(path) as z:
+            root = ET.fromstring(z.read("word/document.xml"))
+    except (zipfile.BadZipFile, KeyError) as e:
+        print("   skipped, not a readable .docx (%s)" % e.__class__.__name__)
+        return []
     out = []
-    for p in d.paragraphs:
-        quoted = (is_response and len(p.text.strip()) > 40 and bool(p.runs)
-                  and all(r.italic for r in p.runs if r.text.strip()))
-        out.append((p.text, quoted))
-    for t in d.tables:
-        for r in t.rows:
-            for c in r.cells:
-                out.append((c.text, False))
+    for para in root.iter(W + "p"):
+        runs = []
+        for r in para.iter(W + "r"):
+            text = "".join(t.text or "" for t in r.iter(W + "t"))
+            rpr = r.find(W + "rPr")
+            italic = rpr is not None and rpr.find(W + "i") is not None
+            runs.append((text, italic))
+        text = "".join(t for t, _i in runs)
+        quoted = (is_response and len(text.strip()) > 40 and bool(runs)
+                  and all(i for t, i in runs if t.strip()))
+        out.append((text, quoted))
     return out
 
 
