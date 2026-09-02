@@ -1,8 +1,7 @@
 axis,substructure,n_compounds,mae_train_at_least_2,mae_train_at_least_3,no_fold_at_least_2,no_fold_at_least_3
-T,iron_chalcogenide_11,4,0.21497577312400068,0.21497577312400068,False,False
-T,iron_other,2,,,True,True
-T,iron_pnictide_1111,4,1.7210731477929757,1.7210731477929757,False,False
-T,iron_pnictide_122,3,1.0922036634530738,,False,True
+T,iron_chalcogenide_11,5,0.9617981603941715,0.9617981603941715,False,False
+T,iron_pnictide_1111,4,1.7210731477929762,1.7210731477929762,False,False
+T,iron_pnictide_122,4,1.1184305880185523,1.1184305880185523,False,False
 H,conventional_AlB2,7,0.7531793918356584,0.7531793918356584,False,False
 H,iron_chalcogenide_11,3,1.0934874826615542,,False,True
 H,iron_pnictide_1111,3,3.1289129665510473,,False,True

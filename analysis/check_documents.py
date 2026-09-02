@@ -119,6 +119,10 @@ SUPERSEDED = {
     # absent or unreproducible, and each was wrong: the component was found on a
     # second search. They are listed here so no revision restores them.
     r"not present anywhere in the workflow": "the cohort-A extractions were located",
+    r"\b0\.215\b": "0.962 on the corrected chalcogenide cohort",
+    r"\b1\.092 across three compounds": "1.118 across four",
+    r"only as an external validation set": "six cuprate papers are in the fitted cohort",
+    r"lowest error of any family on either axis": "withdrawn with the 0.215",
     r"One row is one physical sample from one paper": "one row is one isotherm "
                                           "record; 105 records are 69 samples",
     r"not reproducible from the deposited per-family cohorts": "0.409 dex is deposited",
