@@ -48,7 +48,7 @@ CODE = "H_below_validated_reduced_field"
 # Second gate. Sec. III.C validates each family on each axis against a
 # screening threshold of 1 in the exponent, and Sec. III.E restricts dispatch to
 # families that pass. Applying that rule to the field axis on the corrected
-# cohort, iron chalcogenide 11-type is at 1.094 and iron pnictide 1111-type at
+# cohort, iron chalcogenide 11-type is at 1.093 and iron pnictide 1111-type at
 # 3.13, so neither passes; MgB2-class at 0.753 and iron pnictide 122-type at
 # 0.973 do. The manuscript previously reported the chalcogenide value while
 # still labelling that family field-validated and dispatching it, which is the
