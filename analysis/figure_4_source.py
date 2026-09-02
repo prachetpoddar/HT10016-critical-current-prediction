@@ -2,7 +2,20 @@
 """
 figure_4_source.py
 
-Figure 4 - Variance-decomposition diagnostic across populated substructures.
+Generator for Figure 3 of the manuscript, and the library that every other
+script uses for per-physical-sample aggregation and the variance decomposition.
+The name predates the figure numbering and is kept because verify_deposit.py,
+withdraw_records.py and permutation_test.py import from it.
+
+Figure-to-script mapping for this deposit:
+
+    Fig. 1  analysis/manuscript_figure_1.py
+    Fig. 2  analysis/manuscript_figure_2.py
+    Fig. 3  this file
+    Fig. 4  analysis/manuscript_figure_4.py
+    Fig. 5  analysis/manuscript_figure_5.py
+
+Variance-decomposition diagnostic across populated substructures.
 Three side-by-side panels (one per populated substructure), two-column width
 (178 mm), shared y-axis range.
 
@@ -47,10 +60,10 @@ ROOT = HERE.parent
 # and made load_cohort() and main() raise FileNotFoundError on a clean checkout,
 # so the deposited figure could not be regenerated from the deposited data.
 JC_ANCHOR_CSV = ROOT / "data" / "phase_3_p31_jc_anchor_per_paper.csv"
-OUT = ROOT / "figures" / "figure_4_variance_decomposition.png"
+OUT = ROOT / "figures" / "manuscript_figure_3.png"
 
 plt.rcParams.update({
-    "font.family": "Helvetica",
+    "font.family": ["Helvetica", "Nimbus Sans", "Arial", "Liberation Sans", "DejaVu Sans"],
     "font.size": 10,
     "axes.titlesize": 10,
     "axes.labelsize": 10,
