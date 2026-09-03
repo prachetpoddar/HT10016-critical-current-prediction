@@ -1,0 +1,21 @@
+pdf,page_read,y_axis,x_axis,y_scale,n_series,n_panels,n_measurement_temperatures,colour_or_mono,legend_keys,verdict
+YBa2Cu3O7__0506059,3,Jc (MA/cm2),field (T),linear,4,1,2,mono,sample and temperature,two isotherms only
+1111.3923v1,3,Jc (A/cm2),field (T),log,10,2,5,colour,temperature,yes
+10.1016_j.jallcom.2024.173999,5,Jc (A/cm2),H (T),log,10,2,5,colour,temperature,yes
+MgB2_0509475,3,current density (A/cm2),field (T),log,3,1,1,colour,doping at 5 K,single isotherm
+1004.3910v1,4,Jc (1e4 A/cm2),H (kOe),linear,5,1,5,colour,temperature,yes
+2412.08113v2,5,jc (A/cm2),H (kOe),log,5,1,5,colour,temperature (in plot),yes
+1606.01477v2,23,Jc (A/cm2),field (T),log,8,1,2,colour,substrate misorientation,two isotherms only
+1012.0894,3,Jc (A/cm2),field (T),log,2,1,1,colour,substrate,single isotherm
+2111.11670v1,8,Jc (A/m2),H (T),log,5,2,2,colour,alloy,two isotherms only
+1506.05183v1,4,Jc (A/cm2),field (T),log,3,6,6,colour,pressure,yes
+10.1007_s10854-026-16870-4,9,Jc (A/cm2),H (T),linear,5,1,1,colour,sample at 20 K,single isotherm
+9804161v1,3,Ic (uA),field (mT),linear,1,1,1,mono,none,critical current not density
+BaFeAs2_1001.3615,16,Jc (A/cm2),T (K),log,2,1,0,colour,sample,temperature axis not field
+MgB2__0710_1407,14,Jc (A/cm2),field (T),log,6,2,1,colour,sample and sintering temperature,single isotherm
+10.1038_srep22278,3,Js (A/cm2),field (T),log,7,1,7,colour,temperature (key in panel a),yes
+MgB2_0310196,6,Jc (A/cm2),field (Oe),log,10,2,2,mono,doping and sintering temperature,two isotherms only
+0912.4906v1,14,jc (A/cm2),field (T),log,12,4,6,mono,sintering condition,yes
+cond-mat_0110094,12,Jp (MA/cm2),T (K),log,5,4,0,mono,matching field,temperature axis not field
+SmFeAsO_0808.3666,16,Jc (A/cm2),field (T),log,3,1,1,colour,doping at 5 K,single isotherm
+2308.02128,25,Jc (A/cm2),field (T),log,2,1,1,colour,doping at 7 K,single isotherm

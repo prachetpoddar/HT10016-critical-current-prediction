@@ -127,8 +127,14 @@ Ranked by what it repairs in the manuscript, not by convenience:
 3. **The anchor table.** One (T, H, Jc) point per physical sample is far cheaper
    than a full curve, and the variance decomposition is the paper's
    pre-registered outcome.
-4. **The 137 archived PDFs** whose captions name both an Hc2(T) figure and a
-   Jc(H) figure, of which only 20 are currently used.
+4. **The wider archive.** A caption screen over all 2597 PDFs grades 422 as
+   carrying a Jc(H) figure with several isotherms. A random sample of 20 of
+   those was opened: every one has a real Jc figure, but only 7 carry three or
+   more measurement temperatures on a field axis, because in 8 of the 20 the
+   legend keys doping, sample or pressure rather than temperature. The usable
+   pool is therefore of order 150 papers, not 422. See
+   `audit/jc_figure_screen_precision.md` and
+   `audit/jc_screen_precision_sample.csv`.
 
 ## Status of the cohort re-measurement, and two limits found
 
@@ -150,6 +156,19 @@ coloured isotherms come out in the right order and at the right magnitudes while
 the black 4 K series reads 2.82e6 against the paper's stated 3.9 MA/cm2 and
 below its own 8 K curve. Until a marker-shape or tick-exclusion test is added,
 treat any black series as unmeasured rather than as measured.
+
+**Monochrome figures cannot be separated at all.** `series_colours` keeps only
+non-grey colours, so a figure whose series are distinguished by filled and open
+markers returns nothing and reads as "no figure found". Six of the 23 figures
+opened by hand in this audit are monochrome, so this is about a quarter of the
+pool, not an edge case. Series separation there needs marker shape.
+
+**Frame detection is scale-sensitive, and in the wrong direction.**
+`find_axes_boxes` frames `0507652v1` p17 at render scale 3 but not at 4 or 6,
+and `MgB2_0104395` p9 at 3 and 4 but not 6. A hairline frame stays one pixel
+wide however far the page is scaled, so the run it must form gets longer while
+its anti-aliased gaps do not, and the 85% coverage test fails. Sweep the scale
+rather than fixing it.
 
 **Detection rate.** 11 of 26 papers yield a figure the builder can frame at all.
 The rest need the crop supplied by eye. Realistic throughput with confirmation is
