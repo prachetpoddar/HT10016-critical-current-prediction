@@ -266,6 +266,22 @@ def main():
         check("manuscript %s" % k.replace("_", " "), got == want,
               "deposit %d, manuscript %d%s" % (got, want, note))
 
+    # The upper critical field is the other quantity carried in more than one
+    # deposited table, and nothing here checked it until
+    # analysis/audit_hc2_tables.py was written. It is run as a single line so
+    # that a cross-table inconsistency in Hc2 or Tc cannot pass unnoticed
+    # simply because this script never looked.
+    import subprocess
+    r = subprocess.run([sys.executable,
+                        os.path.join("analysis", "audit_hc2_tables.py")],
+                       capture_output=True, text=True)
+    bad = [ln.strip() for ln in r.stdout.splitlines() if "FAILED" in ln
+           and "check(s)" not in ln]
+    check("Hc2 and Tc are consistent across the deposited tables",
+          r.returncode == 0,
+          "run analysis/audit_hc2_tables.py: " + "; ".join(
+              b.split("FAILED")[0].strip() for b in bad) if bad else "")
+
     withdrawn = os.path.join("audit", "withdrawn_records.csv")
     if os.path.exists(withdrawn):
         w = pd.read_csv(withdrawn)

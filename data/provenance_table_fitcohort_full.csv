@@ -32,7 +32,7 @@ MAGLAB_11_6K,FeSe_Te_doped,iron_chalcogenide_11,thin_film,14.0,paper-reported (C
 MAGLAB_La1111_4_2K,LaFeAsO_F_doped,iron_pnictide_1111,thin_film,26.0,paper-reported (Cohort B extraction),50.25,Tier_2_per_substructure_Hirr_ratio_0.6,14,Cohort B only (β_H partial)
 MAGLAB_Nd1111_10K,NdFeAsO_F_doped,iron_pnictide_1111,thin_film,50.0,paper-reported (Cohort B extraction),115.2,Tier_2_per_substructure_Hirr_ratio_0.6,72,Cohort B only (β_H partial)
 MAGLAB_Nd1111_4_2K,NdFeAsO_F_doped,iron_pnictide_1111,thin_film,50.0,paper-reported (Cohort B extraction),119.15,Tier_2_per_substructure_Hirr_ratio_0.6,10,Cohort B only (β_H partial)
-10.1016/j.physc.2011.02.004,PrFeAsO0.6F0.12,iron_pnictide_1111,polycrystal,51.0,paper-reported (Cohort B extraction),120.0,Tier_3_literature_default,356,Cohort B only (β_H partial)
+10.1016/j.physc.2011.02.004,PrFeAsO0.6F0.12,iron_pnictide_1111,polycrystal,51.0,paper-reported (Cohort B extraction),24.4013,Tier_1_paper_Hirr_at_7.0K_arXiv_1002.0208_Eq5,356,Cohort B only (β_H partial)
 10.1016/j.physc.2009.05.098,SmFeAsO0.8F0.2,iron_pnictide_1111,polycrystal,55.0,paper-reported (Cohort B extraction),86.0,Tier_3_literature_default,234,Cohort B only (β_H partial)
 MAGLAB_Sm1111_4_2K,SmFeAsO_F_doped,iron_pnictide_1111,thin_film,55.0,paper-reported (Cohort B extraction),51.3,Tier_2_per_substructure_Hirr_ratio_0.6,44,Cohort B only (β_H partial)
 2305.10034v1,La2FeAs2O,iron_pnictide_1111,not recorded,28.0,paper-reported (v3.2.1 / Cohort A vision pass),10.0,literature catalog (substructure reference; no per-paper extraction),39,fully fittable

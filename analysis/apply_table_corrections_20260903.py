@@ -164,6 +164,23 @@ def main():
         n += 1
     print("3. moved %d PrFeAsO0.6F0.12 fits onto the paper's own Hirr line" % n)
 
+    # The provenance table carries one Hc2 per paper and was left behind by the
+    # step above, so it went on saying Tier_3 while the fits said Tier_1. That
+    # is the half-applied correction this script exists to prevent, caught by
+    # analysis/audit_hc2_tables.py. The value recorded is the scale at the
+    # paper's lowest fitted isotherm, matching how the other Tier_1 rows are
+    # written.
+    lowest = min(refit, default=None)
+    if lowest is not None:
+        for r in prows:
+            if r["identifier"] == "10.1016/j.physc.2011.02.004":
+                r["Hc2_anchor_T"] = refit[lowest]["Hc2_T_used"]
+                r["Hc2_provenance"] = (
+                    "Tier_1_paper_Hirr_at_%.1fK_arXiv_1002.0208_Eq5" % lowest)
+                print("   provenance row updated to %s T, %s"
+                      % (r["Hc2_anchor_T"], r["Hc2_provenance"]))
+        write(PROV, prows, pcols)
+
     write(FITS_H, rows_h, cols_h)
     write(FITS_T, rows_t, cols_t)
 
