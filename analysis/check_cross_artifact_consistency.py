@@ -101,9 +101,20 @@ STALE = {
     "0.012, 0.005, and 0.055 dex": "pre-gate field shifts",
     "factor of about 2.5 in the critical current":
         "the interval is 0.82 dex, a factor of 6.7",
-    "the 125 the dispatch routine emits": "now 85",
+    "the 125 the dispatch routine emits": "now 84",
     "53 chalcogenide": "that family now emits nothing",
     "37 iron pnictide 122-type records": "that family now emits nothing",
+    # The temperature-window gate, which refused 93 targets and moved every
+    # number derived from the emitted set.
+    "0.82 dex": "interval width before the temperature gate, now 0.61",
+    "factor of about 6.7": "now about 4.1",
+    "0.41 dex around each curve": "Fig. 5 half-width, now 0.31",
+    "one-sigma uncertainty of about 0.21 dex": "now 0.16",
+    "256 predictions": "emitted targets, now 163",
+    "90 of the 186 fits": "now 89 of 159",
+    "29 of the 33 temperature-axis": "the cohort holds 20 papers",
+    "233 / 183 / 85": "Table IV combined row, now 233 / 183 / 84",
+    "105 / 103 / 85": "Table IV MgB2 row, now 105 / 103 / 84",
 }
 
 # Tokens that ARE stale and have NOT been corrected yet, listed so that the

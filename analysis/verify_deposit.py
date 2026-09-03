@@ -71,9 +71,11 @@ MANUSCRIPT_NOT_PRINTED = dict(
     physical_samples=60,
 )
 MANUSCRIPT_NOT_YET_LOCATED = dict(
-    dispatched_compounds=85,
+    # Moved by analysis/apply_temperature_window_gate.py, which refused the
+    # 93 targets sitting at reduced temperature 0.7 or above.
+    dispatched_compounds=84,
     dispatch_tuples=2097,
-    emitted_targets=256,
+    emitted_targets=163,
     candidate_records=233,
     calibration_retained=212,
     calibration_refused=21,
