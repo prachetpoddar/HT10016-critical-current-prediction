@@ -129,3 +129,38 @@ Ranked by what it repairs in the manuscript, not by convenience:
    pre-registered outcome.
 4. **The 137 archived PDFs** whose captions name both an Hc2(T) figure and a
    Jc(H) figure, of which only 20 are currently used.
+
+## Status of the cohort re-measurement, and two limits found
+
+`analysis/figure_spec_builder.py` drafts a spec by finding the axes box on the
+page, reading the tick labels, probing the series colours inside the frame and
+pairing each `N K` legend label with the nearest coloured marker to its left.
+
+It does not work well enough to be trusted unattended. Over the 26 cohort PDFs
+it locates a Jc figure with a usable frame in 11, and its legend pairing
+recovers a complete set of series in none of them. Since a wrong colour silently
+relabels an isotherm, which is the exact failure this whole exercise exists to
+remove, the builder is an assistive probe: it reports the box, the ticks and the
+candidate colours, and a person confirms the legend before anything is measured.
+
+**Black series are unreliable.** The plot frame, the tick marks and the axis
+annotations are the same colour as a black data series, and masking the PDF text
+layer removes the annotations but not the ticks. On 2207.06629 the seven
+coloured isotherms come out in the right order and at the right magnitudes while
+the black 4 K series reads 2.82e6 against the paper's stated 3.9 MA/cm2 and
+below its own 8 K curve. Until a marker-shape or tick-exclusion test is added,
+treat any black series as unmeasured rather than as measured.
+
+**Detection rate.** 11 of 26 papers yield a figure the builder can frame at all.
+The rest need the crop supplied by eye. Realistic throughput with confirmation is
+a handful of papers per sitting, not a single batch run.
+
+Completed so far:
+
+| paper | figure | points | check against the paper |
+|---|---|---|---|
+| 2012.13723 | FIG. 4 | 266 | 1.93e6 at 0.09 T against a stated 2.2 MA/cm2 self-field |
+| 2207.06629 | Figure 4 | 319 | coloured series ordered correctly; black 4 K series wrong |
+
+Both are 0.0% at two significant figures or fewer, with 266 of 266 and 315 of
+319 distinct values.

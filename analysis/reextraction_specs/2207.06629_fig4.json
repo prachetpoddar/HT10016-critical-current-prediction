@@ -1,0 +1,27 @@
+{
+  "paper_id": "2207.06629v1.pdf",
+  "arxiv_id": "2207.06629",
+  "figure": "Figure 4",
+  "compound": "Ba1-xKxFe2As2",
+  "sample_form": "thin_film",
+  "field_orientation": "H//c",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/audit/arxiv_pdfs/2207.06629v1.pdf",
+  "page": 4,
+  "clip": [0.1218, 0.0789, 0.4579, 0.3422],
+  "dpi_scale": 4.0,
+  "inset": 6,
+  "mask_text": true,
+  "n_bins": 40,
+  "x": {"log": false, "label": "field_T"},
+  "y": {"log": true, "label": "Jc_A_per_cm2"},
+  "series": [
+    {"name": "4K",  "temperature_K": 4.0,  "rgb": [0, 0, 0],       "tol": 42},
+    {"name": "8K",  "temperature_K": 8.0,  "rgb": [120, 0, 240],   "tol": 45},
+    {"name": "12K", "temperature_K": 12.0, "rgb": [0, 0, 240],     "tol": 45},
+    {"name": "16K", "temperature_K": 16.0, "rgb": [0, 168, 0],     "tol": 45},
+    {"name": "20K", "temperature_K": 20.0, "rgb": [192, 192, 0],   "tol": 45},
+    {"name": "24K", "temperature_K": 24.0, "rgb": [240, 120, 0],   "tol": 45},
+    {"name": "28K", "temperature_K": 28.0, "rgb": [240, 0, 0],     "tol": 45},
+    {"name": "32K", "temperature_K": 32.0, "rgb": [240, 0, 240],   "tol": 45}
+  ]
+}
