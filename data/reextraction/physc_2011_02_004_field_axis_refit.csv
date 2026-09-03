@@ -1,0 +1,13 @@
+fixed_axis_value,n_pts,Hc2_source,Hc2_T_used,H_axis_range_normalized,beta,SE_beta,log_Jc_partial,provenance
+7.0,49,Tier_3_literature_default,120.0,0.1217,7.2392,1.7053,5.86,literature default
+7.0,49,Tier_1_paper_Hirr,23.931,0.6101,0.9829,0.2629,5.8429,arXiv 1002.0208 FIG.7 / Eq.(5)
+10.0,62,Tier_3_literature_default,120.0,0.1186,3.4941,1.5171,5.5597,literature default
+10.0,62,Tier_1_paper_Hirr,20.8087,0.6839,0.3515,0.1857,5.547,arXiv 1002.0208 FIG.7 / Eq.(5)
+15.0,55,Tier_3_literature_default,120.0,0.1169,2.9874,1.2495,5.2577,literature default
+15.0,55,Tier_1_paper_Hirr,16.0116,0.8758,0.2219,0.0853,5.2514,arXiv 1002.0208 FIG.7 / Eq.(5)
+20.0,56,Tier_3_literature_default,120.0,0.1165,5.215,1.0209,4.9856,literature default
+20.0,50,Tier_1_paper_Hirr,11.7443,0.9577,0.0932,0.0519,4.9585,arXiv 1002.0208 FIG.7 / Eq.(5)
+25.0,65,Tier_3_literature_default,120.0,0.1162,10.8227,1.1709,4.7642,literature default
+25.0,48,Tier_1_paper_Hirr,8.0367,0.9472,-0.0022,0.0715,4.6916,arXiv 1002.0208 FIG.7 / Eq.(5)
+30.0,69,Tier_3_literature_default,120.0,0.0662,29.7358,2.1874,4.5414,literature default
+30.0,52,Tier_1_paper_Hirr,4.9282,0.9583,0.2756,0.08,4.4591,arXiv 1002.0208 FIG.7 / Eq.(5)

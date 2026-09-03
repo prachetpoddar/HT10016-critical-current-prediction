@@ -1,0 +1,14 @@
+paper,compound,tier3_fits,fits_at_ceiling,Jc_series_verdict,Hc2_default_T,Hc2_recovered,provenance,note
+10.1016/j.physc.2011.02.004,PrFeAsO0.6F0.12,6,0,CHECK (named route),120.0,"H_irr(0)=31.9 T, n=1.7",arXiv 1002.0208 FIG. 7 + Eq. (5) fit stated in text,"refitted; window 0.07-0.12 -> 0.61-0.96, all six inside the applicability band"
+10.1016/j.cjph.2024.09.042,FeSeTe,7,3,CHECK (vision),47.0,Hc2 and Hirr vs T present,"Fig. 10 vortex phase diagram, 90% rho_n criterion",not yet digitised
+10.1038/s41598-025-95932-9,Bi2Sr2CaCu2O8,6,6,FAIL (vision),100.0,Hc2 discussed in text,"12 Hc2 tokens in text, no Hc2(T) figure caption",Jc series is FAIL-graded; Hc2 alone cannot rescue
+10.1016/j.physc.2009.03.028,Ba(Fe1-xCox)2As2,9,0,FAIL (vision),50.0,none found,"6 Hc2 tokens, no Hc2(T) figure",Prozorov et al.; Jc series FAIL-graded
+10.1016/j.jpcs.2026.113652,Bi1.6Pb0.4Sr2Ca2Cu3O10,6,6,FAIL (vision),100.0,none found,"3 tokens, no figure",Jc FAIL-graded
+10.1016/j.physc.2016.05.023,FeSe1-xSx,10,0,FAIL (vision),30.0,none found,"1 token, no figure",Jc FAIL-graded
+10.1016/j.jallcom.2013.04.183,Bi2Sr2-xNixCa2Cu3O,8,8,FAIL (vision),100.0,none found,"2 tokens, no figure",Jc FAIL-graded
+10.1038/s41467-025-55880-4,Bi2.1Sr1.9CaCu2O8,6,6,FAIL (vision),100.0,none found,"0 tokens, no figure",Jc FAIL-graded
+10.1016/j.ceramint.2024.10.058,La2SrCuO4,5,0,FAIL (vision),50.0,none found,"0 tokens, no figure",Jc FAIL-graded
+10.1016/0921-4534(96)00225-0,YBaCuO,3,3,PASS (vision),130.0,none found,"0 tokens, no figure",no critical-field data in the paper; the default cannot be replaced
+10.1016/j.physc.2014.03.020,BaFe2As2,1,0,CHECK (vision),60.0,none found,"1 token, no figure",
+10.1016/j.physc.2009.05.098,SmFeAsO0.8F0.2,9,1,CHECK (named route),86.0,none found in the archived PDF,archived PDF is the first page only,full text needed
+10.1088/0953-2048/29/3/035013,FeSe0.5Te0.5,7,1,PASS (named route),47.0,not checked,PDF not present in the archive,cannot be assessed
