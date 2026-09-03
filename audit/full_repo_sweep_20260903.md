@@ -70,22 +70,57 @@ All five source papers are complete and reachable in the upstream tree. The two
 "withdrawn (re-extract)" papers were never entered in
 `audit/withdrawn_records.csv`, which is why `verify_deposit.py` cannot see them.
 
-### 2.2 Outcome A rests on two rows the repair plan says to withdraw
+### 2.2 Outcome A and the polycrystal cell: corrected reading
+
+An earlier version of this section said the A-to-C move showed Outcome A was
+fragile. That was wrong, and the hand derivation shows why.
 
 `physc.2011.05.018`'s two rows ARE the entire `polycrystal` cell of
-`iron_chalcogenide_11`, at log10 Jc 4.699 and 5.000 against 6.07 for single
-crystal and 5.96 for thin film. Outcome A is that gap.
+`iron_chalcogenide_11`. Cell means, over 10 physical samples, grand mean 5.7920:
 
-| | eta^2 | band | n |
-|---|---|---|---|
-| baseline | 0.7687 | **A** | 10 |
-| withdraw physc.2011.05.018 as planned | **0.0385** | **C** | 8 |
+| cell | n | mean | deviation | contribution to SS_between |
+|---|---|---|---|---|
+| polycrystal | 2 | 4.8495 | -0.9425 | **1.7766** |
+| single_crystal | 5 | 6.0711 | +0.2792 | 0.3896 |
+| thin_film | 3 | 5.9550 | +0.1631 | 0.0798 |
 
-That extraction is graded FAIL, tier A in `audit/extraction_integrity.csv` with
-flags `arithmetic duplicate_series field_beyond_hc2 grid_quantized`, and
-`audit/isotherm_head_test.csv` flags its round heads. The paper's clearest
-conditioning result rests on two anchor values from one Tier-A-FAIL extraction
-the deposit's own plan marks for withdrawal.
+SS_between 2.2460, SS_total 2.9216, eta^2 = 0.7687. The polycrystal cell is 79%
+of the between-group sum of squares. Single crystal and thin film differ by
+0.116 dex, which is nothing.
+
+So eta^2 = 0.7687 encodes one statement: **polycrystalline FeTeSe carries about
+fourteen times lower Jc than single crystals or thin films.** That is the most
+physically expected result in the table, weak-link grain boundaries, and the
+magnitudes are ordinary: 5e4 and 1e5 A/cm2 for sintered polycrystal against
+1.2e6 and 9e5 for crystals and films.
+
+Removing that cell does not test the result. It removes the contrast the
+diagnostic exists to detect and leaves eta^2 answering a different question, do
+single crystals and thin films differ, whose honest answer is no. The 0.0385 is
+correct arithmetic for that question and is not a refutation of Outcome A.
+
+**The result is robust to the extraction defect.** The FAIL flags are about
+curve shape, not magnitude: `duplicate_series` (the T=2.0 series equals T=5.0),
+`arithmetic` and `grid_quantized` (values in exact steps of 5000, 2000, 1000),
+and `field_beyond_hc2` (max H 50 T against a recorded 47 T). Perturbing both
+anchors by one quantisation grid step:
+
+| | eta^2 | band |
+|---|---|---|
+| one step down | 0.7819 | A |
+| **as deposited** | **0.7687** | **A** |
+| one step up | 0.7559 | A |
+
+Both anchors would have to be too low by **0.20 dex, a factor of 1.6 in Jc**, in
+the same direction, to lose band A. The quantisation step on 5e4 read to the
+nearest 5000 is at most 0.04 dex.
+
+**The real limitation is narrower, and it stands.** The polycrystal cell rests
+on one paper and two specimens, sintered at 600 and 680 C. Single crystal has
+two source papers, thin film four. A conditioning result whose decisive cell has
+one source is a single-source result however sound the extraction, and that is
+what should be said in the paper. Re-extracting `physc.2011.05.018` would
+settle the extraction grade; it would not add a second polycrystal source.
 
 ### 2.3 Other traced defects
 
