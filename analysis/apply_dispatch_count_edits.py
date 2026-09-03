@@ -13,12 +13,22 @@ The provenance of the two figures that change most:
   * 239 records / 185 compounds / 2151 tuples was the cohort before the
     withdrawals. It is 233 / 183 / 2097 now, and 233 x 9 = 2097 holds as it
     did before.
-  * 0.39 dex was the median 95% interval width over a pre-gate population of
-    1671 rows carrying either an emitted or a withheld value. Over the 256
-    rows the gate actually emits it is 0.825 dex, a factor of about 6.7 rather
-    than 2.5. analysis/manuscript_figure_5.py already computes the envelope
-    half-width from the deposit and draws 0.41; only the captions still said
-    0.19 and 0.39.
+  * 0.39 dex was the median 95% interval width over the predictions the
+    deposit emitted BEFORE the reduced-field gate and the record withdrawals.
+    An earlier note here said it was a population of 1671 rows carrying an
+    emitted or a withheld value; that was wrong and gives 0.379. The figure is
+    exactly reproducible: at commit 8ad8d43 the prediction table held 2151 rows
+    over 185 compounds, the same emission test returned 1386 rows, and their
+    median full width is 0.388328 dex, whose half is 0.194 and whose antilog is
+    2.445. That is the 0.39, the 0.19 and the 2.5 the documents printed, all
+    three from one population. On the 256 rows the gate now emits the median is
+    0.825 dex, a factor of 6.7. analysis/manuscript_figure_5.py already
+    computes the envelope half-width from the deposit and draws 0.41; only the
+    captions still said 0.19 and 0.39.
+  * The one-sigma value quoted beside the width is derived from it, as
+    width / (2 x 1.95996). It read 0.10 dex, which is the sigma of 0.388, and
+    is 0.21 dex for the corrected width. Nothing tracked it, so it had to be
+    added to this list by hand.
 
 Held back, because they are claims and not counts. Two of the three dispatch
 families now emit nothing at all: every one of iron chalcogenide 11-type's 441
@@ -64,6 +74,21 @@ import pandas as pd  # noqa: E402
 from apply_manuscript_edits import apply  # noqa: E402
 
 
+# The transition-temperature range of each family's calibration cohort, as the
+# supplement states it. The inside/above split below is recomputed against
+# these rather than inherited from the pre-withdrawal text, which asserted
+# "one above it" and would have stayed at one however the cohort moved.
+CALIBRATION_RANGE = {
+    "iron_chalcogenide_11": (8.0, 14.5),
+    "iron_pnictide_122": (20.0, 38.0),
+    "conventional_AlB2": (39.0, 39.0),
+}
+
+
+def _words(n):
+    return {0: "none", 1: "one", 2: "two", 3: "three"}.get(n, str(n))
+
+
 def numbers():
     t = pd.read_csv(os.path.join("data",
                                  "phase_3_p56_candidate_tier_assignment.csv"))
@@ -74,7 +99,26 @@ def numbers():
     width = float((em.predicted_log_Jc_upper_95
                    - em.predicted_log_Jc_lower_95).median())
     has = int(t.Hc2_T.notna().sum())
+    keep = t[t.tier != "refused_calibration_domain"]
+    inside = above = 0
+    for _, r in keep.iterrows():
+        lo, hi = CALIBRATION_RANGE[r.substructure_family]
+        if r.Tc_K >= lo:
+            above += r.Tc_K > hi
+            inside += lo <= r.Tc_K <= hi
+    # The tier column is the deposit's own answer to the same question, so a
+    # disagreement here means one of the two is wrong and neither should be
+    # printed.
+    graded = int((t.tier == "graded_confidence").sum())
+    high = int((t.tier == "high_confidence").sum())
+    if inside + above != high or len(keep) - high != graded:
+        raise SystemExit(
+            "the calibration-range split disagrees with the tier column: "
+            "%d inside + %d above vs %d high_confidence, %d below vs %d graded"
+            % (inside, above, high, len(keep) - high, graded))
     return dict(
+        inside=int(inside),
+        above=int(above),
         records=len(t),
         compounds=int(p.compound_formula.nunique()),
         tuples=len(p),
@@ -118,6 +162,14 @@ def edits(N):
              "and each prediction target, of which %d compounds receive at "
              "least one dispatched target" % (N["compounds"], N["dispatched"]),
              "conclusion, recomputed", None),
+            ("Under an approximately Gaussian interpretation this "
+             "corresponds to a pointwise one-sigma uncertainty of about "
+             "0.10 dex.",
+             "Under an approximately Gaussian interpretation this corresponds "
+             "to a pointwise one-sigma uncertainty of about %.2f dex."
+             % (N["width"] / (2 * 1.959964)),
+             "one sigma is derived from the interval width and moved with it",
+             None),
             ("is 0.39 dex in log10 Jc, a factor of about 2.5 in Jc",
              "is %.2f dex in log10 Jc, a factor of about %.1f in Jc"
              % (N["width"], N["factor"]),
@@ -158,9 +210,12 @@ def edits(N):
             ("130 records fall below their family range and 88 fall at or "
              "above it, of which 87 are inside the range and one above it",
              "%d records fall below their family range and %d fall at or "
-             "above it, of which %d are inside the range and one above it"
-             % (N["below"], N["at_or_above"], N["at_or_above"] - 1),
-             "calibration-range classification, recomputed", None),
+             "above it, of which %d are inside the range and %s above it"
+             % (N["below"], N["at_or_above"], N["inside"],
+                _words(N["above"])),
+             "calibration-range classification; the inside/above split is "
+             "recomputed against the family ranges the supplement states, not "
+             "carried over as 'one above'", None),
             ("Missing upper-critical-field anchors produce refusals for 25.1% "
              "of candidate-grid tuples. Target temperatures above the "
              "transition temperature produce refusals for 10.5% of "

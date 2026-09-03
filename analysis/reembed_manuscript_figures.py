@@ -23,6 +23,13 @@ Usage:
 The mapping below is by order of appearance in the document, which is the order
 Figures 1 to 5 are placed. It is asserted rather than assumed: the script
 refuses to write unless it finds exactly five drawings.
+
+Every drawing has its extent recomputed, not only the ones whose image is
+replaced. Figures 2 and 4 were written by whatever tool first built the
+document and carry heights that disagree with their own aspect ratio by 736 and
+4012 EMU; both are under a tenth of a percent and invisible, but there is no
+reason to keep a figure stretched by any amount once the correct height is one
+line of arithmetic.
 """
 import os
 import re
@@ -87,36 +94,49 @@ def main():
         pieces.append(doc[at:s])
         blk = doc[s:e]
         at = e
-        if n not in REPLACE:
-            pieces.append(blk)
-            continue
         m = re.search(r'r:embed="([^"]+)"', blk)
         if not m or m.group(1) not in target:
             sys.exit("drawing %d has no resolvable image relationship" % n)
         part = "word/" + target[m.group(1)]
-        new = REPLACE[n]
-        w, h = Image.open(new).size
-        cx = re.search(r'<wp:extent cx="(\d+)" cy="(\d+)"/>', blk)
+        new = REPLACE.get(n)
+        old_w, old_h = Image.open(zin.open(part)).size
+        w, h = Image.open(new).size if new else (old_w, old_h)
+        # Whitespace inside these tags is legal OOXML, so the patterns tolerate
+        # it. An earlier version required the exact serialization and re.sub
+        # then silently did nothing on a document written by a different tool.
+        WP = r'<wp:extent\s+cx="(\d+)"\s+cy="(\d+)"\s*/>'
+        AX = r'<a:ext\s+cx="(\d+)"\s+cy="(\d+)"\s*/>'
+        cx = re.search(WP, blk)
+        ax = re.search(AX, blk)
+        # Both tags are required. Word takes the picture frame from a:ext, so
+        # updating wp:extent alone renders the figure at the wrong aspect ratio
+        # while every printed diagnostic, which reads wp:extent, says success.
         if not cx:
             sys.exit("drawing %d has no wp:extent" % n)
+        if not ax:
+            sys.exit("drawing %d has no a:ext beside its wp:extent" % n)
         keep_cx = int(cx.group(1))
         cy = round(keep_cx * h / w)
         before = "%s x %s" % (cx.group(1), cx.group(2))
-        blk = re.sub(r'<wp:extent cx="\d+" cy="\d+"/>',
-                     '<wp:extent cx="%d" cy="%d"/>' % (keep_cx, cy), blk)
-        blk = re.sub(r'<a:ext cx="\d+" cy="\d+"/>',
-                     '<a:ext cx="%d" cy="%d"/>' % (keep_cx, cy), blk)
-        old_w, old_h = Image.open(zin.open(part)).size
-        swap[part] = open(new, "rb").read()
-        print("   Figure %d  %s" % (n, new))
-        print("      pixels  %dx%d -> %dx%d" % (old_w, old_h, w, h))
+        if (int(cx.group(1)), int(cx.group(2))) == (keep_cx, cy) and not new:
+            pieces.append(blk)
+            continue
+        blk, nwp = re.subn(WP, '<wp:extent cx="%d" cy="%d"/>' % (keep_cx, cy),
+                           blk)
+        blk, nax = re.subn(AX, '<a:ext cx="%d" cy="%d"/>' % (keep_cx, cy), blk)
+        if nwp != 1 or nax != 1:
+            sys.exit("drawing %d: rewrote %d wp:extent and %d a:ext, expected "
+                     "one of each" % (n, nwp, nax))
+        if new:
+            swap[part] = open(new, "rb").read()
+            print("   Figure %d  %s" % (n, new))
+            print("      pixels  %dx%d -> %dx%d" % (old_w, old_h, w, h))
+        else:
+            print("   Figure %d  extent only, image unchanged" % n)
         print("      extent  %s -> %d x %d EMU" % (before, keep_cx, cy))
         pieces.append(blk)
     pieces.append(doc[at:])
     doc = "".join(pieces)
-
-    if not swap:
-        sys.exit("nothing to replace")
 
     tmp = dst + ".part"
     with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:

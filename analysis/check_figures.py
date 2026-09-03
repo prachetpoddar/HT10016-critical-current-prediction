@@ -12,15 +12,18 @@ through a whole revision, and how the copy in figures/ kept asserting 65, 40,
 
 Three checks, in the order a stale figure gets there:
 
-  1. Figure 1 regenerates from the current deposit to the same pixels as the
-     committed PNG. The generator reads analysis/figure_counts.py, so this
-     fails whenever the committed figure predates a change to the tables.
-  2. Figure 2 regenerates to the same pixels as the committed PNG. It prints
-     only one number, the retrieval corpus, but a silent style drift matters
-     as much as a silent number.
-  3. Every image embedded in the .docx is the committed PNG for that figure,
-     compared pixel by pixel. This is what catches a corrected figure that was
-     never put back into the document.
+  1. Three of the five figures regenerate from the current deposit to the same
+     pixels as the committed PNG: 1, 2 and 5. Say three and not five. Figure 3
+     is excluded because its width depends on which Helvetica the renderer
+     resolves, and Figure 4 has no generator in this deposit at all, so
+     NEITHER of those two has its numeric content checked by anything here.
+  2. Every image embedded in the .docx is the committed PNG for that figure,
+     compared pixel by pixel including the alpha channel. This is what catches
+     a corrected figure that was never put back into the document.
+  3. Every drawing's display extent in the .docx matches its image's aspect
+     ratio. Nothing verified this before, so a re-embed that computed the
+     height from the wrong side, or that failed to update the a:ext beside the
+     wp:extent, produced a stretched figure and reported success.
 
 Usage:
     python3 analysis/check_figures.py [manuscript.docx ...]
@@ -75,12 +78,19 @@ def check(label, ok, detail=""):
 
 
 def same_pixels(a, b):
-    """(equal, detail) for two images, compared without rescaling."""
-    ia, ib = Image.open(a).convert("RGB"), Image.open(b).convert("RGB")
+    """(equal, detail) for two images, compared without rescaling.
+
+    RGBA, not RGB. The committed PNGs carry an alpha channel, and converting
+    to RGB discards it, so a figure re-saved with transparent=True compared
+    equal to an opaque one. The mode is compared too, because two files that
+    differ only in mode are not the same deposited artifact.
+    """
+    ia, ib = Image.open(a).convert("RGBA"), Image.open(b).convert("RGBA")
     if ia.size != ib.size:
         return False, "%dx%d vs %dx%d" % (ia.size + ib.size)
     d = np.abs(np.asarray(ia).astype(int) - np.asarray(ib).astype(int))
-    return d.max() == 0, "max pixel difference %d" % d.max()
+    worst = int(d.max())
+    return worst == 0, "max pixel difference %d" % worst
 
 
 def regenerates(script, committed, work):
@@ -104,6 +114,14 @@ def regenerates(script, committed, work):
         shutil.copy2(f, k)
         saved.append((f, k))
     keep = saved[0][1]
+    # MOVE the committed file out of the way rather than leaving it in place.
+    # Copying it and then comparing the same path against the copy compares a
+    # file with itself, so a generator that writes nothing, writes to a
+    # different path, or swallows its own exception and exits 0 was reported
+    # as reproducing the figure exactly. It has to be absent for its
+    # reappearance to mean anything.
+    for f, _ in saved:
+        os.remove(f)
     env = dict(os.environ, PYTHONPATH=os.path.abspath("analysis"))
     try:
         r = subprocess.run([sys.executable, script],
@@ -112,16 +130,54 @@ def regenerates(script, committed, work):
             return False, (r.stderr.strip().splitlines() or ["failed"])[-1][:90]
         if not os.path.exists(committed):
             return False, "the generator wrote nothing to %s" % committed
-        return same_pixels(committed, keep)
+        ok, detail = same_pixels(committed, keep)
+        return ok, detail
     finally:
         for f, k in saved:
             shutil.copy2(k, f)
+
+
+def extents(doc, z, target):
+    """Check every drawing's wp:extent AND the a:ext beside it.
+
+    Word takes the picture frame from a:ext, so a re-embed that updates only
+    wp:extent renders at the wrong aspect ratio while every other check here
+    passes. Both tags are read, both are required to agree with each other and
+    with the image, and the tolerance is one EMU per rounding step rather than
+    a fraction, because cy is written as round(cx * h / w).
+    """
+    out = []
+    at = 0
+    n = 0
+    while True:
+        s = doc.find("<w:drawing>", at)
+        if s < 0:
+            return out
+        e = doc.find("</w:drawing>", s)
+        blk, at, n = doc[s:e], e, n + 1
+        rid = re.search(r'r:embed="([^"]+)"', blk)
+        wp = re.search(r'<wp:extent\s+cx="(\d+)"\s+cy="(\d+)"\s*/>', blk)
+        ax = re.search(r'<a:ext\s+cx="(\d+)"\s+cy="(\d+)"\s*/>', blk)
+        if not (rid and wp and ax and rid.group(1) in target):
+            out.append((n, False, "missing wp:extent, a:ext or image"))
+            continue
+        w, h = Image.open(z.open("word/" + target[rid.group(1)])).size
+        cx, cy = int(wp.group(1)), int(wp.group(2))
+        want = round(cx * h / w)
+        same = (int(ax.group(1)), int(ax.group(2))) == (cx, cy)
+        ok = abs(cy - want) <= 1 and same
+        out.append((n, ok, "cx %d, cy %d, expected %d%s"
+                    % (cx, cy, want,
+                       "" if same else "; a:ext disagrees with wp:extent")))
 
 
 def main():
     if not os.path.isdir("data"):
         sys.exit("run from the repository root")
     print("figures against the deposit\n")
+    check("the regeneration list still holds %d figures" % len(GENERATED),
+          len(GENERATED) == 3, "figures %s"
+          % ", ".join(str(n) for n, _, _ in GENERATED))
     with tempfile.TemporaryDirectory() as work:
         for n, script, png in GENERATED:
             if not os.path.exists(png):
@@ -141,9 +197,19 @@ def main():
         embeds = re.findall(r'r:embed="([^"]+)"', doc)
         check("the document holds %d drawings" % len(IN_DOCUMENT),
               len(embeds) == len(IN_DOCUMENT), "found %d" % len(embeds))
+        # Count what was actually compared. Without this a mistyped key in
+        # IN_DOCUMENT drops a figure from the run and the only symptom is one
+        # fewer line, which nobody counts.
+        compared = 0
         with tempfile.TemporaryDirectory() as work:
             for n, rid in enumerate(embeds, start=1):
                 if n not in IN_DOCUMENT:
+                    check("drawing %d has an entry in IN_DOCUMENT" % n, False,
+                          "no figure is mapped to this drawing")
+                    continue
+                if rid not in target:
+                    check("drawing %d resolves to an image part" % n, False,
+                          "relationship %s is not in document.xml.rels" % rid)
                     continue
                 part = "word/" + target[rid]
                 out = os.path.join(work, "%d.png" % n)
@@ -152,6 +218,13 @@ def main():
                 ok, detail = same_pixels(out, IN_DOCUMENT[n])
                 check("Figure %d in the document is the committed PNG" % n,
                       ok, detail)
+                compared += 1
+        check("every mapped figure was compared",
+              compared == len(IN_DOCUMENT),
+              "compared %d of %d" % (compared, len(IN_DOCUMENT)))
+        for n, ok, detail in extents(doc, z, target):
+            check("Figure %d's display extent matches its aspect ratio" % n,
+                  ok, detail)
 
     print()
     if failures:

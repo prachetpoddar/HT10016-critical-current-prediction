@@ -40,6 +40,8 @@ FAMILY_LABEL = {
     "conventional_AlB2": r"MgB$_2$-class",
     "iron_chalcogenide_11": "Iron chalcogenide 11-type",
     "iron_pnictide_122": "Iron pnictide 122-type",
+    # 1111 is carried because it appears in the fit cohort even though no
+    # candidate in the current dispatch table belongs to it.
     "iron_pnictide_1111": "Iron pnictide 1111-type",
 }
 
@@ -67,7 +69,27 @@ def from_deposit():
                          total=int(total), dispatched=int(disp),
                          refused=int(total - disp)))
     # Largest family last, which is the order the deposited figure drew them.
-    fams.sort(key=lambda f: f["total"])
+    # Ties are broken by key so the order is stable rather than arbitrary.
+    fams.sort(key=lambda f: (f["total"], f["key"]))
+
+    # The per-family counts have to partition the cohort, or panel (b) draws
+    # bars that do not add up to the total its own footnote quotes. An
+    # independent reviewer found nothing asserting this, and a compound
+    # appearing under two substructures would break it silently.
+    total = sum(f["total"] for f in fams)
+    disp = sum(f["dispatched"] for f in fams)
+    n_comp = int(p57.compound_formula.nunique())
+    n_disp = int(emitted.compound_formula.nunique())
+    if total != n_comp or disp != n_disp:
+        raise SystemExit(
+            "the per-family counts do not partition the cohort: %d family "
+            "totals vs %d compounds, %d family dispatched vs %d dispatched. "
+            "A compound reachable under two substructures would do this."
+            % (total, n_comp, disp, n_disp))
+    missing = [f["key"] for f in fams if f["key"] not in FAMILY_LABEL]
+    if missing:
+        raise SystemExit("no figure label for substructure(s): %s"
+                         % ", ".join(missing))
 
     return dict(
         fitted_curve_papers=int(prov.identifier.nunique()),

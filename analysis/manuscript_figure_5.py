@@ -30,10 +30,14 @@ LAB={"iron_chalcogenide_11":"Iron chalcogenide 11-type",
 COL={"iron_chalcogenide_11":"#1B8A7A","iron_pnictide_122":"#D2691E","conventional_AlB2":"#6A5ACD"}
 ORDER=["iron_chalcogenide_11","iron_pnictide_122","conventional_AlB2"]
 # Half the median 95% interval width across the predictions the dispatch
-# actually emits. An earlier version used 0.194, half of 0.39 dex, which is the
-# median over the pre-gate population of 1671 rows carrying an emitted or a
-# withheld value. On the 256 rows the gate emits it is 0.825 dex. Recomputed
-# from the deposit rather than restated, so it moves with the cohort.
+# actually emits. An earlier version used 0.194, half of 0.39 dex. A note here
+# said 0.39 came from a pre-gate population of 1671 rows carrying an emitted or
+# a withheld value; that was wrong and gives 0.379. It came from the same
+# emission test applied before the reduced-field gate and the withdrawals: at
+# commit 8ad8d43 that returned 1386 rows with a median full width of 0.388328
+# dex, half 0.194, antilog 2.445, which is the 0.39, 0.19 and 2.5 the documents
+# printed. On the 256 rows the gate emits it is 0.825 dex. Recomputed from the
+# deposit rather than restated, so it moves with the cohort.
 import pandas as _pd, os as _os
 _p = _pd.read_csv(_os.path.join("data", "phase_3_p57_de_novo_predictions.csv"),
                   low_memory=False)

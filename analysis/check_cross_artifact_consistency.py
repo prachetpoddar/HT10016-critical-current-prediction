@@ -120,6 +120,13 @@ def plain_text(path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", default=".")
+    # Outstanding items fail the run by default. An earlier version printed
+    # them and returned 0, which meant the script could enumerate eight known
+    # contradictions and still say the artifacts agree. A gate that goes green
+    # on a run that has just listed contradictions cannot be wired into
+    # anything. Pass --allow-outstanding to run it as a report instead.
+    ap.add_argument("--allow-outstanding", action="store_true",
+                    help="report the outstanding rewrites without failing")
     args = ap.parse_args()
 
     artifacts = [
@@ -180,6 +187,16 @@ def main():
     if failures:
         print("%d artifact(s) carry a superseded value." % failures)
         return 1
+    if outstanding and not args.allow_outstanding:
+        print("every tracked number agrees with the deposit, but %d passage(s) "
+              "still need rewriting; run with --allow-outstanding to treat "
+              "this as a report." % len(outstanding))
+        return 2
+    if outstanding:
+        print("every tracked number agrees with the deposit; %d passage(s) "
+              "still need rewriting, accepted by --allow-outstanding."
+              % len(outstanding))
+        return 0
     print("all four artifacts agree with the deposit on every tracked quantity")
     return 0
 
