@@ -26,10 +26,10 @@ import docx
 # (document, find, replace, why)
 MS_EDITS = [
     # --- Table I ------------------------------------------------------------
-    ("69", "64", "Table I, papers contributing fitted curves; "
+    ("69", "62", "Table I, papers contributing fitted curves; "
                  "provenance_table_fitcohort_full.csv", "table:0:2:1"),
-    ("43", "39", "Table I, distinct compounds; same source", "table:0:3:1"),
-    ("4387", "4211", "Table I, points extracted; n_Jc_points summed", "table:0:4:1"),
+    ("43", "38", "Table I, distinct compounds; same source", "table:0:3:1"),
+    ("4387", "4146", "Table I, points extracted; n_Jc_points summed", "table:0:4:1"),
     ("419", "260", "Table I, temperature-axis partial fits; "
                    "phase_3_p44_post_UCLA_beta_T_fits.csv", "table:0:6:1"),
     ("95", "94", "Table I, field-axis fits passing physicality; "
@@ -38,7 +38,7 @@ MS_EDITS = [
      "Field-exponent aggregation, from 16 source papers",
      "Table I, field-axis source papers; distinct arxiv_id among passing fits",
      "table:0:7:2"),
-    ("110", "103", "Table I, per-paper anchors; "
+    ("110", "96", "Table I, per-paper anchors; "
                    "phase_3_p31_jc_anchor_per_paper.csv", "table:0:8:1"),
     ("185", "183", "Table I, candidate compounds; "
                    "phase_3_p56_candidate_tier_assignment.csv", "table:0:9:1"),
@@ -53,11 +53,11 @@ MS_EDITS = [
     # --- Fig. 3 caption -------------------------------------------------------
     ("Of the 110 per-paper anchor records of Table I, 61 fall in the three "
      "families shown",
-     "Of the 103 per-paper anchor records of Table I, 59 fall in the three "
+     "Of the 96 per-paper anchor records of Table I, 52 fall in the three "
      "families shown",
      "anchor table filtered to the three plotted families", None),
     ("The 61 collapse to the 44 markers drawn",
-     "The 59 collapse to the 41 markers drawn",
+     "The 52 collapse to the 34 markers drawn",
      "aggregate_per_physical_sample over those records", None),
 
     # --- Sec. III.C, temperature axis ----------------------------------------
@@ -157,7 +157,7 @@ MS_EDITS = [
      "same", None),
     # --- two further occurrences found on verification ------------------------
     ("all 110 per-paper anchor groups are identical before and after",
-     "all 103 per-paper anchor groups are identical before and after",
+     "all 96 per-paper anchor groups are identical before and after",
      "Sec. III.D, second mention of the anchor count; "
      "phase_3_p31_jc_anchor_per_paper.csv", None),
     ("Conditioning by substructure and sample form reduces the cross-family "
@@ -169,25 +169,30 @@ MS_EDITS = [
     # --- occurrences found on the second verification sweep -------------------
     ("built from 69 papers that contribute fitted critical-current curves, "
      "covering 43 compounds and 4387 extracted data points",
-     "built from 64 papers that contribute fitted critical-current curves, "
-     "covering 39 compounds and 4211 extracted data points",
+     "built from 62 papers that contribute fitted critical-current curves, "
+     "covering 38 compounds and 4146 extracted data points",
      "abstract; provenance_table_fitcohort_full.csv", None),
     ("Sixty-nine papers pass the fittability filters and contribute fitted "
      "curves across 43 compounds and 4387 critical-current data points",
-     "Sixty-four papers pass the fittability filters and contribute fitted "
-     "curves across 39 compounds and 4211 critical-current data points",
+     "Sixty-two papers pass the fittability filters and contribute fitted "
+     "curves across 38 compounds and 4146 critical-current data points",
      "Sec. II.A; same", None),
     ("110 per-paper anchors in total, of which 61 fall in the three families "
      "plotted",
-     "103 per-paper anchors in total, of which 59 fall in the three families "
+     "96 per-paper anchors in total, of which 52 fall in the three families "
      "plotted", "Table II; phase_3_p31_jc_anchor_per_paper.csv", None),
     ("Sample form explains 73%, 60%, and 12% of within-family anchor variance",
-     "Sample form explains 77%, 60%, and 12% of within-family anchor variance",
+     "Sample form explains 77%, 35%, and 12% of within-family anchor variance",
      "Table II; phase_3_p31_variance_decomposition.csv, which gives 0.7687, "
      "0.5988 and 0.1159. Figure 3 already prints 0.77", None),
     ("For iron chalcogenide 11-type materials the ratio is 0.73",
      "For iron chalcogenide 11-type materials the ratio is 0.77",
      "same; the text and the figure disagreed before this change", None),
+    ("For iron pnictide 122-type the ratio is 0.60",
+     "For iron pnictide 122-type the ratio is 0.35",
+     "phase_3_p31_variance_decomposition.csv after the two withdrawals of "
+     "2026-09-03; the family loses 7 of its 16 physical samples and the ratio "
+     "falls from 0.5988 to 0.3452, close to the 0.3 band boundary", None),
     ("Temperature axis: iron chalcogenide 11-type 0.261 clears the "
      "screening-grade threshold of 1 in the exponent; 122-type 1.092 and "
      "1111-type 1.721 do not; MgB2-class not assessable. Field axis: 0.641, "
@@ -214,7 +219,7 @@ MS_EDITS = [
      "not deposited and the comparison cannot be reproduced", None),
     ("13 for iron chalcogenide 11-type, 16 for iron pnictide 122-type, and 15 "
      "for MgB2-class",
-     "10 for iron chalcogenide 11-type, 16 for iron pnictide 122-type, and 15 "
+     "10 for iron chalcogenide 11-type, 9 for iron pnictide 122-type, and 15 "
      "for MgB2-class",
      "Fig. 3 caption, markers per family; physical samples per family from "
      "analysis/regenerate_regime_tables.py, which gives 10, 16 and 15 "
@@ -225,10 +230,10 @@ MS_EDITS = [
 
 SUPP_EDITS = [
     ("the 69 source papers that contribute fitted data",
-     "the 64 source papers that contribute fitted data",
+     "the 62 source papers that contribute fitted data",
      "provenance_table_fitcohort_full.csv", None),
     ("The 69 papers listed contribute curves",
-     "The 64 papers listed contribute curves", "same", None),
+     "The 62 papers listed contribute curves", "same", None),
     ("The median ratio of measured maximum to assigned scale is 0.86, and for "
      "15 of 77 curves it exceeds 0.9.",
      "The median ratio of measured maximum to assigned scale is 0.80, and for "
@@ -242,7 +247,7 @@ SUPP_EDITS = [
      "28 of 77 curves qualify where the pipeline admitted 77", "same", None),
     ("phase_3_p31_jc_anchor_per_paper.csv, the 110-row file behind the "
      "variance-decomposition diagnostic",
-     "phase_3_p31_jc_anchor_per_paper.csv, the 103-row file behind the "
+     "phase_3_p31_jc_anchor_per_paper.csv, the 96-row file behind the "
      "variance-decomposition diagnostic",
      "phase_3_p31_jc_anchor_per_paper.csv", None),
     ("A caption-scoped screen over the 2615 unique PDFs in the archive",
@@ -265,13 +270,13 @@ SUPP_EDITS = [
 TABLE_S1 = [
     ["Iron chalcogenide 11", "17", "7", "2", "8", "0", "10", "5", "980"],
     ["Iron pnictide 111", "2", "2", "0", "0", "0", "1", "0", "85"],
-    ["Iron pnictide 1111", "13", "6", "0", "7", "0", "10", "5", "1149"],
-    ["Iron pnictide 122", "23", "14", "0", "9", "0", "11", "7", "1509"],
+    ["Iron pnictide 1111", "13", "6", "0", "7", "0", "10", "6", "1149"],
+    ["Iron pnictide 122", "21", "14", "0", "7", "0", "10", "7", "1444"],
     ["Conventional AlB2", "4", "3", "0", "1", "0", "2", "4", "267"],
     ["Cuprate BSCCO", "3", "0", "0", "3", "0", "3", "0", "152"],
     ["Cuprate LSCO", "1", "0", "0", "1", "0", "1", "0", "48"],
     ["Cuprate RBCO", "1", "0", "0", "1", "0", "1", "0", "21"],
-    ["TOTAL", "64", "32", "2", "30", "0", "39", "21", "4211"],
+    ["TOTAL", "62", "32", "2", "28", "0", "38", "22", "4146"],
 ]
 
 
@@ -310,7 +315,7 @@ def rebuild_table_s1(doc, report):
     for row in data[len(TABLE_S1):]:
         row._element.getparent().remove(row._element)
     report.append(("supplement", True, "Table S1 (provenance), %d rows" % len(TABLE_S1),
-                   "TOTAL 64 papers, 39 compounds, 4211 points",
+                   "TOTAL 62 papers, 38 compounds, 4146 points",
                    "analysis/rebuild_supplement_table_s1.py"))
     return []
 

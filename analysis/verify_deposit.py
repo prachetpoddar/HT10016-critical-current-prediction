@@ -67,8 +67,8 @@ MANUSCRIPT_CSV = os.path.join("audit", "manuscript_printed_counts.csv")
 # deposit's own current values so that a future cohort change still moves them
 # visibly, and they are labelled as not printed rather than as verified.
 MANUSCRIPT_NOT_PRINTED = dict(
-    papers_contributing_anchor_rows=34,
-    physical_samples=67,
+    papers_contributing_anchor_rows=32,
+    physical_samples=60,
 )
 MANUSCRIPT_NOT_YET_LOCATED = dict(
     dispatched_compounds=85,

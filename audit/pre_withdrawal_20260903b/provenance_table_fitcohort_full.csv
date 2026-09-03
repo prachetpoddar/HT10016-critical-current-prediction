@@ -45,7 +45,9 @@ MAGLAB_Sm1111_4_2K,SmFeAsO_F_doped,iron_pnictide_1111,thin_film,55.0,paper-repor
 MAGLAB_Co122_4_2K,"Ba(Fe,Co)2As2",iron_pnictide_122,thin_film,22.0,paper-reported (Cohort B extraction),39.89,Tier_2_per_substructure_Hirr_ratio_0.6,18,Cohort B only (β_H partial)
 10.1016/j.phpro.2012.03.421,"Ba(Fe,Ru)2As2",iron_pnictide_122,single_crystal,20.0,paper-reported (Cohort B extraction),15.3,Tier_1_extrapolated_to_low_T_anchor_15.0K,6,Cohort B only (β_H partial)
 10.1016/j.physc.2009.11.051,Ba(Fe0.93Co0.07)2As2,iron_pnictide_122,single_crystal,22.0,paper-reported (Cohort B extraction),2.5,Tier_1_direct_match_at_2.0K_term_Hc2,26,Cohort B only (β_H partial)
+10.1016/j.physc.2009.03.028,Ba(Fe1-xCox)2As2,iron_pnictide_122,single_crystal,22.0,paper-reported (Cohort B extraction),50.0,Tier_3_literature_default,54,Cohort B only (β_H partial)
 10.1016/j.phpro.2015.06.160,BaFe2As2,iron_pnictide_122,single_crystal,20.0,paper-reported (Cohort B extraction),9.0,Tier_1_direct_match_at_17.7K_term_Hc2,24,Cohort B only (β_H partial)
+10.1016/j.physc.2014.03.020,BaFe2As2,iron_pnictide_122,wire,20.0,paper-reported (Cohort B extraction),60.0,Tier_3_literature_default,11,Cohort B only (β_H partial)
 MAGLAB_Ni122_4_2K,BaFe2_NiAs2,iron_pnictide_122,thin_film,20.0,paper-reported (Cohort B extraction),24.09,Tier_2_per_substructure_Hirr_ratio_0.6,24,Cohort B only (β_H partial)
 MAGLAB_P122_4_2K,BaFe2_PAs2,iron_pnictide_122,thin_film,30.0,paper-reported (Cohort B extraction),20.59,Tier_2_per_substructure_Hirr_ratio_0.6,30,Cohort B only (β_H partial)
 0903.0004v2,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),45,fully fittable
