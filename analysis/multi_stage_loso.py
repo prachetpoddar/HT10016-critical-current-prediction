@@ -319,6 +319,10 @@ def report(out, keys, title):
     return dict(stage1_mae=m1, stage1_median=d1, stage3_mae=m3,
                 stage3_median=d3, best_stage2=best,
                 best_stage2_mae=float(out["stage2_%s_abs" % best].mean()),
+                best_stage2_fold=float(m1 / out["stage2_%s_abs" % best].mean()),
+                stage3_fold_means=float(m1 / m3),
+                stage3_fold_medians=float(d1 / d3),
+                n_families=int(len(out)),
                 bound_coverage="%d/%d" % (cov, len(out)))
 
 
@@ -345,8 +349,22 @@ def main():
         summary[title] = report(out, keys, title)
         frames.append(out)
 
-    print("\nNo reading of Stage 2, on any cohort, reaches even a two-fold "
-          "improvement on Stage 1, and the published comparison claims sixteen.")
+    # Compute the closing statement rather than assert it. This line was
+    # hard-coded as "no reading reaches even a two-fold improvement", which was
+    # true when it was written and became false when the cohort changed: on the
+    # physicality-passing cohort the pooled_flat reading now reaches 2.24. A
+    # conclusion printed by a script has to be recomputed by that script.
+    if summary:
+        where, s2 = max(summary.items(), key=lambda kv: kv[1]["best_stage2_fold"])
+        print("\nBest Stage 2 reading on any cohort: %.2f-fold on Stage 1, on "
+              "'%s' (%d families, reading '%s')."
+              % (s2["best_stage2_fold"], where, s2["n_families"],
+                 s2["best_stage2"]))
+        w3, s3 = max(summary.items(), key=lambda kv: kv[1]["stage3_fold_means"])
+        print("Best Stage 3 on means: %.2f-fold, on '%s'; its interquartile "
+              "bound covers %s families."
+              % (s3["stage3_fold_means"], w3, s3["bound_coverage"]))
+        print("The published comparison claims sixteen.")
     # Round on write. np.polyfit goes through whatever LAPACK the host provides,
     # so stage1_abs differs in the fifteenth significant digit between machines
     # and the deposited file comes back modified from a clean checkout on a

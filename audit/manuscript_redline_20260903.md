@@ -396,3 +396,60 @@ matches the deposit.
 Two quantities the verifier checks are printed nowhere in either document,
 "papers contributing anchor rows" and "physical samples". They are now labelled
 as not printed rather than counted as agreeing.
+
+---
+
+## Cross-artifact consistency, checked
+
+`analysis/check_cross_artifact_consistency.py` scans all four artifacts for every
+string a cohort change makes wrong, and for the values that should have replaced
+them. It exits zero only when all four agree with the deposit.
+
+**The response letter had never been touched by any correction.** It was still
+quoting the August cohort in full: 69 papers, 43 compounds, 4387 points, 419
+temperature-axis fits, 95 field-axis fits from 17 papers, 110 anchors, 2615
+archive PDFs, and the 16-fold conditioning figure the manuscript had already
+abandoned. A letter citing numbers the paper no longer makes is worse than one
+that says nothing, because the referee checks the two against each other. Six
+edits, applied to the markdown and the docx from one list so they cannot drift.
+
+**Two more stale passages were found in the manuscript and supplement by the
+same scan**, both of which the earlier redline missed:
+
+The manuscript's replacement conditioning paragraph, which I wrote two rounds
+ago, was itself stale: it quoted a best Stage 2 reading of 1.77-fold and a
+Stage 3 pair of 1.73 and 1.99 "across all families", from a run made before the
+last two withdrawals. The current figures are cohort dependent and are now given
+as such: 1.07-fold across the seven families carrying a descriptor, 2.24-fold on
+the fits passing physicality, 1.83-fold with the cuprate families removed, and
+Stage 3 at 1.37-fold on means across all seven and 2.20-fold with the cuprates
+removed. Stage 1 moves from 10.10 to 12.30 as its cohort shrinks from nine
+families to seven.
+
+`multi_stage_loso.py` printed a hard-coded closing sentence, "no reading of
+Stage 2, on any cohort, reaches even a two-fold improvement". That was true when
+written and is now false: the physicality-passing cohort reaches 2.24. The
+script computes the sentence instead.
+
+**The supplement's per-paper validation paragraph is withdrawn and rewritten.**
+It reported 0.994 against a pre-expansion 1.069 on a 99-fit cohort with seed 42.
+None of that is reproducible from the deposit, whose regenerated file gives 1.257
+over 82 fits with [1.006, 1.612] for the conditioned predictor and 1.158 over 94
+for the pooled median, seed 20260901. The conditioned predictor no longer has
+the lower error, and the paragraph now says so rather than reporting only the
+figure that flatters it.
+
+**Two hits are correct and stay.** The letter quotes the referee's own phrase
+"yet another number, 69 papers", which must not be edited, and the manuscript
+names the superseded ratio of 10.10 to 0.43 in past tense while explaining why
+it was withdrawn. Both are listed as allowed in the checker, with the reason.
+
+## One artifact that is stale and was not corrected
+
+`~/Documents/SuperconductorWorkflow/HT10016_release/` is a copy of the data
+release made in late August and is not a git repository. It still holds 109
+anchor rows, 182 field-axis fits, 419 temperature-axis fits and 68 provenance
+rows, against 96, 159, 260 and 62 in the repository. If anything is zipped for
+deposit it must come from `ht10016-repo`, not from that folder. Deleting it, or
+replacing it with an export of the repository, would remove the risk of the
+wrong one being sent.

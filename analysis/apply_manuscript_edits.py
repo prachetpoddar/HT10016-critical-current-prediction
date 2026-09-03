@@ -130,7 +130,7 @@ MS_EDITS = [
 
     # --- Sec. III.B and the summary, the conditioning claim -------------------
     ("On the matched five-family cohort the reduction is 16-fold on means and "
-     "4.7-fold on medians. All three figures are computed on βH and therefore "
+     "4.7-fold on medians. All three figures are computed on \u03b2H and therefore "
      "inherit the field-scale qualification of Section III.F. We no longer "
      "present a single \"23-fold\" figure, and the conditioning claim below does "
      "not rest on it.",
@@ -139,21 +139,39 @@ MS_EDITS = [
      "for a family is built from a pool that contains that family's own fits, "
      "so neither figure is a statement about generalization. We therefore "
      "report the comparison under leave-one-substructure-out, in which the "
-     "held-out family is withheld at every stage. On that protocol no reading "
-     "of Stage 2 reaches a two-fold reduction on any cohort we can construct, "
-     "the best being 1.77-fold, and Stage 3 reaches 1.73-fold on means and 1.99 "
-     "on medians across all families, and 2.32 and 2.23 with the cuprate "
-     "families removed. All figures are computed on βH and therefore inherit "
-     "the field-scale qualification of Section III.F. We no longer present a "
-     "single fold-improvement headline.",
+     "held-out family is withheld at every stage. The improvement is then "
+     "between one and about two-fold and depends on the cohort: across the "
+     "seven families that carry a descriptor the best Stage 2 reading gives "
+     "1.07-fold, restricted to fits passing physicality it gives 2.24-fold, "
+     "and with the cuprate families removed 1.83-fold. Stage 3 gives 1.37-fold "
+     "on means across all seven families and 2.20-fold with the cuprate "
+     "families removed, where its interquartile bound covers the residual in "
+     "four of four families. All figures are computed on \u03b2H and therefore "
+     "inherit the field-scale qualification of Section III.F. We no longer "
+     "present a single fold-improvement headline.",
      "analysis/multi_stage_loso.py; audit/multi_stage_loso.csv", None),
+    ("Stage 1 gives a leave-one-substructure-out mean absolute error of 10.10 "
+     "in the dimensionless field exponent.",
+     "Stage 1 gives a leave-one-substructure-out mean absolute error of 12.30 "
+     "in the dimensionless field exponent, across the seven substructure "
+     "families that carry a descriptor.",
+     "analysis/multi_stage_loso.py, cohort 'all fits, every family with a "
+     "descriptor'", None),
+    ("The Stage 1 error is computed across nine substructure families and the "
+     "Stage 2 error across the five families that carry populated sample-form "
+     "cells",
+     "The Stage 1 error was computed across nine substructure families and the "
+     "Stage 2 error across the five families that carried populated "
+     "sample-form cells",
+     "past tense: this sentence describes the superseded comparison", None),
     ("Substructure and sample-form conditioning reduces field-exponent error "
      "16-fold on means and 4.7-fold on medians relative to monolithic "
      "regression.",
-     "Substructure conditioning reduces field-exponent error about two-fold "
-     "under leave-one-substructure-out validation, and the interquartile bound "
-     "reported with it covers the residual in four of four families once the "
-     "cuprate families are removed.",
+     "Substructure conditioning reduces field-exponent error by between one "
+     "and about two-fold under leave-one-substructure-out validation, "
+     "depending on the cohort, and the interquartile bound reported with "
+     "Stage 3 covers the residual in four of four families once the cuprate "
+     "families are removed.",
      "same", None),
     # --- two further occurrences found on verification ------------------------
     ("all 110 per-paper anchor groups are identical before and after",
@@ -164,7 +182,8 @@ MS_EDITS = [
      "field-exponent error by 16-fold on means relative to monolithic "
      "regression on a matched cohort.",
      "Conditioning by substructure reduces the cross-family field-exponent "
-     "error by about two-fold under leave-one-substructure-out validation.",
+     "error by at most about two-fold under leave-one-substructure-out "
+     "validation, and by less on some cohorts.",
      "conclusions; analysis/multi_stage_loso.py", None),
     # --- occurrences found on the second verification sweep -------------------
     ("built from 69 papers that contribute fitted critical-current curves, "
@@ -250,6 +269,59 @@ SUPP_EDITS = [
      "phase_3_p31_jc_anchor_per_paper.csv, the 96-row file behind the "
      "variance-decomposition diagnostic",
      "phase_3_p31_jc_anchor_per_paper.csv", None),
+    ("The per-paper leave-one-out Stage 2 validation gives a post-expansion "
+     "mean absolute error of 0.994 in \u03b2H, with a 95% bootstrap confidence "
+     "interval of [0.495, 1.661]. The bootstrap uses 5000 iterations with seed "
+     "42, applying the percentile method throughout. The validation cohort "
+     "contains 99 fits across five substructures and 17 papers. It comprises "
+     "95 field-axis partial fits that pass the physicality checks, plus four "
+     "additional FeSe pure-compound fits incorporated after an expansion of "
+     "the applicability criterion. Twelve additional field-axis fits are "
+     "excluded because they fail the field-axis applicability boundary. The "
+     "corresponding pre-expansion estimate was 1.069, with a 95% confidence "
+     "interval of [0.632, 1.816]. The post-expansion result therefore lowers "
+     "the point estimate by 0.075 and lowers the upper bound by 0.155; the "
+     "interval width is essentially unchanged, 1.166 against 1.184. The "
+     "overlapping intervals indicate cohort-stable performance after the "
+     "expansion.",
+     "The per-paper leave-one-out validation is regenerated by "
+     "analysis/compound_leave_one_out.py and deposited as "
+     "audit/per_paper_field_validation.csv. We report both predictors, because "
+     "they no longer favour the conditioned one. The Stage 2 predictor, "
+     "conditioned on substructure and sample form, gives a mean absolute error "
+     "of 1.257 in \u03b2H over 82 scored fits from 16 papers, with a 95% "
+     "bootstrap confidence interval of [1.006, 1.612]. A pooled median with no "
+     "conditioning gives 1.158 over 94 fits from the same 16 papers, with "
+     "[0.900, 1.497]. The bootstrap uses 5000 iterations with seed 20260901 "
+     "and the percentile method throughout. The two are not scored on the same "
+     "cohort, since the conditioned predictor cannot score a fit whose "
+     "sample-form cell is unpopulated, so this is not a like-for-like "
+     "comparison; but the conditioned predictor no longer has the lower error "
+     "and we state that rather than reporting only the figure that flatters "
+     "it. An earlier version of this section quoted 0.994 against a "
+     "pre-expansion 1.069 on a 99-fit cohort. Neither is reproducible from the "
+     "deposited data and both are withdrawn.",
+     "audit/per_paper_field_validation.csv", None),
+    ("The cuprate substructures account for 62% of the residual mass but "
+     "represent only 44% of the substructure cohort. Three cuprate "
+     "substructures hit or approach the imposed regression ceiling: RBCO "
+     "(REBa2Cu3O7, rare-earth\u2013barium\u2013copper\u2013oxide) and BSCCO "
+     "(Bi\u2013Sr\u2013Ca\u2013Cu\u2013O) at \u03b2 = 30, HBCCO "
+     "(Hg\u2013Ba\u2013Ca\u2013Cu\u2013O) at \u03b2 = 25.81; LSCO "
+     "(La2\u2212xSrxCuO4, lanthanum\u2013strontium\u2013copper\u2013oxide) is "
+     "physical at \u03b2 = 5.50.",
+     "The cuprate substructures account for 59% of the residual mass but "
+     "represent only 43% of the substructure cohort. RBCO (REBa2Cu3O7, "
+     "rare-earth\u2013barium\u2013copper\u2013oxide) sits at the imposed "
+     "regression ceiling of \u03b2 = 30 on all 3 of its fits and BSCCO "
+     "(Bi\u2013Sr\u2013Ca\u2013Cu\u2013O) on all 20 of its fits, while LSCO "
+     "(La2\u2212xSrxCuO4, lanthanum\u2013strontium\u2013copper\u2013oxide) is "
+     "physical. The ceiling is not confined to the cuprates: 4 of 46 iron "
+     "chalcogenide 11-type fits and 1 of 22 iron pnictide 1111-type fits also "
+     "reach it.",
+     "audit/multi_stage_loso.csv for the residual shares; "
+     "phase_3_form3_fits_partial_cohortB_v2.csv for the ceiling counts. HBCCO "
+     "left the cohort with an earlier withdrawal", None),
     ("A caption-scoped screen over the 2615 unique PDFs in the archive",
      "A caption-scoped screen over the 2594 papers in the archive", "same", None),
     ("a compound leave-one-out mean absolute error of 5.13 in \u03b2H under the "
