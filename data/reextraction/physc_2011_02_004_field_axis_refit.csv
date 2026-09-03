@@ -1,13 +1,25 @@
-fixed_axis_value,n_pts,Hc2_source,Hc2_T_used,H_axis_range_normalized,beta,SE_beta,log_Jc_partial,provenance
-7.0,49,Tier_3_literature_default,120.0,0.1217,7.2392,1.7053,5.86,literature default
-7.0,49,Tier_1_paper_Hirr,23.931,0.6101,0.9829,0.2629,5.8429,arXiv 1002.0208 FIG.7 / Eq.(5)
-10.0,62,Tier_3_literature_default,120.0,0.1186,3.4941,1.5171,5.5597,literature default
-10.0,62,Tier_1_paper_Hirr,20.8087,0.6839,0.3515,0.1857,5.547,arXiv 1002.0208 FIG.7 / Eq.(5)
-15.0,55,Tier_3_literature_default,120.0,0.1169,2.9874,1.2495,5.2577,literature default
-15.0,55,Tier_1_paper_Hirr,16.0116,0.8758,0.2219,0.0853,5.2514,arXiv 1002.0208 FIG.7 / Eq.(5)
-20.0,56,Tier_3_literature_default,120.0,0.1165,5.215,1.0209,4.9856,literature default
-20.0,50,Tier_1_paper_Hirr,11.7443,0.9577,0.0932,0.0519,4.9585,arXiv 1002.0208 FIG.7 / Eq.(5)
-25.0,65,Tier_3_literature_default,120.0,0.1162,10.8227,1.1709,4.7642,literature default
-25.0,48,Tier_1_paper_Hirr,8.0367,0.9472,-0.0022,0.0715,4.6916,arXiv 1002.0208 FIG.7 / Eq.(5)
-30.0,69,Tier_3_literature_default,120.0,0.0662,29.7358,2.1874,4.5414,literature default
-30.0,52,Tier_1_paper_Hirr,4.9282,0.9583,0.2756,0.08,4.4591,arXiv 1002.0208 FIG.7 / Eq.(5)
+fixed_axis_value,Hc2_source,Tc_assumed,Hc2_T_used,n_pts,H_axis_range_normalized,beta,SE_beta,log_Jc_partial,rms,at_ceiling,provenance
+7.0,Tier_3_literature_default,,120.0,49,0.1217,7.2392,1.7053,5.86,0.17835,False,literature default 120 T
+7.0,Tier_1_paper_Hirr,45.0,23.931,49,0.6101,0.9829,0.2629,5.8429,0.18417,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+7.0,Tier_1_paper_Hirr,48.0,24.4013,49,0.5984,1.0151,0.2703,5.8434,0.18398,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+7.0,Tier_1_paper_Hirr,51.0,24.8194,49,0.5883,1.0435,0.2769,5.8439,0.18383,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+10.0,Tier_3_literature_default,,120.0,62,0.1186,3.4941,1.5171,5.5597,0.1633,False,literature default 120 T
+10.0,Tier_1_paper_Hirr,45.0,20.8087,62,0.6839,0.3515,0.1857,5.547,0.1655,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+10.0,Tier_1_paper_Hirr,48.0,21.4443,62,0.6636,0.3727,0.1949,5.5476,0.1654,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+10.0,Tier_1_paper_Hirr,51.0,22.0117,62,0.6465,0.3915,0.203,5.548,0.16532,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+15.0,Tier_3_literature_default,,120.0,55,0.1169,2.9874,1.2495,5.2577,0.14945,False,literature default 120 T
+15.0,Tier_1_paper_Hirr,45.0,16.0116,55,0.8758,0.2219,0.0853,5.2514,0.14813,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+15.0,Tier_1_paper_Hirr,48.0,16.8715,55,0.8312,0.2499,0.0974,5.2521,0.14835,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+15.0,Tier_1_paper_Hirr,51.0,17.6456,55,0.7947,0.2738,0.1076,5.2525,0.1485,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+20.0,Tier_3_literature_default,,120.0,56,0.1165,5.215,1.0209,4.9856,0.12451,False,literature default 120 T
+20.0,Tier_1_paper_Hirr,45.0,11.7443,50,0.9577,0.0932,0.0519,4.9585,0.10287,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+20.0,Tier_1_paper_Hirr,48.0,12.76,52,0.983,0.1607,0.0436,4.9645,0.10336,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+20.0,Tier_1_paper_Hirr,51.0,13.6847,55,0.9852,0.243,0.0357,4.9716,0.1033,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+25.0,Tier_3_literature_default,,120.0,65,0.1162,10.8227,1.1709,4.7642,0.15728,False,literature default 120 T
+25.0,Tier_1_paper_Hirr,45.0,8.0367,49,0.9822,0.0366,0.0564,4.6976,0.13785,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+25.0,Tier_1_paper_Hirr,48.0,9.1331,51,0.9758,0.099,0.061,4.7031,0.13734,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+25.0,Tier_1_paper_Hirr,51.0,10.1479,54,0.9911,0.1834,0.0503,4.7095,0.13642,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+30.0,Tier_3_literature_default,,120.0,69,0.0662,29.7358,2.1874,4.5414,0.16656,False,literature default 120 T
+30.0,Tier_1_paper_Hirr,45.0,4.9282,53,0.9937,0.2257,0.0594,4.4499,0.17125,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+30.0,Tier_1_paper_Hirr,48.0,6.0207,60,0.9987,0.3412,0.0487,4.4362,0.17614,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"
+30.0,Tier_1_paper_Hirr,51.0,7.0582,64,0.9851,0.6367,0.0627,4.4594,0.16836,False,"arXiv 1002.0208 Eq.(5): Hirr(0)=31.9 T, n=1.7"

@@ -4,6 +4,7 @@ identifier,compound,substructure_family,sample_form,Tc_anchor_K,Tc_provenance,Hc
 10.1016/j.matchemphys.2023.128348,MgB2,conventional_AlB2,bulk,39.0,paper-reported (Cohort B extraction),3.0,Tier_1_direct_match_at_20.0K_term_H_irr_Birr,20,fully fittable
 10.1016/j.matpr.2019.05.078,MgB2,conventional_AlB2,wire,39.0,paper-reported (Cohort B extraction),2.5,Tier_1_direct_match_at_5.0K_term_Hc2,6,fully fittable
 10.1016/j.jpcs.2026.113652,Bi1.6Pb0.4Sr2Ca2Cu3O10,cuprate_BSCCO,bulk,110.0,paper-reported (Cohort B extraction),100.0,Tier_3_literature_default,36,Cohort B only (β_H partial)
+10.1038/s41467-025-55880-4,Bi2.1Sr1.9CaCu2O8,cuprate_BSCCO,thin_film,85.0,paper-reported (Cohort B extraction),100.0,Tier_3_literature_default,36,Cohort B only (β_H partial)
 10.1016/j.jallcom.2013.04.183,Bi2Sr2-xNixCa2Cu3O,cuprate_BSCCO,bulk,110.0,paper-reported (Cohort B extraction),100.0,Tier_3_literature_default,56,Cohort B only (β_H partial)
 10.1038/s41598-025-95932-9,Bi2Sr2CaCu2O8,cuprate_BSCCO,thin_film,85.0,paper-reported (Cohort B extraction),100.0,Tier_3_literature_default,60,Cohort B only (β_H partial)
 10.1016/j.ceramint.2024.10.058,La2SrCuO4,cuprate_LSCO,bulk,38.0,paper-reported (Cohort B extraction),50.0,Tier_3_literature_default,48,Cohort B only (β_H partial)
