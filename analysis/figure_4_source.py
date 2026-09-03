@@ -53,11 +53,19 @@ stack to do it.
 Note on regenerating the figure: it renders in Helvetica or Arial with several
 fallbacks. On a machine that has neither, matplotlib substitutes silently and
 the deposited figure comes back with a different typeface while reporting
-success. Check the font warnings before committing a re-render.
+success.
+
+Do not read the findfont warnings as the test. matplotlib walks the family list
+in order and warns once per family it cannot resolve, so on macOS it warns about
+Nimbus Sans and Liberation Sans, which are Linux fallbacks, while having found
+Helvetica first and used it. A warning naming a fallback is expected; a warning
+naming Helvetica AND Arial is the one that matters. The run reports the family
+it actually resolved, which is the check to read.
 """
 
 from __future__ import annotations
 import re
+import os
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -69,6 +77,25 @@ import pandas as pd
 # ModuleNotFoundError on a clean environment, which reads as a broken deposit
 # rather than as a missing optional dependency.
 plt = None
+
+
+def _report_font():
+    """Say which font family was actually used, so nobody has to interpret the
+    findfont warnings to know whether the deposited typeface changed."""
+    from matplotlib import font_manager
+    for want in RC_PARAMS["font.family"]:
+        try:
+            path = font_manager.findfont(font_manager.FontProperties(family=want),
+                                         fallback_to_default=False)
+        except Exception:
+            continue
+        print("font resolved: %s  (%s)" % (want, os.path.basename(path)))
+        if want not in ("Helvetica", "Arial"):
+            print("WARNING: the deposited figure was drawn in %s, not Helvetica "
+                  "or Arial. Do not commit this render." % want)
+        return
+    print("WARNING: no family from the list resolved; matplotlib fell back to "
+          "its default. Do not commit this render.")
 
 
 def _need_plt():
@@ -437,6 +464,7 @@ def main():
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.97])
     plt.savefig(OUT, dpi=300, bbox_inches="tight")
+    _report_font()
     print(f"wrote {OUT}")
 
 
