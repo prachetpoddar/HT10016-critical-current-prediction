@@ -1,0 +1,112 @@
+{
+  "paper_id": "2012.13723v3.pdf",
+  "arxiv_id": "2012.13723",
+  "figure": "FIG. 4",
+  "compound": "Ba0.6K0.4Fe2As2",
+  "sample_form": "thin_film",
+  "field_orientation": "H//c",
+  "pdf": "audit/arxiv_pdfs/2012.13723v3.pdf",
+  "page": 4,
+  "clip": [
+    0.52,
+    0.08,
+    0.99,
+    0.36
+  ],
+  "dpi_scale": 4.0,
+  "x": {
+    "log": false,
+    "label": "field_T"
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2"
+  },
+  "series": [
+    {
+      "name": "4K",
+      "temperature_K": 4.0,
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 45,
+      "min_px": 20,
+      "max_px": 900
+    },
+    {
+      "name": "8K",
+      "temperature_K": 8.0,
+      "rgb": [
+        96,
+        0,
+        192
+      ],
+      "tol": 45,
+      "min_px": 20,
+      "max_px": 900
+    },
+    {
+      "name": "12K",
+      "temperature_K": 12.0,
+      "rgb": [
+        0,
+        0,
+        192
+      ],
+      "tol": 45,
+      "min_px": 20,
+      "max_px": 900
+    },
+    {
+      "name": "16K",
+      "temperature_K": 16.0,
+      "rgb": [
+        0,
+        192,
+        0
+      ],
+      "tol": 45,
+      "min_px": 20,
+      "max_px": 900
+    },
+    {
+      "name": "20K",
+      "temperature_K": 20.0,
+      "rgb": [
+        168,
+        168,
+        0
+      ],
+      "tol": 45,
+      "min_px": 20,
+      "max_px": 900
+    },
+    {
+      "name": "24K",
+      "temperature_K": 24.0,
+      "rgb": [
+        192,
+        96,
+        0
+      ],
+      "tol": 45,
+      "min_px": 20,
+      "max_px": 900
+    },
+    {
+      "name": "28K",
+      "temperature_K": 28.0,
+      "rgb": [
+        192,
+        0,
+        0
+      ],
+      "tol": 45,
+      "min_px": 20,
+      "max_px": 900
+    }
+  ],
+  "inset": 6
+}
