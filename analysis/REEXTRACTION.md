@@ -74,6 +74,43 @@ Three independent checks that the numbers are the paper's:
    route ran at 85-100% and 0.29 respectively; the papers that were withdrawn
    ran at 0.09.
 
+## Calibration without a text layer
+
+`read_ticks` needs the axis labels to be real text in the PDF. Six of the nine
+figures located by the archive text search have none: the figure is an embedded
+raster or its labels are outlined, and on `10.1016/j.cjph.2024.09.042` p5 the
+page carries 483 words with not one of them inside the figure.
+
+`geometry_ticks` covers that case. The major ticks of an evenly divided axis are
+equally spaced whatever the figure is made of, so `axis_ticks.uniform_majors`
+measures their pixel positions by searching tick-length thresholds for the one
+whose surviving ticks are most evenly spaced, and refusing when none clears a
+uniformity of 0.02. Only two numbers are then supplied per axis, the value at
+the first major tick and the value at the last; every intermediate major is
+predicted.
+
+**It reproduces the read-the-labels route.** 2012.13723 FIG. 4 is the only
+figure whose x axis can be done both ways. Over its 265 points the two routes
+differ by at most 0.00106 T on a 7 T span, the Jc values are identical, and the
+implied step comes out at exactly 1.0.
+
+**A wrong typed value is refused, not flagged.** Typing 2 for the first major
+gives an implied step of 0.8, typing 7 for the last gives 1.2, and swapping the
+two gives -1.0. None of these is caught by the re-projection residual, which
+stays at 0.005 px because the pixels are measured correctly and only their
+labelling is wrong. All three are caught by the round-step check and raise.
+`analysis/test_geometry_calibration.py` asserts the reproduction, the three
+mutations and the refusal.
+
+**Where it does not work: log y axes.** On all five figures tried, the bottom
+axis calibrates and the left axis refuses. The tick-length measurement walks
+inward from the frame, so a data curve reaching the axis reads as a long tick
+and the major set is no longer evenly spaced. Mirroring to the right spine does
+not help. So the geometry route halves the problem rather than solving it: a
+figure with no text layer still cannot be measured end to end until either
+marker-shape separation cleans the tick set or the y axis is calibrated some
+other way.
+
 ## A finding about the screen itself
 
 `audit_extraction_integrity.py` grades this re-extraction **CHECK**, on

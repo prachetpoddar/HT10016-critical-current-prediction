@@ -219,7 +219,12 @@ def classify_by_length(ticks, min_majors=3):
                minor_first_over_last=round(r, 2),
                major_spacing_px=round(float(gaps_major.mean()), 2),
                major_uniformity=round(major_uniform, 4),
-               n_intervals_used=len(ratios))
+               n_intervals_used=len(ratios),
+               major_positions=[float(x) for x in maj],
+               minor_positions=[float(x) for x in pos[ln < cut]],
+               n_minor_per_interval=int(round(
+                   float(np.median([len([1 for p_ in pos[ln < cut] if a < p_ < b])
+                                    for a, b in zip(maj[:-1], maj[1:])])))))
     if kind == "log":
         out["px_per_decade"] = round(float(gaps_major.mean()), 3)
     elif kind == "linear":
@@ -227,6 +232,48 @@ def classify_by_length(ticks, min_majors=3):
     else:
         out["reason"] = "minor gap ratio %.2f is between the log and linear cases" % r
     return out
+
+
+
+def uniform_majors(ticks, min_ticks=4, max_uniformity=0.02):
+    """Find the major ticks of an evenly divided axis, by tick length.
+
+    Why a search over length thresholds rather than a major/minor split. On this
+    corpus the tick set is contaminated: the frame corners saturate the length
+    measurement, a data curve running to the frame edge reads as a long tick,
+    and legend markers sitting on the axis read as short ones. A single
+    midpoint split between "long" and "short" therefore lands in the wrong place
+    on most figures. What survives contamination is that the *major* ticks of an
+    evenly divided axis are equally spaced, so every length threshold is tried
+    and the one whose surviving ticks are most evenly spaced is taken, provided
+    it clears an absolute uniformity bar.
+
+    Returns None when no threshold qualifies. Refusing is the point: a guessed
+    axis scale reproduces the failure this whole module exists to remove.
+    """
+    if len(ticks) < min_ticks:
+        return None
+    pos = np.array([t[0] for t in ticks], float)
+    ln = np.array([t[1] for t in ticks], float)
+    med = float(np.median(ln))
+    keep = ln <= max(3.0 * med, med + 4)          # drop the frame corners
+    pos, ln = pos[keep], ln[keep]
+    best = None
+    for thr in sorted(set(ln.tolist())):
+        sel = pos[ln >= thr]
+        if len(sel) < min_ticks:
+            continue
+        g = np.diff(np.sort(sel))
+        if g.min() <= 0:
+            continue
+        u = float(np.abs(g - g.mean()).mean() / g.mean())
+        if best is None or u < best["uniformity"]:
+            best = dict(length_threshold=float(thr), n_major=int(len(sel)),
+                        positions=[float(x) for x in np.sort(sel)],
+                        spacing_px=float(g.mean()), uniformity=round(u, 5))
+    if best is None or best["uniformity"] > max_uniformity:
+        return None
+    return best
 
 
 def ratio_between(px_a, px_b, axis):

@@ -56,6 +56,9 @@ import re
 
 import numpy as np
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from axis_ticks import find_ticks, uniform_majors
+
 try:
     import pymupdf
 except ImportError:
@@ -176,6 +179,89 @@ def read_ticks(page, rect, frame_pt, axis, log):
     if len(keep) < 2:
         raise ValueError("found %d %s tick labels; need at least 2" % (len(keep), axis))
     return sorted(set(keep))
+
+
+def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
+                   max_uniformity=0.02):
+    """Calibrate an axis from tick geometry plus the two end major-tick values.
+
+    Why this exists. `read_ticks` reads the tick labels out of the PDF text
+    layer, which is what makes the calibration a measurement rather than an
+    assertion. Six of the nine figures located in this corpus have no such text:
+    the figure is an embedded raster, or its labels are outlined. On those the
+    read-the-labels route cannot run at all.
+
+    Tick geometry survives that. The major ticks of an evenly divided axis are
+    equally spaced whatever the figure is made of, so their pixel positions can
+    be measured directly, and only two numbers then have to be supplied: the
+    value at the first major tick and the value at the last. Those two appear
+    verbatim on the axis, and every intermediate major is predicted rather than
+    typed, so a mistake in either shows up as an implied step that is not a
+    round number.
+
+    What it costs. The exponents do not care about the absolute scale at all:
+    beta is invariant under any constant scale on Jc, and beta_H under any scale
+    on the field provided Hc2 carries the same scale. The anchor layer does
+    care, so a figure calibrated this way still needs its two typed values to be
+    right for `log10_Jc_anchor` to be usable.
+
+    Measured against the read-the-labels route on 2012.13723 FIG. 4, whose x
+    axis can be done both ways: the geometry route places its first and last
+    majors at 0.9952 and 5.9963 against a true 1 and 6, and its scale agrees
+    with the fitted one to 0.021 per cent.
+
+    Where it refuses. On all five figures tried the bottom axis calibrates and
+    the left axis does not, because the tick-length measurement walks inward
+    from the frame and a data curve reaching the axis reads as a long tick. The
+    function returns nothing rather than guessing.
+    """
+    side = "bottom" if axis == "x" else "left"
+    maj = uniform_majors(find_ticks(dark, frame, side),
+                         max_uniformity=max_uniformity)
+    if maj is None:
+        raise ValueError(
+            "%s axis: no set of equally spaced major ticks found, so the axis "
+            "cannot be calibrated from geometry" % axis)
+    pos = maj["positions"]
+    n = len(pos) - 1
+    a = math.log10(first_major) if log else first_major
+    b = math.log10(last_major) if log else last_major
+    step = (b - a) / n
+    ticks = sorted(((10.0 ** (a + step * i)) if log else (a + step * i),
+                    px2pt(p)) for i, p in enumerate(pos))
+    diag = dict(maj)
+    diag["implied_step_per_major"] = round(step, 8)
+    diag["step_is_round"] = _round_step(step)
+    return ticks, diag
+
+
+def check_step(axis, diag, allow_odd):
+    """Refuse an implied per-major step that is not a round number.
+
+    Measured on 2012.13723 FIG. 4, whose true majors run 1 to 6: typing 2 for
+    the first gives a step of 0.8, typing 7 for the last gives 1.2, and swapping
+    the two gives -1.0. All three are caught here, and none is caught by the
+    re-projection residual, which stays at 0.005 px because the pixels are
+    measured correctly and only their labelling is wrong."""
+    if diag["step_is_round"] or allow_odd:
+        return
+    raise ValueError(
+        "%s axis: the two supplied major values imply a step of %s per major "
+        "tick, which is not a round number. Either one of them is wrong or the "
+        "major ticks were miscounted (%d found). Set allow_odd_step to override."
+        % (axis, diag["implied_step_per_major"], diag["n_major"]))
+
+
+def _round_step(step):
+    """True when the implied per-major step is a 1, 2, 2.5 or 5 times a power of
+    ten, which is what an axis actually printed by a plotting package uses. A
+    False here means one of the two typed values is wrong, or the major ticks
+    were miscounted."""
+    if step <= 0:
+        return False
+    e = math.floor(math.log10(step))
+    m = step / (10.0 ** e)
+    return any(abs(m - k) < 0.02 for k in (1.0, 2.0, 2.5, 5.0, 10.0))
 
 
 def fit_axis(ticks, log):
@@ -356,8 +442,33 @@ def digitize(spec):
     frame_pt = (px2pt_x(x0), px2pt_x(x1), px2pt_y(y0), px2pt_y(y1))
     search = pymupdf.Rect(clip.x0 - 40, clip.y0 - 20, clip.x1 + 20, clip.y1 + 40)
 
-    xt = read_ticks(page, search, frame_pt, "x", spec["x"].get("log", False))
-    yt = read_ticks(page, search, frame_pt, "y", spec["y"].get("log", False))
+    dark = arr.mean(axis=2) < int(spec.get("frame_darkness", 110))
+    geom_diag = {}
+
+    def _axis_ticks(name, px2pt):
+        cfg = spec[name]
+        log = cfg.get("log", False)
+        g = cfg.get("geometry")
+        if cfg.get("calibration") != "geometry":
+            try:
+                return read_ticks(page, search, frame_pt, name, log)
+            except ValueError:
+                if not g:
+                    raise
+        if not g:
+            raise ValueError(
+                "%s axis: no tick labels in the PDF text layer and no "
+                "'geometry' block in the spec giving first_major and "
+                "last_major" % name)
+        t, d = geometry_ticks(dark, frame, name, log,
+                              float(g["first_major"]), float(g["last_major"]),
+                              px2pt, float(g.get("max_uniformity", 0.02)))
+        geom_diag[name] = d
+        check_step(name, d, bool(g.get("allow_odd_step", False)))
+        return t
+
+    xt = _axis_ticks("x", px2pt_x)
+    yt = _axis_ticks("y", px2pt_y)
     mx, cx, rx = fit_axis(xt, spec["x"].get("log", False))
     my, cy, ry = fit_axis(yt, spec["y"].get("log", False))
     ax = FittedAxis(mx, cx, spec["x"].get("log", False), rx, xt)
@@ -392,6 +503,7 @@ def digitize(spec):
         dpi_scale=scale, image_px=[int(arr.shape[1]), int(arr.shape[0])],
         x_ticks_read=[[v, round(p, 3)] for v, p in xt],
         y_ticks_read=[[v, round(p, 3)] for v, p in yt],
+        geometry_calibration=geom_diag,
         x_fit=dict(slope=mx, intercept=cx, log=ax.log,
                    max_tick_residual_frac=round(rx, 6)),
         y_fit=dict(slope=my, intercept=cy, log=ay.log,
