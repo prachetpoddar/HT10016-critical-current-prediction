@@ -49,8 +49,10 @@ CODE = "H_below_validated_reduced_field"
 # screening threshold of 1 in the exponent, and Sec. III.E restricts dispatch to
 # families that pass. Applying that rule to the field axis on the corrected
 # cohort, iron chalcogenide 11-type is at 1.093 and iron pnictide 1111-type at
-# 3.13, so neither passes; MgB2-class at 0.753 and iron pnictide 122-type at
-# 0.973 do. The manuscript previously reported the chalcogenide value while
+# 2.571, so neither passes; MgB2-class at 0.753 and iron pnictide 122-type at
+# 0.973 do. (This comment said 3.13 for the 1111 family, which no longer
+# matches data/phase_3_p47_compound_leave_out_MAE.csv; the values are read from
+# that table at run time, so only the comment was wrong.) The manuscript previously reported the chalcogenide value while
 # still labelling that family field-validated and dispatching it, which is the
 # contradiction this gate removes. The thresholds are read from the deposited
 # leave-one-out table rather than hardcoded, so a change in the cohort moves the
@@ -65,9 +67,10 @@ VALUE_COLS = ["predicted_log_Jc", "predicted_log_Jc_lower_95",
 
 # The gate is non-destructive. A refused target's value is moved into a
 # withheld_ column rather than deleted, so the dispatch emits nothing while the
-# value the model would have produced stays auditable. Sec. 16 of the
-# Supplemental Material reports that withheld set, labelled as what it is: a
-# projection outside the validated window, not a prediction. Deleting it would
+# value the model would have produced stays auditable. audit/field_window_gate.
+# csv is that withheld set, labelled as what it is: a projection outside the
+# validated window, not a prediction. (This comment pointed at "Sec. 16 of the
+# Supplemental Material", which has fifteen sections and no such section.) Deleting it would
 # have made the paper's own scope boundary unfalsifiable, and would have thrown
 # away the evidence for what the framework covers if the cohort grows.
 WITHHELD_COLS = {c: "withheld_" + c.replace("predicted_", "")

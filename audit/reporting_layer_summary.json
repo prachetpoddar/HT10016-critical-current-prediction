@@ -1,13 +1,10 @@
 {
- "total_tuples": 2151,
- "emitted_by_dispatch": 1386,
- "compounds_dispatched": 125,
+ "total_tuples": 2097,
+ "emitted_by_dispatch": 163,
+ "compounds_dispatched": 84,
  "tuples_flagged_record_below_grid_floor": 189,
- "tuples_flagged_calibration_outlier": 6,
- "emitted_tuples_removed": 6,
- "compounds_reported": 123,
- "compounds_removed": [
-  "Fe1Se0.05Te0.95",
-  "Fe1Te1"
- ]
+ "tuples_flagged_calibration_outlier": 0,
+ "emitted_tuples_removed": 0,
+ "compounds_reported": 84,
+ "compounds_removed": []
 }

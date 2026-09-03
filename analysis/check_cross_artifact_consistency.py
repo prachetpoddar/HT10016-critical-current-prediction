@@ -143,6 +143,25 @@ ALLOWED = [
 ]
 
 
+def repeated_phrases(text, n=8, min_chars=40):
+    """Immediately repeated phrases, which is how a bad edit shows up.
+
+    An edit whose find string is a PREFIX of its replacement matches its own
+    output on a second run and appends the new clause twice. That happened to
+    the Fig. 5 caption, which read "...which at present is the MgB2 class
+    alone, which at present is the MgB2 class alone,". No check saw it: every
+    number was right and no tracked token was present. This one reads the
+    sentence instead of the numbers.
+    """
+    w = re.sub(r"\s+", " ", text).split(" ")
+    out = []
+    for i in range(len(w) - 2 * n):
+        a, b = " ".join(w[i:i + n]), " ".join(w[i + n:i + 2 * n])
+        if a == b and len(a) >= min_chars:
+            out.append(a)
+    return sorted(set(out))
+
+
 def docx_text(path):
     x = zipfile.ZipFile(path).read("word/document.xml").decode("utf8", "ignore")
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", x))
@@ -190,6 +209,9 @@ def main():
                 (pending if token in OUTSTANDING else bad).append(
                     (token, why, window.strip()))
         outstanding.extend((label, t) for t, _, _ in pending)
+        for phrase in repeated_phrases(text):
+            bad.append(("a phrase repeats itself", "an edit matched its own "
+                        "output", phrase))
         if bad:
             failures += 1
             print("%-26s %d stale string(s)" % (label, len(bad)))

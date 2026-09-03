@@ -5,24 +5,18 @@ Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,4.2,5.0,,T_above_Tc,False,record_below
 Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,20.0,0.1,,T_above_Tc,False,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
 Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,20.0,1.0,,T_above_Tc,False,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
 Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,20.0,5.0,,T_above_Tc,False,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
-Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,0.1,9.496827252954537,,True,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
-Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,0.1,9.496827252954537,,True,calibration_outlier,0.77*Tc extrapolation far below family calibration cohort
-Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,1.0,9.485691710204012,,True,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
-Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,1.0,9.485691710204012,,True,calibration_outlier,0.77*Tc extrapolation far below family calibration cohort
-Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,5.0,9.433259390877138,,True,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
-Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,5.0,9.433259390877138,,True,calibration_outlier,0.77*Tc extrapolation far below family calibration cohort
+Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,0.1,,H_below_validated_reduced_field,False,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
+Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,1.0,,H_below_validated_reduced_field,False,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
+Fe1Se0.05Te0.95,iron_chalcogenide_11,3.35,2.5795000000000003,5.0,,H_below_validated_reduced_field,False,record_below_grid_floor,Tc anchor 3.35 K < 4.2 K grid floor
 Fe1Te1,iron_chalcogenide_11,1.5,4.2,0.1,,T_above_Tc,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
 Fe1Te1,iron_chalcogenide_11,1.5,4.2,1.0,,T_above_Tc,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
 Fe1Te1,iron_chalcogenide_11,1.5,4.2,5.0,,T_above_Tc,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
 Fe1Te1,iron_chalcogenide_11,1.5,20.0,0.1,,T_above_Tc,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
 Fe1Te1,iron_chalcogenide_11,1.5,20.0,1.0,,T_above_Tc,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
 Fe1Te1,iron_chalcogenide_11,1.5,20.0,5.0,,T_above_Tc,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
-Fe1Te1,iron_chalcogenide_11,1.5,1.155,0.1,9.496827252954537,,True,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
-Fe1Te1,iron_chalcogenide_11,1.5,1.155,0.1,9.496827252954537,,True,calibration_outlier,0.77*Tc extrapolation far below family calibration cohort
-Fe1Te1,iron_chalcogenide_11,1.5,1.155,1.0,9.485540850494706,,True,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
-Fe1Te1,iron_chalcogenide_11,1.5,1.155,1.0,9.485540850494706,,True,calibration_outlier,0.77*Tc extrapolation far below family calibration cohort
-Fe1Te1,iron_chalcogenide_11,1.5,1.155,5.0,9.4321765893952,,True,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
-Fe1Te1,iron_chalcogenide_11,1.5,1.155,5.0,9.4321765893952,,True,calibration_outlier,0.77*Tc extrapolation far below family calibration cohort
+Fe1Te1,iron_chalcogenide_11,1.5,1.155,0.1,,H_below_validated_reduced_field,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
+Fe1Te1,iron_chalcogenide_11,1.5,1.155,1.0,,H_below_validated_reduced_field,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
+Fe1Te1,iron_chalcogenide_11,1.5,1.155,5.0,,H_below_validated_reduced_field,False,record_below_grid_floor,Tc anchor 1.5 K < 4.2 K grid floor
 As2Co0.068Fe1.932K1,iron_pnictide_122,1.845,4.2,0.1,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.845 K < 4.2 K grid floor
 As2Co0.068Fe1.932K1,iron_pnictide_122,1.845,4.2,1.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.845 K < 4.2 K grid floor
 As2Co0.068Fe1.932K1,iron_pnictide_122,1.845,4.2,5.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.845 K < 4.2 K grid floor
@@ -65,18 +59,18 @@ As2Cs1Fe2,iron_pnictide_122,2.08,4.2,5.0,,Hc2_unavailable,False,record_below_gri
 As2Cs1Fe2,iron_pnictide_122,2.08,20.0,0.1,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
 As2Cs1Fe2,iron_pnictide_122,2.08,20.0,1.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
 As2Cs1Fe2,iron_pnictide_122,2.08,20.0,5.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
-As2Cs1Fe2,iron_pnictide_122,2.08,1.6016000000000001,0.1,17.420957315549423,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
-As2Cs1Fe2,iron_pnictide_122,2.08,1.6016000000000001,1.0,17.420957315549423,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
-As2Cs1Fe2,iron_pnictide_122,2.08,1.6016000000000001,5.0,17.420957315549423,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
+As2Cs1Fe2,iron_pnictide_122,2.08,1.6016,0.1,17.420957315549423,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
+As2Cs1Fe2,iron_pnictide_122,2.08,1.6016,1.0,17.420957315549423,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
+As2Cs1Fe2,iron_pnictide_122,2.08,1.6016,5.0,17.420957315549423,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.08 K < 4.2 K grid floor
 As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,4.2,0.1,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
 As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,4.2,1.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
 As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,4.2,5.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
 As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,20.0,0.1,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
 As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,20.0,1.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
 As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,20.0,5.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
-As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,1.7748500000000003,0.1,17.426776495403338,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
-As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,1.7748500000000003,1.0,17.426776495403338,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
-As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,1.7748500000000003,5.0,17.426776495403338,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
+As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,1.7748500000000005,0.1,17.426776495403338,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
+As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,1.7748500000000005,1.0,17.426776495403338,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
+As2Fe1.78Ni0.22Sr1,iron_pnictide_122,2.305,1.7748500000000005,5.0,17.426776495403338,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 2.305 K < 4.2 K grid floor
 As2Fe1.9Pt0.1Sr1,iron_pnictide_122,1.6,4.2,0.1,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.6 K < 4.2 K grid floor
 As2Fe1.9Pt0.1Sr1,iron_pnictide_122,1.6,4.2,1.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.6 K < 4.2 K grid floor
 As2Fe1.9Pt0.1Sr1,iron_pnictide_122,1.6,4.2,5.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.6 K < 4.2 K grid floor
@@ -146,9 +140,9 @@ B2Ce1Ru3,conventional_AlB2,0.55,4.2,5.0,,Hc2_unavailable,False,record_below_grid
 B2Ce1Ru3,conventional_AlB2,0.55,20.0,0.1,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
 B2Ce1Ru3,conventional_AlB2,0.55,20.0,1.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
 B2Ce1Ru3,conventional_AlB2,0.55,20.0,5.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
-B2Ce1Ru3,conventional_AlB2,0.55,0.42350000000000004,0.1,14.853201201835986,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
-B2Ce1Ru3,conventional_AlB2,0.55,0.42350000000000004,1.0,14.853201201835986,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
-B2Ce1Ru3,conventional_AlB2,0.55,0.42350000000000004,5.0,14.853201201835986,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
+B2Ce1Ru3,conventional_AlB2,0.55,0.4235,0.1,14.853201201835986,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
+B2Ce1Ru3,conventional_AlB2,0.55,0.4235,1.0,14.853201201835986,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
+B2Ce1Ru3,conventional_AlB2,0.55,0.4235,5.0,14.853201201835986,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 0.55 K < 4.2 K grid floor
 B2Ir3La1,conventional_AlB2,1.65,4.2,0.1,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.65 K < 4.2 K grid floor
 B2Ir3La1,conventional_AlB2,1.65,4.2,1.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.65 K < 4.2 K grid floor
 B2Ir3La1,conventional_AlB2,1.65,4.2,5.0,,Hc2_unavailable,False,record_below_grid_floor,Tc anchor 1.65 K < 4.2 K grid floor

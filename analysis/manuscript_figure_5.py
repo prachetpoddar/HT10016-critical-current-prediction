@@ -42,6 +42,7 @@ import pandas as _pd, os as _os
 _p = _pd.read_csv(_os.path.join("data", "phase_3_p57_de_novo_predictions.csv"),
                   low_memory=False)
 _e = _p[_p.refusal_flag.fillna("") == ""]
+_EM = _e   # the emitted set, used again below to mark the grid
 HALF = float((_e.predicted_log_Jc_upper_95 - _e.predicted_log_Jc_lower_95).median()) / 2
 H_MIN_VALID=0.30                # field-axis applicability bound, Eq. (1)
 T_MAX_VALID=0.70                # temperature-axis applicability bound, Eq. (1)
@@ -79,10 +80,16 @@ for k in ORDER:
     axR.fill_between(h[val],y[val]-HALF,y[val]+HALF,color=COL[k],alpha=0.15,lw=0,zorder=1)
     for HT in (0.1,1.0,5.0):                       # the dispatch grid
         hh=HT/p["Hc2"]
+        # Filled where the dispatch actually emits, open where it refuses.
+        # Read from the deposited table rather than assumed: after the
+        # reduced-field and reduced-temperature gates only one family and one
+        # field survive, and drawing every grid point identically said the
+        # opposite.
+        live=bool(len(_EM[(_EM.substructure==k)&(np.isclose(_EM.H_T,HT))]))
         axR.plot(hh,p["logJc_H"]+p["beta_H"]*np.log10(1-hh),marker="o",ms=3.4,
-                 mfc="white",mec=COL[k],mew=1.1,zorder=4)
+                 mfc=COL[k] if live else "white",mec=COL[k],mew=1.1,zorder=4)
 axR.axvspan(0,H_MIN_VALID,color="0.90",zorder=0)
-axR.text(0.145,0.055,"dispatch grid\nsits here",transform=axR.transAxes,ha="center",va="bottom",
+axR.text(0.145,0.055,"refused:\nbelow the bound",transform=axR.transAxes,ha="center",va="bottom",
          fontsize=7,color="0.35",linespacing=1.15)
 axR.axvline(H_MIN_VALID,color="0.45",lw=0.7,ls=":",zorder=2)
 axR.set_xlabel(r"Reduced field $H/H_{c2,0}$")
@@ -96,7 +103,8 @@ axR.annotate("ordering reverses",xy=(0.589,5.463),xytext=(0.40,6.05),fontsize=7,
 
 handles=[Line2D([],[],color=COL[k],lw=1.6,label=LAB[k]) for k in ORDER]
 handles+=[Line2D([],[],color="0.35",lw=1.2,ls=(0,(4,2)),label="outside applicability window"),
-          Line2D([],[],color="0.35",lw=0,marker="o",ms=3.4,mfc="white",mec="0.35",label="evaluated dispatch grid point")]
+          Line2D([],[],color="0.35",lw=0,marker="o",ms=3.4,mfc="0.35",mec="0.35",label="dispatched grid point"),
+          Line2D([],[],color="0.35",lw=0,marker="o",ms=3.4,mfc="white",mec="0.35",label="grid point refused")]
 fig.legend(handles=handles,loc="lower center",ncol=3,frameon=False,fontsize=7.6,
            bbox_to_anchor=(0.5,-0.055),columnspacing=1.5,handletextpad=0.6)
 fig.tight_layout(rect=[0,0.055,1,1])

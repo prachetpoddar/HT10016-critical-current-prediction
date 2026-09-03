@@ -263,10 +263,14 @@ def edits(N):
              "cell otherwise." % N["anchor"],
              "two of the three rules are not exercised by any dispatch",
              None),
+            # The find string must not be a prefix of its own replacement.
+            # It was, so a second run matched the replaced text again and
+            # appended the new clause twice. The trailing comma is what makes
+            # this one match once and once only.
             ("These curves apply only to candidates that pass the refusal "
-             "gates",
+             "gates, and panel (b)",
              "These curves apply only to candidates that pass the refusal "
-             "gates, which at present is the MgB2 class alone",
+             "gates, which at present is the MgB2 class alone, and panel (b)",
              "Fig. 5 caption, matched to the dispatch", None),
         ],
         supplement=[
