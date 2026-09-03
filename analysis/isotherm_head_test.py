@@ -41,6 +41,13 @@ Result on this corpus, recorded in audit/isotherm_head_test.csv:
 The separation is total between the beta_T source and the named route, and no
 other signature in the deposit's screen separates them at all.
 
+What the signature means. It marks a coarse reading of a figure at its axis
+ticks, not an invented one. The beta_T source is the output of the first
+extraction pass, frozen 2026-04-27 and superseded three times afterwards by
+passes that are in this repository and were never merged back; see
+audit/extraction_generations.md. A record this test flags should be re-measured,
+not treated as fabricated.
+
 The direct confirmation is 2012.13723, the one figure re-extracted by
 measurement. Its deposited 4 K isotherm is 1e6, 8e5, 6e5, 5e5, 4e5, 3e5, 2e5,
 1.5e5 and its isotherm heads step by exactly 1e5. The figure starts at
