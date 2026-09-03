@@ -78,13 +78,19 @@ the same table: it crosses the C/B boundary at the first withdrawal, 0.2671 to
 | springer_10.1038_s41598-022-24044-5 | FST_6K | thin_film | -0.001095 |
 
 All three are `iron_chalcogenide_11 / thin_film`. A negative field is a
-digitiser or axis-calibration output, not a measurement setpoint, which means
-the anchor layer carries per-paper scale error. `analysis/axis_ticks.py` says
-so directly: a per-paper scale error moves `log10_Jc_anchor` by log10(k) and
-does corrupt the variance decomposition. The claim that the diagnostic is
-independent of the field scale is therefore false; independence from the fitted
-exponents beta_T and beta_H is true, because the anchor table shares no column
-with the fit tables.
+digitiser or axis-calibration output, not a measurement setpoint, so the anchor
+layer carries per-paper axis error.
+
+**Correction.** An earlier version of this note said those three values corrupt
+the variance decomposition. That is too strong and is withdrawn. The
+decomposition never reads `H_anchor_T`, so correcting the sign changes eta^2 by
+exactly zero; removing the three rows gives 0.7553, still Outcome A. Measured
+from the source series, the local slope at each isotherm head puts the worst
+propagated error at 0.0098 dex, because Jc(H) is flat at the self-field head.
+They are a real defect and real evidence of axis error, but Outcome A does not
+rest on them. It rests on the two rows in `audit/full_repo_sweep_20260903.md`
+section 2.2, which the deposit's own repair plan marks for withdrawal and which
+take the family from 0.7687 to 0.0385.
 
 ## What is defensible
 
