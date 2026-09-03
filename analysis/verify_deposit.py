@@ -284,6 +284,26 @@ def main():
           "run analysis/audit_hc2_tables.py: " + "; ".join(
               b.split("FAILED")[0].strip() for b in bad) if bad else "")
 
+    # The paper-clustered permutation table is a derived artifact of the anchor
+    # cohort, and nothing read it. It was still describing the pre-withdrawal
+    # cohort, 69 samples against 60, with the 122 family at n=16 and eta^2
+    # 0.5988 against 9 and 0.3452. That is the exact failure this script exists
+    # to catch, a withdrawal applied to the source and not to what derives from
+    # it, so the sample counts are now checked against the live cohort.
+    perm = os.path.join("audit", "permutation_paper_clustered.csv")
+    if os.path.exists(perm):
+        pt = pd.read_csv(perm).set_index("scope")
+        live = {"aggregate": len(agg)}
+        for sub, g in agg.groupby("substructure"):
+            live[sub] = len(g)
+        drift = {k: (int(pt.loc[k, "n"]), v) for k, v in live.items()
+                 if k in pt.index and int(pt.loc[k, "n"]) != v}
+        check("the permutation table describes the current cohort",
+              not drift,
+              "; ".join("%s table %d vs cohort %d" % (k, a_, b)
+                        for k, (a_, b) in drift.items())
+              or "run analysis/permutation_test.py")
+
     withdrawn = os.path.join("audit", "withdrawn_records.csv")
     if os.path.exists(withdrawn):
         w = pd.read_csv(withdrawn)
