@@ -1,0 +1,94 @@
+cohort,record,n_isotherms,round_heads,ladder,ladder_kind,verdict,heads
+beta_T source (v3_2_1 iron),0806.2839v1.pdf,3,True,True,geometric,LADDER (geometric),1e+06 1e+05 1e+04
+beta_T source (v3_2_1 iron),0903.0004v2.pdf,3,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05
+beta_T source (v3_2_1 iron),0904.2442v1.pdf,4,True,False,,round heads,1e+09 1e+09 1e+09 9e+08
+beta_T source (v3_2_1 iron),0906.0444v1.pdf,8,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05 7e+05 6e+05 5e+05 4e+05 3e+05
+beta_T source (v3_2_1 iron),0907.0147v2.pdf,5,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05 7e+05 6e+05
+beta_T source (v3_2_1 iron),0907.4227v1.pdf,2,True,False,,round heads,9000 2000
+beta_T source (v3_2_1 iron),1002.0208v2.pdf,7,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05 7e+05 6e+05 5e+05 4e+05
+beta_T source (v3_2_1 iron),1002.0248v1.pdf,7,True,False,,round heads,1e+05 4e+04 2e+04 1e+04 5000 2000 1000
+beta_T source (v3_2_1 iron),1003.0153v1.pdf,1,,False,,too few isotherms,1000
+beta_T source (v3_2_1 iron),1003.0946v2.pdf,5,True,False,,round heads,9000 4000 68 62 60
+beta_T source (v3_2_1 iron),1009.4896v1.pdf,6,True,False,,round heads,1e+04 8000 6000 4000 3000 2000
+beta_T source (v3_2_1 iron),1012.0894v1.pdf,1,,False,,too few isotherms,1e+06
+beta_T source (v3_2_1 iron),1103.1809v1.pdf,2,True,False,,round heads,1e+04 9000
+beta_T source (v3_2_1 iron),1104.0477v2.pdf,5,True,True,arithmetic,LADDER (arithmetic),1e+06 8e+05 6e+05 4e+05 2e+05
+beta_T source (v3_2_1 iron),1108.0407v1.pdf,8,True,True,arithmetic,LADDER (arithmetic),1e+05 9.5e+04 9e+04 8.5e+04 8e+04 7.5e+04 7e+04 6.5e+04
+beta_T source (v3_2_1 iron),1108.5583v3.pdf,3,True,True,arithmetic,LADDER (arithmetic),500 400 300
+beta_T source (v3_2_1 iron),1109.5479v1.pdf,3,True,True,arithmetic,LADDER (arithmetic),9e+08 8e+08 7e+08
+beta_T source (v3_2_1 iron),1111.3923v1.pdf,6,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05 7e+05 6e+05 5e+05
+beta_T source (v3_2_1 iron),1204.0339v2.pdf,5,True,True,arithmetic,LADDER (arithmetic),1e+05 9e+04 8e+04 7e+04 6e+04
+beta_T source (v3_2_1 iron),1303.2586v1.pdf,6,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05 7e+05 6e+05 5e+05
+beta_T source (v3_2_1 iron),1311.5370v1.pdf,3,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05
+beta_T source (v3_2_1 iron),1403.1947v2.pdf,2,True,False,,round heads,9e+06 7e+06
+beta_T source (v3_2_1 iron),1406.3109v1.pdf,1,,False,,too few isotherms,7e+05
+beta_T source (v3_2_1 iron),1502.05345v1.pdf,5,False,True,geometric,LADDER (geometric),1e+06 5e+05 2.5e+05 1.25e+05 6.25e+04
+beta_T source (v3_2_1 iron),1511.04938v1.pdf,6,True,False,,round heads,1200 1000 700 600 500 400
+beta_T source (v3_2_1 iron),1606.01477v2.pdf,2,True,False,,round heads,5e+05 4e+05
+beta_T source (v3_2_1 iron),1611.08455v1.pdf,5,True,True,arithmetic,LADDER (arithmetic),1e+04 9000 8000 7000 6000
+beta_T source (v3_2_1 iron),1612.02839v1.pdf,3,True,True,arithmetic,LADDER (arithmetic),10 9 8
+beta_T source (v3_2_1 iron),1710.07550v1.pdf,3,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05
+beta_T source (v3_2_1 iron),1712.02558v1.pdf,3,True,True,arithmetic,LADDER (arithmetic),1e+06 8e+05 6e+05
+beta_T source (v3_2_1 iron),1801.04972v1.pdf,2,True,False,,round heads,7e+06 5e+06
+beta_T source (v3_2_1 iron),1801.05074v1.pdf,12,True,True,arithmetic,LADDER (arithmetic),5e+05 4.8e+05 4.6e+05 4.4e+05 4.2e+05 4e+05 3.8e+05 3.6e+05
+beta_T source (v3_2_1 iron),1802.06160v1.pdf,2,True,False,,round heads,800 400
+beta_T source (v3_2_1 iron),1802.09868v1.pdf,6,True,False,,round heads,1e+07 9e+06 8e+06 6e+06 1.5e+06 1e+06
+beta_T source (v3_2_1 iron),1903.00866v2.pdf,7,True,False,,round heads,1e+06 8e+05 6e+05 5e+05 4e+05 3e+05 2e+05
+beta_T source (v3_2_1 iron),2012.13723v3.pdf,7,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05 7e+05 6e+05 5e+05 4e+05
+beta_T source (v3_2_1 iron),2110.15577v1.pdf,4,True,True,arithmetic,LADDER (arithmetic),1e+07 9e+06 8e+06 7e+06
+beta_T source (v3_2_1 iron),2207.06629v1.pdf,8,True,False,,round heads,1e+07 8e+06 6e+06 5e+06 4e+06 3e+06 2e+06 1e+06
+beta_T source (v3_2_1 iron),2305.10034v1.pdf,3,True,False,,round heads,1e+06 5e+05 2e+05
+beta_T source (v3_2_1 iron),2308.10492v1.pdf,5,True,True,arithmetic,LADDER (arithmetic),1e+06 8e+05 6e+05 4e+05 2e+05
+beta_T source (v3_2_1 iron),2403.19981v1.pdf,6,True,True,arithmetic,LADDER (arithmetic),100 90 80 70 60 50
+beta_T source (v3_2_1 iron),2510.10264v1.pdf,4,True,True,arithmetic,LADDER (arithmetic),1e+06 8e+05 6e+05 4e+05
+beta_T source (v3_2_1 iron),2511.19058v1.pdf,7,True,True,arithmetic,LADDER (arithmetic),1e+06 9e+05 8e+05 7e+05 6e+05 5e+05 4e+05
+Cohort B vision,elsevier_10.1016_0921-4534(96)00225-0_VISION_PASS_LONG.csv,1,,False,,too few isotherms,5.3e+04
+Cohort B vision,elsevier_10.1016_j.ceramint.2024.10.058_VISION_PASS_LONG.csv,1,,False,,too few isotherms,1200
+Cohort B vision,elsevier_10.1016_j.cjph.2024.09.042_VISION_PASS_LONG.csv,6,True,False,,round heads,8e+05 6e+05 6e+05 5e+05 1.8e+05 1.5e+05
+Cohort B vision,elsevier_10.1016_j.jallcom.2013.04.183_VISION_PASS_LONG.csv,2,True,False,,round heads,6400 6200
+Cohort B named,elsevier_10.1016_j.jallcom.2023.170146_MgB2_bulk_magnetization_10-35K_LONG.csv,6,False,False,,irregular,5.072e+05 4.366e+05 3.795e+05 2.699e+05 1.649e+05 5.707e+04
+Cohort B named,elsevier_10.1016_j.jallcom.2023.170384_LaFeAsO_magnetization_2-10K_LONG.csv,4,False,False,,irregular,3.341e+06 1.527e+06 8.16e+05 4.716e+05
+Cohort B vision,elsevier_10.1016_j.jallcom.2024.173999_PATH_AC_VISION_PASS_LONG.csv,4,True,True,arithmetic,LADDER (arithmetic),1.8e+06 1.7e+06 1.6e+06 1.5e+06
+Cohort B vision,elsevier_10.1016_j.jpcs.2026.113652_VISION_PASS_LONG.csv,3,True,True,arithmetic,LADDER (arithmetic),2.5e+06 2e+06 1.5e+06
+Cohort B vision,elsevier_10.1016_j.matchemphys.2023.128348_VISION_PASS_LONG.csv,1,,False,,too few isotherms,8.8e+04
+Cohort B vision,elsevier_10.1016_j.matpr.2019.05.078_VISION_PASS_LONG.csv,2,True,False,,round heads,8e+05 7e+05
+Cohort B vision,elsevier_10.1016_j.mtphys.2021.100414_PATH_AC_VISION_PASS_LONG.csv,1,,False,,too few isotherms,1e+05
+Cohort B vision,elsevier_10.1016_j.mtphys.2022.100783_VISION_PASS_LONG.csv,12,True,True,arithmetic,LADDER (arithmetic),8e+05 7.5e+05 7e+05 6.5e+05 6e+05 5.5e+05 5e+05 4.5e+05
+Cohort B vision,elsevier_10.1016_j.phpro.2012.03.421_VISION_PASS_LONG.csv,1,,False,,too few isotherms,4.8e+05
+Cohort B vision,elsevier_10.1016_j.phpro.2015.06.160_VISION_PASS_LONG.csv,6,True,False,,round heads,1e+06 9e+05 7e+05 6e+05 5e+05 3e+05
+Cohort B vision,elsevier_10.1016_j.physb.2025.417755_VISION_PASS_LONG.csv,1,,False,,too few isotherms,2e+06
+Cohort B vision,elsevier_10.1016_j.physc.2009.03.028_VISION_PASS_LONG.csv,7,False,False,,irregular,1.6e+06 1.45e+06 1.4e+06 1.3e+06 1.3e+06 1.25e+06 1.2e+06
+Cohort B vision,elsevier_10.1016_j.physc.2009.03.048_PATH_AC_VISION_PASS_LONG.csv,3,True,False,,round heads,5e+04 4e+04 1.5e+04
+Cohort B named,elsevier_10.1016_j.physc.2009.05.098_SmFeAsO_MO_SHPM_2-40K_LONG.csv,9,False,False,,irregular,3.897e+05 2.279e+05 1.047e+05 5.804e+04 4.439e+04 3.395e+04 2.527e+04 2.152e+04
+Cohort B vision,elsevier_10.1016_j.physc.2009.11.051_VISION_PASS_LONG.csv,4,True,False,,round heads,6e+05 3e+05 2e+05 1.5e+05
+Cohort B vision,elsevier_10.1016_j.physc.2010.03.003_VISION_PASS_LONG.csv,5,False,False,,irregular,3.162e+06 1.778e+06 1.334e+06 1.122e+06 1e+05
+Cohort B vision,elsevier_10.1016_j.physc.2010.05.048_VISION_PASS_LONG.csv,8,False,False,,irregular,1e+06 1e+06 1e+06 1e+06 9.12e+05 8.235e+05 7.323e+05 6.529e+05
+Cohort B vision,elsevier_10.1016_j.physc.2010.09.012_PATH_AC_VISION_PASS_LONG.csv,1,,False,,too few isotherms,2e+04
+Cohort B named,elsevier_10.1016_j.physc.2011.02.004_PrFeAsO_magnetization_5-35K_LONG.csv,6,False,False,,irregular,1.842e+06 1.1e+06 6.287e+05 1.543e+05 1.333e+05 1.044e+05
+Cohort B vision,elsevier_10.1016_j.physc.2011.05.018_VISION_PASS_LONG.csv,2,True,False,,round heads,5e+04 2e+04
+Cohort B named,elsevier_10.1016_j.physc.2013.04.060_MgB2_C_doping_series_transport_4_2K_LONG.csv,1,,False,,too few isotherms,2.905e+05
+Cohort B named,elsevier_10.1016_j.physc.2013.04.060_MgB2_dopant_series_transport_10K_LONG.csv,1,,False,,too few isotherms,1.887e+05
+Cohort B vision,elsevier_10.1016_j.physc.2014.03.020_VISION_PASS_LONG.csv,1,,False,,too few isotherms,5e+04
+Cohort B vision,elsevier_10.1016_j.physc.2014.09.015_PATH_AC_VISION_PASS_LONG.csv,1,,False,,too few isotherms,1.4e+04
+Cohort B vision,elsevier_10.1016_j.physc.2015.03.022_PATH_AC_VISION_PASS_LONG.csv,1,,False,,too few isotherms,3e+06
+Cohort B vision,elsevier_10.1016_j.physc.2016.05.023_VISION_PASS_LONG.csv,5,True,False,,round heads,6e+04 4.8e+04 3e+04 2.2e+04 1.8e+04
+Cohort B vision,elsevier_10.1016_j.tsf.2010.03.129_PATH_AC_VISION_PASS_LONG.csv,1,,False,,too few isotherms,8500
+Cohort B vision,elsevier_10.1038_s41598-021-86728-8_PATH_AC_VISION_PASS_LONG.csv,1,,False,,too few isotherms,5e+05
+Cohort B vision,elsevier_10.1038_srep22278_PATH_AC_VISION_PASS_LONG.csv,2,True,False,,round heads,9e+05 1e+05
+Cohort B named,iop_10.1088_0953-2048_29_3_035013_FeSe0.5Te0.5_MO_SHPM_H_sweep_LONG.csv,7,False,False,,irregular,1.621e+06 1.509e+06 1.482e+06 1.238e+06 9.63e+05 5.52e+05 1.688e+05
+Cohort B named,iop_10.1088_0953-2048_29_3_035013_FeSe0.5Te0.5_MO_SHPM_T_sweep_LONG.csv,30,False,False,,irregular,2.27e+06 2.037e+06 1.679e+06 1.453e+06 1.402e+06 1.288e+06 1.184e+06 1.115e+06
+Cohort B named,maglab_11_4_2K.csv,1,,False,,too few isotherms,1.392e+06
+Cohort B named,maglab_11_6K.csv,1,,False,,too few isotherms,3.538e+06
+Cohort B named,maglab_Co122_4_2K.csv,1,,False,,too few isotherms,3.314e+06
+Cohort B named,maglab_Co122_4_2K_zero.csv,1,,False,,too few isotherms,5.587e+06
+Cohort B named,maglab_La1111_4_2K.csv,1,,False,,too few isotherms,1.248e+04
+Cohort B named,maglab_Nd1111_10K.csv,1,,False,,too few isotherms,4.941e+06
+Cohort B named,maglab_Nd1111_4_2K.csv,1,,False,,too few isotherms,3.302e+06
+Cohort B named,maglab_Ni122_4_2K.csv,1,,False,,too few isotherms,5.679e+05
+Cohort B named,maglab_P122_4_2K.csv,1,,False,,too few isotherms,7.045e+06
+Cohort B named,maglab_Sm1111_4_2K.csv,1,,False,,too few isotherms,1.243e+06
+Cohort B vision,springer_10.1007_s10854-026-16566-9_VISION_PASS_LONG.csv,3,True,False,,round heads,1e+06 9e+05 7.5e+05
+Cohort B vision,springer_10.1038_s41467-025-55880-4_VISION_PASS_LONG.csv,3,False,False,,irregular,3.4e+05 2.95e+05 2.75e+05
+Cohort B named,springer_10.1038_s41598-022-24044-5_FeSeTe_transport_4-12K_LONG.csv,5,False,False,,irregular,1.034e+06 6.373e+05 4.415e+05 2.546e+05 1.017e+05
+Cohort B vision,springer_10.1038_s41598-025-24806-x_VISION_PASS_LONG.csv,3,True,False,,round heads,1.2e+05 1e+05 6e+04
+Cohort B vision,springer_10.1038_s41598-025-95932-9_VISION_PASS_LONG.csv,6,True,True,arithmetic,LADDER (arithmetic),3e+06 2.7e+06 2.4e+06 2.1e+06 1.8e+06 1.5e+06
