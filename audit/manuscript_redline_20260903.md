@@ -128,13 +128,13 @@ with a substructure-median predictor ... gives 0.558, 0.751, 0.929, and 3.13,
 preserving the ordering."
 
 **To:** "The same protocol on the field-axis cohort gives 0.753 for MgB2-class,
-0.973 for iron pnictide 122-type and 1.094 for iron chalcogenide 11-type, with
+0.973 for iron pnictide 122-type and 1.093 for iron chalcogenide 11-type, with
 iron pnictide 1111-type at 2.571. Repeating the test with a substructure-median
-predictor gives 0.751, 0.930, 1.094 and 2.622."
+predictor gives 0.751, 0.929, 1.094 and 2.622."
 
 Two things the old text asserts are no longer true.
 
-**Iron chalcogenide 11-type no longer passes on the field axis.** At 1.094 it is
+**Iron chalcogenide 11-type no longer passes on the field axis.** At 1.093 it is
 above the screening-grade threshold of 1. The graded applicability claim in the
 next paragraph, and Table III, follow from this.
 
