@@ -84,6 +84,26 @@ STALE = {
         "every target at 0.1 T is refused; the emitted grid is 5 T",
     "one-sigma uncertainty of about 0.10 dex":
         "derived from the pre-gate width, now 0.21 dex",
+    # Found by adversarial review after the gate went in. The checker printed
+    # "all four artifacts agree" while these sat in the .docx, every one of
+    # them falsified by the reduced-field gate the checker was written for.
+    "0.002 and 0.3": "pre-gate reduced-field range; every emitted row is at "
+                     "0.3226",
+    "reduced fields of order 0.01": "Assumption 1, contradicted by Sec. III.E "
+                                    "in the same document",
+    "barely above the 0.3 bound": "compares one evaluation point against a "
+                                  "bound defined on a fitted curve's field "
+                                  "SPAN; a point has no span",
+    "87 of 186 fits": "field-axis fits, now 61 of 159",
+    "99 fits where a paper-derived value": "now 98",
+    "median factor of 5.2 smaller": "now 6.43",
+    "29 of the 33 source papers": "now eighteen of the 20",
+    "0.012, 0.005, and 0.055 dex": "pre-gate field shifts",
+    "factor of about 2.5 in the critical current":
+        "the interval is 0.82 dex, a factor of 6.7",
+    "the 125 the dispatch routine emits": "now 85",
+    "53 chalcogenide": "that family now emits nothing",
+    "37 iron pnictide 122-type records": "that family now emits nothing",
 }
 
 # Tokens that ARE stale and have NOT been corrected yet, listed so that the
