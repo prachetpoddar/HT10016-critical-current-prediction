@@ -52,6 +52,43 @@ STALE = {
     "1.721": "1111 temperature-axis leave-one-out, now 3.120",
     "0.641": "chalcogenide field-axis leave-one-out, now 1.093",
     "5.13": "1111 expanded-diversity value, cohort not deposited",
+    # The candidate-dispatch accounting, which Table IV and the Fig. 1 caption
+    # carried through the whole revision because no check reads a figure.
+    "185 distinct": "candidate compounds, now 183",
+    "185 candidates": "candidate compounds, now 183",
+    "239 / 185 / 125": "Table IV combined row, now 233 / 183 / 85",
+    "55 / 31 / 31": "Table IV chalcogenide row, now 49 / 29 / 0",
+    "79 / 51 / 9": "Table IV 122 row, now 79 / 51 / 0",
+    "125 compounds receive": "dispatched compounds, now 85",
+    "25.1%": "Hc2-unavailable refusal share, now 25.8%",
+    "10.5%": "above-Tc refusal share, now 9.9%",
+    "for want of a critical-field anchor":
+        "one refusal code of four, and not the largest",
+}
+
+# Tokens that ARE stale and have NOT been corrected yet, listed so that the
+# script reports them as outstanding rather than either hiding them or failing
+# the run. Everything here belongs to one block: the candidate-dispatch
+# accounting, which the reduced-field gate changed and which cannot be
+# corrected by swapping numbers because two of the three dispatch families now
+# emit nothing at all. Moving a token out of here and into STALE is what
+# records that the passage has actually been rewritten.
+OUTSTANDING = {
+    "185 distinct",
+    "185 candidates",
+    "185 candidate compounds",
+    "125 compounds receive",
+    "125 of the 185",
+    "123 rather than 125",
+    "Of the 185, 125",
+    "239 candidate records",
+    "Of the 239 records",
+    "179 of the 239",
+    "2151 candidate-grid tuples",
+    "218 are retained",
+    "25.1%",
+    "10.5%",
+    "0.39 dex",
 }
 
 # hits that are correct and must stay
@@ -66,6 +103,8 @@ ALLOWED = [
      "names the withdrawn figures explicitly as withdrawn"),
     (re.compile(r"ratio of 10\.10 to 0\.43"),
      "names the superseded comparison in past tense"),
+    (re.compile(r"Why not 0\.39 dex\?"),
+     "quoted verbatim from the referee's own report"),
 ]
 
 
@@ -91,6 +130,7 @@ def main():
          plain_text),
     ]
     failures = 0
+    outstanding = []
     for label, name, reader in artifacts:
         path = os.path.join(args.dir, name)
         if not os.path.exists(path):
@@ -98,21 +138,43 @@ def main():
             failures += 1
             continue
         text = reader(path)
-        bad = []
-        for token, why in STALE.items():
+        bad, pending = [], []
+        for token, why in list(STALE.items()) + [(t, "not yet rewritten")
+                                                 for t in sorted(OUTSTANDING)]:
             for m in re.finditer(re.escape(token), text):
                 window = text[max(0, m.start() - 90):m.end() + 90]
                 if any(a.search(window) for a, _ in ALLOWED):
                     continue
-                bad.append((token, why, window.strip()))
+                (pending if token in OUTSTANDING else bad).append(
+                    (token, why, window.strip()))
+        outstanding.extend((label, t) for t, _, _ in pending)
         if bad:
             failures += 1
             print("%-26s %d stale string(s)" % (label, len(bad)))
             for token, why, window in bad:
                 print("   %-24s %s" % (token, why))
                 print("      ...%s..." % window[:150])
+        elif pending:
+            print("%-26s clean, %d outstanding" % (label, len(pending)))
         else:
             print("%-26s clean" % label)
+
+    if outstanding:
+        print("\noutstanding, the candidate-dispatch accounting the "
+              "reduced-field gate changed:\n")
+        seen = set()
+        for label, token in outstanding:
+            if (label, token) in seen:
+                continue
+            seen.add((label, token))
+            print("   %-26s %s" % (label, token))
+        print("\n   %d occurrence(s). These need the passage rewritten, not a "
+              "number swapped:" % len(outstanding))
+        print("   two of the three dispatch families now emit nothing, and the "
+              "surviving")
+        print("   grid carries one field, so the family medians and the "
+              "uncertainty width")
+        print("   are quoted at a field where nothing is dispatched.")
 
     print()
     if failures:

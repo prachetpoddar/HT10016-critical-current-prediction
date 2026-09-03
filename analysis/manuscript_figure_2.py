@@ -21,6 +21,7 @@ Run from the repository root; writes into figures/.
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+from figure_counts import UPSTREAM
 
 plt.rcParams.update({"font.family":"serif","font.size":8.6,"mathtext.fontset":"dejavuserif"})
 fig,ax=plt.subplots(figsize=(6.9,6.5)); ax.set_xlim(0,10); ax.set_ylim(0,12.6); ax.axis("off")
@@ -42,7 +43,7 @@ STAGES=[
       "Anchor count, monotonicity, family population,\nanchor availability, target inside calibration"),
 ]
 ARROWS=[
- "934 screened articles",
+ "%d screened articles" % UPSTREAM["articles_screened"],
  "curve records: sample form, sample identifier,\nfixed-axis value, source paper",
  r"$T_c$ and $H_{c2,0}$ per curve, each tagged with its provenance tier",
  r"$\beta_T$, $\beta_H$, $\log_{10} J_{c,\mathrm{partial}}$ per curve",
