@@ -1,0 +1,22 @@
+{
+  "paper_id": "10.1016_j.cjph.2024.09.042.pdf",
+  "doi": "10.1016/j.cjph.2024.09.042",
+  "figure": "Fig. 4(a)",
+  "compound": "FeSe",
+  "sample_form": "single_crystal",
+  "field_orientation": "H//c",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/10.1016_j.cjph.2024.09.042.pdf",
+  "page": 5,
+  "clip": [0.09, 0.35, 0.53, 0.66],
+  "dpi_scale": 4.0,
+  "x": {"log": false, "label": "field_T"},
+  "y": {"log": true,  "label": "Jc_A_per_cm2"},
+  "series": [
+    {"name": "4.5K", "temperature_K": 4.5, "rgb": [254, 0, 0],   "tol": 40, "min_px": 8, "max_px": 900},
+    {"name": "5K",   "temperature_K": 5.0, "rgb": [255, 101, 0], "tol": 40, "min_px": 8, "max_px": 900},
+    {"name": "6K",   "temperature_K": 6.0, "rgb": [255, 238, 0], "tol": 40, "min_px": 8, "max_px": 900},
+    {"name": "7K",   "temperature_K": 7.0, "rgb": [0, 255, 0],   "tol": 40, "min_px": 8, "max_px": 900},
+    {"name": "8K",   "temperature_K": 8.0, "rgb": [0, 125, 254], "tol": 40, "min_px": 8, "max_px": 900}
+  ],
+  "inset": 6
+}
