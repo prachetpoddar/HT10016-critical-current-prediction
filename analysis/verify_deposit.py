@@ -46,26 +46,59 @@ BANDS = "A > 0.7 | B 0.3-0.7 | C < 0.3"
 # carried into the text fails loudly rather than sitting in a table nobody
 # recomputes. Every earlier version of this deposit disagreed with its own
 # manuscript on at least one of these.
-MANUSCRIPT = dict(
+# What the manuscript actually prints, read out of the manuscript by
+# analysis/read_manuscript_counts.py and deposited with its provenance in
+# audit/manuscript_printed_counts.csv.
+#
+# This replaces a hand-written dictionary that described itself as the
+# manuscript's counts and was not. Every value in it equalled what the deposit
+# held on the day it was written, so the check compared the deposit with a
+# snapshot of the deposit. Table I of HT10016_revised.docx prints 69, 43, 4387,
+# 419, 95, 110 and 185 where that dictionary held 65, 40, 4247, 414, 88, 105
+# and 183, so nine mismatches were being reported at the wrong sizes and one
+# quantity, candidate compounds, was reported as agreeing when it does not.
+#
+# Counts still typed here are ones not yet located in the manuscript text. They
+# are marked, and locating them is outstanding work rather than a passing check.
+MANUSCRIPT_CSV = os.path.join("audit", "manuscript_printed_counts.csv")
+MANUSCRIPT_NOT_YET_LOCATED = dict(
     papers_contributing_anchor_rows=35,
     physical_samples=69,
-    anchor_rows=105,
-    fitted_curve_papers=65,          # Table I, "Papers contributing fitted curves"
-    fitted_curve_compounds=40,       # Table I, "Distinct compounds with fitted curves"
-    extracted_points=4247,           # Table I, "Critical-current data points extracted"
-    temperature_axis_fits=414,       # Table I, "Temperature-axis partial fits"
-    field_axis_fits_ok=88,           # Table I, "Field-axis partial fits passing physicality"
-    field_axis_ok_papers=15,
-    candidate_compounds=183,         # Table I, "Candidate compounds evaluated"
-    dispatched_compounds=85,         # Table IV, combined "dispatched"
+    dispatched_compounds=85,
     dispatch_tuples=2097,
     emitted_targets=256,
-    candidate_records=233,           # Supplement Sec. 12, record-level counts
+    candidate_records=233,
     calibration_retained=212,
     calibration_refused=21,
     calibration_high_confidence=82,
     calibration_graded_confidence=130,
 )
+
+
+def _load_manuscript_counts():
+    """Read the manuscript's printed counts, and refuse to run without them.
+
+    A missing file is not a reason to fall back on typed values: that is how the
+    previous version came to assert numbers nobody had read out of the paper.
+    """
+    if not os.path.exists(MANUSCRIPT_CSV):
+        raise SystemExit(
+            "%s is missing. Run analysis/read_manuscript_counts.py against the "
+            "manuscript before verifying the deposit against it." % MANUSCRIPT_CSV)
+    import csv as _csv
+    out, where = {}, {}
+    with open(MANUSCRIPT_CSV, newline="") as fh:
+        for r in _csv.DictReader(fh):
+            out[r["quantity"]] = int(r["value"])
+            where[r["quantity"]] = "%s, %s" % (r["document"], r["located_in"])
+    for k, v in MANUSCRIPT_NOT_YET_LOCATED.items():
+        out.setdefault(k, v)
+        where.setdefault(k, "NOT YET LOCATED in the manuscript")
+    return out, where
+
+
+MANUSCRIPT, MANUSCRIPT_SOURCE = _load_manuscript_counts()
+
 
 failures = []
 
@@ -211,8 +244,12 @@ def main():
     )
     for k, want in MANUSCRIPT.items():
         got = computed[k]
+        src = MANUSCRIPT_SOURCE.get(k, "")
+        # A count nobody has found in the manuscript is not verified by matching
+        # it, so say so on the line rather than printing a bare ok.
+        note = "" if src.startswith("HT10016") else "  [value not located in the manuscript]"
         check("manuscript %s" % k.replace("_", " "), got == want,
-              "deposit %d, manuscript %d" % (got, want))
+              "deposit %d, manuscript %d%s" % (got, want, note))
 
     withdrawn = os.path.join("audit", "withdrawn_records.csv")
     if os.path.exists(withdrawn):

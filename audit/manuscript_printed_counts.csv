@@ -1,0 +1,9 @@
+quantity,value,printed_as,located_in,document,read_on
+fitted_curve_papers,69,69,"Table I, row 'Papers contributing fitted curves'",HT10016_revised.docx,2026-09-03
+fitted_curve_compounds,43,43,"Table I, row 'Distinct compounds with fitted curves'",HT10016_revised.docx,2026-09-03
+extracted_points,4387,4387,"Table I, row 'Critical-current data points extracted'",HT10016_revised.docx,2026-09-03
+temperature_axis_fits,419,419,"Table I, row 'Temperature-axis partial fits (βT)'",HT10016_revised.docx,2026-09-03
+field_axis_fits_ok,95,95,"Table I, row 'Field-axis partial fits passing physicality'",HT10016_revised.docx,2026-09-03
+anchor_rows,110,110,"Table I, row 'Per-paper anchors behind Fig. 3'",HT10016_revised.docx,2026-09-03
+candidate_compounds,185,185,"Table I, row 'Candidate compounds evaluated'",HT10016_revised.docx,2026-09-03
+field_axis_ok_papers,17,from 17 source papers,"Table I, 'What it supports' column of row 'Field-axis partial fits passing physicality'",HT10016_revised.docx,2026-09-03
