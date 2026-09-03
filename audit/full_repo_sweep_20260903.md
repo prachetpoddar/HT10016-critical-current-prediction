@@ -124,12 +124,39 @@ settle the extraction grade; it would not add a second polycrystal source.
 
 ### 2.3 Other traced defects
 
-- The substructure matcher misses `Fe0.975Cu0.025Te0.66Se0.34` (an 11-type
-  chalcogenide, no "FeTe" or "FeSe" substring) and `Ba_Fe_Co_2As2` (the
-  underscore spelling of a 122 that `provenance_table_fitcohort_full.csv` calls
-  `iron_pnictide_122`). Reclassifying both: chalcogenide 0.7687 A to 0.3737 B,
-  and `other_unclassified` dissolves. Its 0.9880 Outcome A is three unrelated
-  samples pooled because their formulas were spelled unusually.
+- **The substructure matcher, which is what actually moves Outcome A.**
+  `assign_substructure` tests formula substrings and fails on two spellings:
+  `Fe0.975Cu0.025Te0.66Se0.34`, Cu-doped FeTe0.66Se0.34, which contains neither
+  "FeTe" nor "FeSe" because of the Cu insertion; and `Ba_Fe_Co_2As2`, the
+  underscore-sanitised spelling of Ba(Fe,Co)2As2. Both land in
+  `other_unclassified`. Neither is a judgement call: the anchor table already
+  assigns the Cu-doped rows the chalcogenide reference field of 47.0 T while
+  calling them unclassified, and `provenance_table_fitcohort_full.csv` calls the
+  Ba(Fe,Co) record `iron_pnictide_122`. The deposit contradicts its own label in
+  both cases.
+
+  Recomputed with the deposit's own `aggregate_per_physical_sample`:
+
+  | family | as deposited | matcher fixed |
+  |---|---|---|
+  | iron_chalcogenide_11 | 0.7687 **A** (n=10) | **0.3737 B** (n=12) |
+  | iron_pnictide_122 | 0.3452 B (n=9) | 0.4877 B (n=10) |
+  | other_unclassified | 0.9880 **A** (n=3) | family dissolves |
+  | conventional_AlB2 | 0.1159 C | 0.1159 C |
+  | cuprate_BSCCO | 0.0964 C | 0.0964 C |
+  | iron_pnictide_1111 | 0.1433 C | 0.1433 C |
+
+  The mechanism: the two Cu-doped crystals enter at 4.778 and 5.000, low for
+  single crystals, widening that cell from [5.60, 6.32] to [4.78, 6.32] and
+  blurring the contrast with polycrystal. `other_unclassified`'s Outcome A was
+  three unrelated samples pooled because their formulas were spelled unusually,
+  and it disappears, which is a clean improvement.
+
+  **Three independent routes now put iron_chalcogenide_11 in band B, not A:**
+  fixing the matcher gives 0.3737; the bias-corrected omega^2 on the deposited
+  cohort gives 0.6802; and the paper-clustered permutation null gives p = 0.166,
+  which does not distinguish it from noise either way. The repair-plan route,
+  which I retracted, is the one that does NOT bear on this.
 - `physc.2010.05.048`'s anchor is 4.0e5 A/cm2 with n=110; the deposited source
   excerpt `data/extraction_examples/physc_2010_05_048_field_axis.csv` gives
   1.0e6 at the same point with 80 rows. Correcting it moves the chalcogenide to
