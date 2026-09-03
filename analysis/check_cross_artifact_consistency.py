@@ -106,6 +106,18 @@ STALE = {
     "37 iron pnictide 122-type records": "that family now emits nothing",
     # The temperature-window gate, which refused 93 targets and moved every
     # number derived from the emitted set.
+    # The classifier correction: four anchor rows left other_unclassified.
+    "0.7687": "chalcogenide ratio before the classifier fix, now 0.3737",
+    "ratio is 0.77": "chalcogenide ratio, now 0.37",
+    "explains 73%": "chalcogenide share, now 37%",
+    "60% for iron pnictide": "the 122 share, pre-withdrawal; now 49%",
+    "77%, 35%, and 12%": "now 37%, 49% and 12%",
+    "three distinct regimes": "two remain, B and C",
+    "three distinct outcomes": "two remain, B and C",
+    "conditioning is mandatory": "no family now requires it outright",
+    "conditioning is essential": "no family now requires it outright",
+    "52 of the 96": "anchors in the plotted families, now 56 of 96",
+    "34 markers": "now 37",
     "0.82 dex": "interval width before the temperature gate, now 0.61",
     "factor of about 6.7": "now about 4.1",
     "0.41 dex around each curve": "Fig. 5 half-width, now 0.31",

@@ -37,6 +37,7 @@ import tempfile
 import zipfile
 
 import numpy as np
+import pandas as pd
 from PIL import Image
 
 # Figure 3 is absent from the strict list, and this is the reason. It is the
@@ -186,6 +187,30 @@ def main():
             ok, detail = regenerates(script, png, os.path.join(work, str(n)))
             check("Figure %d regenerates from the current deposit" % n,
                   ok, detail)
+
+    # Figure 3 cannot be regenerated here: it is the only figure set in
+    # Helvetica and this container resolves Nimbus Sans, which changes its
+    # width. So instead of comparing pixels, compare the numbers the committed
+    # render displays against the deposit. The stamp is what the PNG shows; if
+    # the deposit has moved, the figure is stale and must be redrawn on a
+    # machine that has Helvetica.
+    stamp_path = os.path.join("figures", "manuscript_figure_3.stamp.json")
+    if os.path.exists(stamp_path):
+        import json
+        stamp = json.load(open(stamp_path))["drawn_from"]
+        vd = pd.read_csv(os.path.join(
+            "data", "phase_3_p31_variance_decomposition.csv"))
+        per = vd[vd.scope == "per_substructure"].set_index("substructure")
+        drift = {k: (v, float(per.loc[k, "ratio_between_total"]))
+                 for k, v in stamp.items()
+                 if k in per.index
+                 and abs(v - float(per.loc[k, "ratio_between_total"])) > 5e-4}
+        check("Figure 3's committed render matches the current deposit",
+              not drift,
+              "; ".join("%s shows %.4f, deposit %.4f" % (k, a_, b)
+                        for k, (a_, b) in drift.items())
+              or "redraw with analysis/figure_4_source.py where Helvetica is "
+                 "installed, and update the stamp")
 
     for docx in sys.argv[1:]:
         print("\n%s\n" % os.path.basename(docx))

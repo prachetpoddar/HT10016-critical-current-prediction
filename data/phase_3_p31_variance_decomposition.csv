@@ -1,10 +1,9 @@
-scope,substructure,n_papers,n_sample_forms,total_var,between_sf_var,within_sf_var,ratio_between_total,note
-aggregate_all,ALL,60,5,0.9232114999471677,0.2898338060642158,0.6333776938829518,0.31394085329396576,derived from phase_3_p31_jc_anchor_per_paper.csv via analysis/figure_4_source.py; regenerated 2026-09-03 after withdrawing 10.1016/j.physc.2009.03.028 and 10.1016/j.physc.2014.03.020
-per_substructure,conventional_AlB2,15,2,0.08209051972532246,0.009513105745561933,0.07257741397976053,0.11588555873921974,
-per_substructure,cuprate_BSCCO,9,2,1.6944702525844355,0.16339056007116995,1.5310796925132655,0.09642574711592831,
-per_substructure,cuprate_LSCO,5,1,0.00915195258917131,,,,single sample_form; no decomposition
-per_substructure,cuprate_RBCO,3,1,0.0008605679645531265,,,,single sample_form; no decomposition
-per_substructure,iron_chalcogenide_11,10,3,0.2921619220904893,0.22459682614961438,0.06756509594087493,0.7687409246987756,
-per_substructure,iron_pnictide_1111,6,3,0.7675766260769454,0.10995601448263204,0.6576206115943134,0.14325086349308602,
-per_substructure,iron_pnictide_122,9,3,0.1320423032909984,0.04557519267804079,0.0864671106129576,0.34515599578417644,
-per_substructure,other_unclassified,3,2,0.6861904500869729,0.6779876388025827,0.008202811284390155,0.988045867902489,
+scope,substructure,n_papers,n_sample_forms,total_var,between_sf_var,within_sf_var,ratio_between_total,note,note
+aggregate_all,ALL,60,5,0.9232114999471677,0.2898338060642159,0.6333776938829518,0.3139408532939658,derived from phase_3_p31_jc_anchor_per_paper.csv via analysis/figure_4_source.py; regenerated 2026-09-03 after analysis/fix_substructure_classifier.py moved four rows out of other_unclassified,derived from phase_3_p31_jc_anchor_per_paper.csv via analysis/figure_4_source.py; regenerated 2026-09-03 after analysis/fix_substructure_classifier.py moved four rows out of other_unclassified
+per_substructure,conventional_AlB2,15,2,0.08209051972532246,0.009513105745561933,0.07257741397976053,0.11588555873921974,,
+per_substructure,cuprate_BSCCO,9,2,1.6944702525844355,0.16339056007116995,1.5310796925132655,0.09642574711592831,,
+per_substructure,cuprate_LSCO,5,1,0.00915195258917131,,,,,
+per_substructure,cuprate_RBCO,3,1,0.0008605679645531265,,,,,
+per_substructure,iron_chalcogenide_11,12,3,0.3587437266730906,0.13404957973479306,0.22469414693829756,0.37366389923508625,,
+per_substructure,iron_pnictide_1111,6,3,0.7675766260769454,0.10995601448263204,0.6576206115943134,0.14325086349308602,,
+per_substructure,iron_pnictide_122,10,3,0.16647586292721744,0.08118660810037952,0.08528925482683793,0.4876779532650566,,

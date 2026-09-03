@@ -139,11 +139,20 @@ SUB_LABELS = {
     "iron_pnictide_122": "Iron pnictide 122-type",
     "conventional_AlB2": r"MgB$_2$-class",
 }
-SUB_OUTCOMES = {
-    "iron_chalcogenide_11": "A",
-    "iron_pnictide_122": "B",
-    "conventional_AlB2": "C",
-}
+# The outcome letter is DERIVED from the ratio the panel computes, not stored.
+# It was a dict frozen at A / B / C, so a band change left the figure printing
+# the old letter while the panel's own number said otherwise, and any claim of
+# label stability read off this figure was true by construction.
+BANDS = ((0.7, "A"), (0.3, "B"))
+
+
+def outcome_letter(ratio):
+    if ratio is None or ratio != ratio:
+        return "-"
+    for lo, letter in BANDS:
+        if ratio > lo or (letter == "B" and ratio >= lo):
+            return letter
+    return "C"
 
 # Sample-form marker shapes (redundant with color for grayscale safety)
 SAMPLE_FORM_MARKERS = {
@@ -408,11 +417,11 @@ def panel_one_substructure(ax, sub_df: pd.DataFrame, sub: str,
     # markers in the chalc_11 and pn-122 panels. The upper-left region is
     # clear in all three panels (polycrystal/wire data sits at low y; left
     # column tops are empty above ~ log Jc 5.0).
-    outcome = SUB_OUTCOMES[sub]
     decomp_row = compute_variance_decomposition(sub_df, substructures=[sub])
     ratio = float(decomp_row.loc[
         decomp_row["scope"] == "per_substructure", "ratio_between_total"
     ].iloc[0])
+    outcome = outcome_letter(ratio)
     ax.text(0.03, 0.96,
               f"Outcome {outcome}\nratio {ratio:.2f}",
               transform=ax.transAxes, ha="left", va="top",

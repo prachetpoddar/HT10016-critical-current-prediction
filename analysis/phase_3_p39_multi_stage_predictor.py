@@ -30,6 +30,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import re
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
@@ -49,34 +50,55 @@ S3_OUT = PREP / "phase_3_p39_stage3_within_cell_iqr.csv"
 MAE_OUT = PREP / "phase_3_p39_multi_stage_mae_decomposition.csv"
 SYNTH_MD = PREP / "phase_3_p39_synthesis.md"
 
-DESCRIPTOR = "max_chi_mean"
+DESCRIPTOR = "max_chdef assign_substructure(compound: str) -> str:
+    """Refined classifier per P5.7-prime maintenance.
 
-
-def assign_substructure(compound: str) -> str:
-    """Refined classifier per P5.7-prime maintenance."""
+    Authoritative for data/phase_3_p31_jc_anchor_per_paper.csv, whose labels it
+    reproduces exactly. It is NOT the classifier that labelled the candidate
+    tables or the temperature-axis fit table: it reproduces 26.6% and 48.8% of
+    those, which use Materials Project reduced spellings such as
+    Al0.01B2Mg0.99 that this function does not know. Do not relabel those tables
+    with it.
+    """
     c = compound or ""
-    if "Nb3Sn" in c or "V3Si" in c or "V3Ga" in c:
+    # Normalise separators first. Ba_Fe_Co_2As2 is the sanitised spelling of
+    # Ba(Fe,Co)2As2 and matched none of the rules below without this.
+    n = re.sub(r"[_(),\s-]", "", c)
+    els = set(re.findall(r"[A-Z][a-z]?", n))
+    if "Nb3Sn" in n or "V3Si" in n or "V3Ga" in n:
         return "conventional_A15"
-    if "MgB2" in c or "MgB(2-x)Cx" in c:
+    if "MgB2" in n or "MgB2xCx" in n or "MgB(2-x)Cx" in c:
         return "conventional_AlB2"
-    if ("FeTe" in c or "FeSe" in c) and "FeAs" not in c:
-        return "iron_chalcogenide_11"
-    if "FeAsO" in c:
+    # 1111 before 122, and on the element set, so that the Materials Project
+    # reduced spelling La2FeAs2O of LaFeAsO is not caught by the FeAs2 rule.
+    # No 122 in this corpus carries oxygen.
+    if "FeAsO" in n or ("Fe" in els and "As" in els and "O" in els):
         return "iron_pnictide_1111"
-    if "Fe2As2" in c or "BaFe" in c or "(Fe" in c:
+    # Element set for the 11-type, so that a dopant sitting between the cation
+    # and the chalcogen cannot hide it: Fe0.975Cu0.025Te0.66Se0.34 is
+    # FeTe0.66Se0.34 with 2.5% Cu on the Fe site.
+    if ("Fe" in els and ("Te" in els or "Se" in els)
+            and "As" not in els and "O" not in els):
+        return "iron_chalcogenide_11"
+    if ("FeTe" in n or "FeSe" in n) and "FeAs" not in n:
+        return "iron_chalcogenide_11"
+    if "Fe2As2" in n or "BaFe" in n or "(Fe" in c or "FeAs2" in n:
         return "iron_pnictide_122"
-    if ("YBa" in c or "REBCO" in c or "SmBa" in c or "GdBa" in c or "NdBa" in c
-            or "YBaCuO" in c):
+    if ("YBa" in n or "REBCO" in n or "SmBa" in n or "GdBa" in n
+            or "NdBa" in n or "YBaCuO" in n):
         return "cuprate_RBCO"
-    if "Hg" in c and "Cu" in c and ("Ba" in c or "Sr" in c):
+    if "Hg" in n and "Cu" in n and ("Ba" in n or "Sr" in n):
         return "cuprate_HBCCO"
-    if "BSCCO" in c or "Bi-22" in c:
+    if "BSCCO" in n or "Bi-22" in c or "Bi22" in n:
         return "cuprate_BSCCO"
-    if "Bi" in c and "Sr" in c and "Cu" in c:
+    if "Bi" in n and "Sr" in n and "Cu" in n:
         return "cuprate_BSCCO"
-    if "La" in c and "Cu" in c and "O" in c and "Ba" not in c:
+    if "La" in n and "Cu" in n and "O" in n and "Ba" not in n:
         return "cuprate_LSCO"
     return "other_unclassified"
+
+
+sified"
 
 
 def regime_from_variance_ratio(ratio):
