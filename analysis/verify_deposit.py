@@ -61,9 +61,16 @@ BANDS = "A > 0.7 | B 0.3-0.7 | C < 0.3"
 # Counts still typed here are ones not yet located in the manuscript text. They
 # are marked, and locating them is outstanding work rather than a passing check.
 MANUSCRIPT_CSV = os.path.join("audit", "manuscript_printed_counts.csv")
+# These are not printed anywhere in the manuscript or the supplement. Both were
+# searched for the phrases that would carry them and neither appears, so there
+# is nothing in the text to agree or disagree with. They are checked against the
+# deposit's own current values so that a future cohort change still moves them
+# visibly, and they are labelled as not printed rather than as verified.
+MANUSCRIPT_NOT_PRINTED = dict(
+    papers_contributing_anchor_rows=34,
+    physical_samples=67,
+)
 MANUSCRIPT_NOT_YET_LOCATED = dict(
-    papers_contributing_anchor_rows=35,
-    physical_samples=69,
     dispatched_compounds=85,
     dispatch_tuples=2097,
     emitted_targets=256,
@@ -94,6 +101,9 @@ def _load_manuscript_counts():
     for k, v in MANUSCRIPT_NOT_YET_LOCATED.items():
         out.setdefault(k, v)
         where.setdefault(k, "NOT YET LOCATED in the manuscript")
+    for k, v in MANUSCRIPT_NOT_PRINTED.items():
+        out.setdefault(k, v)
+        where.setdefault(k, "NOT PRINTED in the manuscript; pinned to the deposit")
     return out, where
 
 
@@ -247,7 +257,12 @@ def main():
         src = MANUSCRIPT_SOURCE.get(k, "")
         # A count nobody has found in the manuscript is not verified by matching
         # it, so say so on the line rather than printing a bare ok.
-        note = "" if src.startswith("HT10016") else "  [value not located in the manuscript]"
+        if src.startswith("HT10016"):
+            note = ""
+        elif src.startswith("NOT PRINTED"):
+            note = "  [not printed in the manuscript]"
+        else:
+            note = "  [value not located in the manuscript]"
         check("manuscript %s" % k.replace("_", " "), got == want,
               "deposit %d, manuscript %d%s" % (got, want, note))
 

@@ -336,3 +336,63 @@ Written to be dropped in, in the manuscript's own register.
 > leave-one-compound-out test, which is why the MgB2-class temperature axis is
 > dispatched but not validated, and why Table III records it as not assessable
 > rather than as passing.
+
+---
+
+## Applied
+
+`analysis/apply_manuscript_edits.py` applies all of the above to the two
+documents. It works at run level, so the subscripts in betaT, Hc2 and log10 Jc
+survive, and it refuses to write anything if any single edit fails to find its
+target.
+
+**44 edits, all applied.** Outputs are `HT10016_revised_corrected.docx` and
+`SUPPLEMENTAL_MATERIAL_revised_corrected.docx`, with the inputs preserved
+alongside as `..._asfound.docx`.
+
+### Edits the first pass missed, found by sweeping the documents afterwards
+
+The redline above was written from the passages I had read. Sweeping both
+documents for every stale token found nine more, which is the same propagation
+failure this deposit has had at every previous revision:
+
+- the **abstract** and Sec. II.A each repeat the cohort size in prose (69 papers,
+  43 compounds, 4387 points),
+- **Table II** repeats the anchor count, the three variance ratios and every
+  leave-one-out figure,
+- Sec. III.D repeats the anchor count a third time,
+- the archive size appears twice more in the main text,
+- the Fig. 3 caption breaks the marker count down by family (13, 16, 15, which
+  had to become 10, 16, 15),
+- the supplement calls the anchor file "the 110-row file",
+- and the conclusions repeat the 16-fold claim.
+
+**One of those was a live contradiction rather than a stale number.** Sec. III.A
+prints "for iron chalcogenide 11-type materials the ratio is 0.73" and Table II
+prints "73%", while Figure 3, generated from the deposit, prints 0.77. The
+deposited decomposition gives 0.7687. The text was wrong and the figure was
+right.
+
+### Supplement Table S1, rebuilt
+
+The provenance table was static and still described a 69-paper cohort with
+three families that no longer contribute. `analysis/rebuild_supplement_table_s1.py`
+recomputes it from `provenance_table_fitcohort_full.csv`. Iron other,
+Conventional A15 and Cuprate HBCCO leave the table, and the total becomes 64
+papers, 39 compounds and 4211 points, matching Table I.
+
+**One column needs your eye.** "Paper-reported Hc2" is recomputed as the count
+of papers whose critical field carries a Tier 1 or Tier 2 provenance, which
+gives 21 against the 37 the table printed. The original definition is not
+recorded anywhere I could find, so if it meant something wider than Tier 1 and
+Tier 2 the column needs redoing.
+
+### Verification
+
+`analysis/verify_deposit.py` now exits zero. Every count Table I prints is read
+back out of the corrected document by `analysis/read_manuscript_counts.py` and
+matches the deposit.
+
+Two quantities the verifier checks are printed nowhere in either document,
+"papers contributing anchor rows" and "physical samples". They are now labelled
+as not printed rather than counted as agreeing.
