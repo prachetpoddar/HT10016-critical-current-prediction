@@ -1,42 +1,42 @@
 pdf,verdict,jc_page,hc2_page,withdrawn_beta_T,basis
-0806.2839v1,screenshot only,11,13,,"p11 Jc(H) log y, 4 series, no legend box; annotations 2 K, 5 K, 20 K plus Powder/Bulk"
+0806.2839v1,nothing needed,11,13,,"opened and confirmed: p11 Jc(H) log y, 4 series, labels 2, 5, 20 K plus a separate bulk curve at 5 K"
 0903.0004v2,needs metadata,4,5,,"p4 (b) jc(H) log y, 3 series, legend 2 K / 5 K / 10 K, open square/diamond/triangle"
 0904.2442v1,needs a page from you,,,yes,no figure caption naming a critical current was found
-0906.0444v1,screenshot only,3,,,"p3: frame detected, 26600 saturated px, 12 distinct colours"
-0907.0147v2,screenshot only,7,4,,"p7: frame detected, 38288 saturated px, 11 distinct colours"
+0906.0444v1,nothing needed,3,,,"opened and confirmed: p3 Fig. 3(a),(b) Jc(H) log y, 8 series per panel, legend 2 to 20 K"
+0907.0147v2,nothing needed,7,4,,"opened and confirmed: p7 Fig. 6(c),(d) Jc(H) log-log, 8 and 7 series, legend 1.8 to 11 K"
 10.1016_0921-4534(96)00225-0,needs metadata,4,,,"p4 Fig. 5 Bean Jc vs field, linear y, 3 series, legend keys doping not temperature; 77 K stated in the caption"
-10.1016_j.ceramint.2024.10.058,screenshot only,5,,,"p5: frame detected, 49695 saturated px, 8 distinct colours"
-10.1016_j.cjph.2024.09.042,screenshot only,6,9,,"p6: frame detected, 90172 saturated px, 12 distinct colours"
-10.1016_j.jallcom.2013.04.183,screenshot only,6,,,"p6 Fig. 8 Jc(H) linear y, 4 series, legend N1-N4, T = 10 K annotated"
+10.1016_j.ceramint.2024.10.058,needs metadata,5,,,"p5 Fig. 4 Jc(H) linear y, 5 series, legend keys sample name (LSCO-CS, Vac-1, Vac-2, Nitrogen-1, Nitrogen-2) and no measurement temperature appears anywhere on the figure"
+10.1016_j.cjph.2024.09.042,needs a page from you,6,9,,"p6 Fig. 5 plots the anisotropy ratio gamma = Jc(H||c)/Jc(H_perp_c), not Jc. The Hc2 figure on p9 is fine"
+10.1016_j.jallcom.2013.04.183,nothing needed,6,,,"opened and confirmed: p6 Fig. 8 Jc(H) linear y, 4 series, legend N1 to N4, T = 10 K annotated"
 10.1016_j.jpcs.2026.113652,needs a page from you,,,,no figure caption naming a critical current was found
 10.1016_j.physc.2009.03.028,needs a page from you,4,,,"p4 holds magneto-optical frames and one M-H loop, no Jc plot"
 10.1016_j.physc.2009.05.098,needs a page from you,,,,no figure caption naming a critical current was found
 10.1016_j.physc.2011.02.004,needs a page from you,,,,no figure caption naming a critical current was found
-10.1016_j.physc.2014.03.020,screenshot only,2,,,"p2: frame detected, 21010 saturated px, 12 distinct colours"
-10.1016_j.physc.2016.05.023,screenshot only,2,,,"p2: frame detected, 51868 saturated px, 13 distinct colours"
+10.1016_j.physc.2014.03.020,needs metadata,2,,,"p2 Fig. 2(b) Jc(H) log y, 2 series, legend keys sample (wire, HIP wire); 4.2 K appears only in panel (a) corner text and the body"
+10.1016_j.physc.2016.05.023,nothing needed,2,,,"opened and confirmed: p2 Fig. 3(a),(b) Jc(H) log-log, 9 series per panel, legend 2 to 8 K"
 10.1038_s41467-025-55880-4,needs a page from you,,,,no figure caption naming a critical current was found
-10.1038_s41598-025-95932-9,screenshot only,5,,,"p5: frame detected, 55732 saturated px, 12 distinct colours"
-1002.0208v2,screenshot only,4,6,,"p4: frame detected, 26440 saturated px, 8 distinct colours"
+10.1038_s41598-025-95932-9,nothing needed,5,,,"opened and confirmed: p5 Fig. 4(b) Jc(H) linear y, 6 series, legend 45 to 70 K"
+1002.0208v2,nothing needed,4,6,,"opened and confirmed: p4 Fig. 5(a),(b) J_L(H), 8 and 6 series, temperatures 5 to 35 K as coloured labels and a legend"
 1002.0248v1,needs a page from you,8,8,yes,"p8 is the figure-caption list, the figures are elsewhere"
 1003.0946v2,needs a page from you,,,yes,no figure caption naming a critical current was found
-1009.4896v1,screenshot only,2,4,,"p2: frame detected, 10321 saturated px, 14 distinct colours"
+1009.4896v1,nothing needed,2,4,,"opened and confirmed: p2 Fig. 2(b) Jc(H) log y, 6 series, legend 2 to 15 K"
 1104.0477v2,needs a page from you,,,,no figure caption naming a critical current was found
-1108.0407v1,screenshot only,4,2,,"p4: frame detected, 28365 saturated px, 7 distinct colours"
-1108.5583v3,screenshot only,2,,yes,"p2: frame detected, 22148 saturated px, 14 distinct colours"
-1109.5479v1,screenshot only,3,,yes,"p3: frame detected, 16969 saturated px, 15 distinct colours"
-1111.3923v1,screenshot only,3,2,,"p3: frame detected, 35563 saturated px, 9 distinct colours"
-1204.0339v2,screenshot only,17,16,yes,"p16 is M-H, the Jc figure is p17"
-1502.05345v1,screenshot only,4,,,"p4: frame detected, 38569 saturated px, 17 distinct colours"
+1108.0407v1,nothing needed,4,2,,"opened and confirmed: p4 Fig. 5(c),(d) Jc(H) log y, 7 and 8 series, legend 1.8 to 7 K"
+1108.5583v3,borderline,2,,yes,p2: the plotted ordinate is dB/dx (G/um); j (kA/cm2) appears only as a right-hand twin axis. Withdrawn beta_T paper
+1109.5479v1,nothing needed,3,,yes,"opened and confirmed: p3 Fig. 2 jc(H) log-log, 3 series, coloured labels 5, 11, 17.5 K. Withdrawn beta_T paper"
+1111.3923v1,nothing needed,3,2,,"opened and confirmed: p3 Fig. 4(a),(b) Jc(H) log y, 6 series each, 4.2 to 16 K, H||c and H_perp_c"
+1204.0339v2,nothing needed,17,16,yes,"opened and confirmed: p17 Fig. 3(a),(b) Jc(H) log y, 5 and 4 series, legend 4 to 15 K. Withdrawn beta_T paper"
+1502.05345v1,nothing needed,4,,,"opened and confirmed: p4 Fig. 4(b) Jc(H) log y, two panels, 5 series each, coloured labels 4.2 to 25 K"
 1611.08455v1,needs a page from you,,15,,p15 is caption text only
-1612.02839v1,screenshot only,9,,yes,"p9: frame detected, 15865 saturated px, 10 distinct colours"
-1801.05074v1,screenshot only,4,4,yes,"p4: frame detected, 37287 saturated px, 12 distinct colours"
-1802.09868v1,screenshot only,5,,yes,"p5: frame detected, 68040 saturated px, 9 distinct colours"
-1903.00866v2,screenshot only,16,,,"p16: frame detected, 48123 saturated px, 13 distinct colours"
+1612.02839v1,needs metadata,9,,yes,"p9 Fig. 6(a): colour encodes sample condition (as-grown black, annealed red) and temperature is in-plot text, 5 K and 13.5 K, so colour and temperature are decoupled. Withdrawn beta_T paper"
+1801.05074v1,needs a page from you,4,4,yes,p4 has no Jc plot at all: Fig. 2(b) puts 1/J on the x axis. Withdrawn beta_T paper
+1802.09868v1,nothing needed,5,,yes,"opened and confirmed: p5 Fig. 6 Jc(H) log y, six panels, up to 8 series, legend 2 to 35 K. Withdrawn beta_T paper"
+1903.00866v2,nothing needed,16,,,"opened and confirmed: p16 (e),(f) Jc2 and Jc3 against H, log y, 7 series each, legend 2 to 30 K"
 2012.13723v3,already measured,4,,,266 and 319 points already deposited
 2110.15577v1,needs a page from you,7,13,yes,"p7 is body text, no figure"
 2207.06629v1,already measured,4,,,266 and 319 points already deposited
-2305.10034v1,screenshot only,23,25,,"p23 panel (c) Jc(H) log y, 4 series, legend 2/5/8/10 K, H//c"
-2308.10492v1,screenshot only,3,3,,"p3: frame detected, 13173 saturated px, 20 distinct colours"
-2403.19981v1,screenshot only,9,,yes,"p9: frame detected, 32497 saturated px, 9 distinct colours"
-2510.10264v1,screenshot only,5,6,,p6 FIG 5(c) carries Bc2(T) and Birr(T) with (1-T/Tc)^n fits: a Tier-1 critical scale
-2511.19058v1,screenshot only,3,,,"p3: frame detected, 52815 saturated px, 10 distinct colours"
+2305.10034v1,nothing needed,23,25,,"opened and confirmed: p23 (c) Jc(H) log y, 4 series, legend 2, 5, 8, 10 K, H//c"
+2308.10492v1,nothing needed,3,3,,"opened and confirmed: p3 (b) Jc(field) log y, 7 series, legend 1.8 to 15 K"
+2403.19981v1,nothing needed,9,,yes,"opened and confirmed: p9 (c),(d) Jc(H) log y, 6 series each, legend 4.2 to 30 K. Withdrawn beta_T paper"
+2510.10264v1,needs metadata,5,6,,"p5 (a),(b) are log-log Jc(B) fans of about 15 colour curves with no legend; only the end members are labelled, 2.5 K and 20 K in (a), 2 K and 16 K in (b). The intermediate temperatures are not on the plot"
+2511.19058v1,nothing needed,3,,,"opened and confirmed: p3 (b),(d) Jc(H) log-log, 7 series each, legend 2 to 8 K"
