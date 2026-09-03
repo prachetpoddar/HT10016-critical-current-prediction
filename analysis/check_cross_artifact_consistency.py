@@ -64,6 +64,26 @@ STALE = {
     "10.5%": "above-Tc refusal share, now 9.9%",
     "for want of a critical-field anchor":
         "one refusal code of four, and not the largest",
+    # Sec. III.E as it read before the reduced-field gate closed two of the
+    # three dispatch families. These were carried as outstanding while the
+    # passages were rewritten; they are ordinary stale tokens now.
+    "185 candidate compounds": "candidate compounds, now 183",
+    "125 of the 185": "dispatched compounds, now 85 of 183",
+    "123 rather than 125": "the outlier screen no longer changes the count",
+    "Of the 185, 125": "dispatched compounds, now 85 of 183",
+    "239 candidate records": "candidate records, now 233",
+    "Of the 239 records": "candidate records, now 233",
+    "179 of the 239": "Hc2 coverage, now 173 of 233",
+    "2151 candidate-grid tuples": "now 2097",
+    "218 are retained": "retained after the calibration screen, now 212",
+    "0.39 dex": "pre-gate interval width, now 0.82 dex over the emitted rows",
+    "0.19 dex": "half the pre-gate width, now 0.41 dex",
+    "identical to nine decimal places":
+        "the within-family spread is 0.0098 dex, not identity",
+    "lowest evaluated field of 0.1 T":
+        "every target at 0.1 T is refused; the emitted grid is 5 T",
+    "one-sigma uncertainty of about 0.10 dex":
+        "derived from the pre-gate width, now 0.21 dex",
 }
 
 # Tokens that ARE stale and have NOT been corrected yet, listed so that the
@@ -73,23 +93,7 @@ STALE = {
 # corrected by swapping numbers because two of the three dispatch families now
 # emit nothing at all. Moving a token out of here and into STALE is what
 # records that the passage has actually been rewritten.
-OUTSTANDING = {
-    "185 distinct",
-    "185 candidates",
-    "185 candidate compounds",
-    "125 compounds receive",
-    "125 of the 185",
-    "123 rather than 125",
-    "Of the 185, 125",
-    "239 candidate records",
-    "Of the 239 records",
-    "179 of the 239",
-    "2151 candidate-grid tuples",
-    "218 are retained",
-    "25.1%",
-    "10.5%",
-    "0.39 dex",
-}
+OUTSTANDING = set()   # every passage below has now been rewritten
 
 # hits that are correct and must stay
 ALLOWED = [
