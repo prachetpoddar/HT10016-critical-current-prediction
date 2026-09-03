@@ -44,6 +44,16 @@ Singleton cells (n=1) display only the per-paper marker with explicit "n=1"
 annotation; no median line or IQR box is drawn for cells with one record.
 
 Output: figure_4_variance_decomposition.png at 300 DPI.
+
+matplotlib is imported only when something is drawn. verify_deposit.py imports
+this module for aggregate_per_physical_sample and compute_variance_decomposition
+alone, and a reviewer checking the deposited numbers should not need a plotting
+stack to do it.
+
+Note on regenerating the figure: it renders in Helvetica or Arial with several
+fallbacks. On a machine that has neither, matplotlib substitutes silently and
+the deposited figure comes back with a different typeface while reporting
+success. Check the font warnings before committing a re-render.
 """
 
 from __future__ import annotations
@@ -51,7 +61,23 @@ import re
 from pathlib import Path
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+
+# matplotlib is imported lazily. verify_deposit.py imports this module only for
+# aggregate_per_physical_sample and compute_variance_decomposition, neither of
+# which draws anything, and a reviewer checking the deposit should not need a
+# plotting stack to do it. A hard import here made verify_deposit.py fail with
+# ModuleNotFoundError on a clean environment, which reads as a broken deposit
+# rather than as a missing optional dependency.
+plt = None
+
+
+def _need_plt():
+    global plt
+    if plt is None:
+        import matplotlib.pyplot as _plt
+        _plt.rcParams.update(RC_PARAMS)
+        plt = _plt
+    return plt
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -62,7 +88,7 @@ ROOT = HERE.parent
 JC_ANCHOR_CSV = ROOT / "data" / "phase_3_p31_jc_anchor_per_paper.csv"
 OUT = ROOT / "figures" / "manuscript_figure_3.png"
 
-plt.rcParams.update({
+RC_PARAMS = {
     "font.family": ["Helvetica", "Nimbus Sans", "Arial", "Liberation Sans", "DejaVu Sans"],
     "font.size": 10,
     "axes.titlesize": 10,
@@ -74,7 +100,7 @@ plt.rcParams.update({
     "axes.linewidth": 0.8,
     "xtick.direction": "in",
     "ytick.direction": "in",
-})
+}
 
 SUB_COLORS = {
     "iron_chalcogenide_11": "#1B9E77",
@@ -377,6 +403,7 @@ def main():
     y_min = float(np.floor(log_jc_vals.min())) - 0.5
     y_max = float(np.ceil(log_jc_vals.max())) + 0.5
 
+    plt = _need_plt()
     fig, axes = plt.subplots(1, 3, figsize=(7.01, 3.3), sharey=True)
     subs_ordered = ["iron_chalcogenide_11", "iron_pnictide_122",
                     "conventional_AlB2"]
@@ -400,7 +427,7 @@ def main():
             forms_used.add(sf)
     for sf in SAMPLE_FORM_ORDER:
         if sf in forms_used:
-            handles.append(plt.Line2D([0], [0], marker=SAMPLE_FORM_MARKERS[sf],
+            handles.append(_need_plt().Line2D([0], [0], marker=SAMPLE_FORM_MARKERS[sf],
                                          color="black", lw=0, ms=6,
                                          mec="black", mfc="lightgray"))
             # Capitalize first letter for marker legend; "_" -> space
