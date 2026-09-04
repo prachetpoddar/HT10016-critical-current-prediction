@@ -1,0 +1,32 @@
+verdict,paper,signatures,n_points,round_fraction,anchor_rows,field_axis_fits,passing_fits,status
+CHECK,10.1016_j.physc.2010.05.048,field_beyond_hc2,80,0.05,1,8,8,LIVE
+CHECK,10.1016_j.phpro.2015.06.160,,30,0.8,2,6,6,LIVE
+CHECK,10.1016_j.matchemphys.2023.128348,,24,0.5417,4,4,4,LIVE
+CHECK,10.1016_j.matpr.2019.05.078,,20,0.65,4,2,2,LIVE
+CHECK,10.1016_j.cjph.2024.09.042,,47,0.766,0,7,0,LIVE
+FAIL,10.1016_j.mtphys.2022.100783,duplicate_series shifted_series,100,0.68,2,20,20,LIVE
+FAIL,10.1007_s10854-026-16566-9,shifted_series,72,0.6111,4,12,12,LIVE
+FAIL,10.1016_j.physc.2009.11.051,arithmetic grid_quantized shifted_series,48,0.3542,2,8,8,LIVE
+FAIL,10.1038_s41598-025-24806-x,arithmetic grid_quantized shifted_series,15,0.9333,2,0,0,LIVE
+FAIL,10.1016_j.jpcs.2026.113652,arithmetic grid_quantized shifted_series,36,0.5278,4,6,0,LIVE
+FAIL,10.1038_s41598-025-95932-9,arithmetic shifted_series,60,0.3833,1,6,0,LIVE
+FAIL,10.1016_j.jallcom.2013.04.183,shifted_series,56,0.3036,4,8,0,LIVE
+FAIL,10.1016_j.physc.2011.05.018,arithmetic duplicate_series field_beyond_hc2 grid_quantized,20,0.3,2,0,0,LIVE
+FAIL,10.1016_j.ceramint.2024.10.058,arithmetic shifted_series,48,0.1667,5,5,0,LIVE
+FAIL,10.1016_j.physc.2016.05.023,arithmetic grid_quantized,60,0.1667,0,10,0,LIVE
+CHECK,10.1016_j.mtphys.2021.100414,,5,0.8,0,0,0,not in the cohort
+CHECK,10.1016_j.physc.2015.03.022,grid_quantized,6,0.6667,0,0,0,not in the cohort
+CHECK,10.1038_srep22278,,10,0.6,0,0,0,not in the cohort
+CHECK,10.1016_j.physc.2010.09.012,,10,0.5,0,0,0,not in the cohort
+CHECK,10.1038_s41598-021-86728-8,non_monotonic,9,0.2222,0,0,0,not in the cohort
+CHECK,elsevier,non_monotonic,210,0.0238,0,0,0,not in the cohort
+CHECK,elsevier,non_monotonic,234,0.0,0,0,0,not in the cohort
+CHECK,elsevier,non_monotonic,356,0.0,0,0,0,not in the cohort
+CHECK,maglab_Sm1111_4_2K,non_monotonic,44,0.0,0,0,0,not in the cohort
+FAIL,10.1016_j.physc.2009.03.048,arithmetic grid_quantized,15,0.7333,0,0,0,not in the cohort
+FAIL,10.1016_j.jallcom.2024.173999,shifted_series,30,0.2667,0,0,0,not in the cohort
+CHECK,10.1016_j.physb.2025.417755,,5,1.0,0,0,0,withdrawn
+CHECK,10.1016_j.physc.2014.03.020,,11,1.0,0,0,0,withdrawn
+FAIL,10.1016_j.physc.2009.03.028,shifted_series,54,0.3148,0,0,0,withdrawn
+FAIL,10.1016_j.physc.2010.03.003,field_beyond_hc2 log_ladder,25,0.2,0,0,0,withdrawn
+FAIL,10.1038_s41467-025-55880-4,shifted_series,36,0.0556,0,0,0,withdrawn
