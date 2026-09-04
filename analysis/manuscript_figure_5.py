@@ -21,6 +21,11 @@ Run from the repository root; writes into figures/.
 import json, numpy as np, matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import logging as _logging
+# font.family carries fallbacks for other machines, so matplotlib warns
+# once per missing family per text element. Several hundred lines that
+# look like failures, on a render that succeeded.
+_logging.getLogger("matplotlib.font_manager").setLevel(_logging.ERROR)
 from matplotlib.lines import Line2D
 
 P=json.load(open("data/family_params.json"))

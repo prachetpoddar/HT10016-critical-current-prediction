@@ -19,6 +19,11 @@ depend on the cohort and change with it.
 Run from the repository root; writes into figures/.
 """
 import matplotlib; matplotlib.use("Agg")
+import logging as _logging
+# font.family carries fallbacks for other machines, so matplotlib warns
+# once per missing family per text element. Several hundred lines that
+# look like failures, on a render that succeeded.
+_logging.getLogger("matplotlib.font_manager").setLevel(_logging.ERROR)
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 from figure_counts import UPSTREAM
