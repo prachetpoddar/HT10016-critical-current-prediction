@@ -1,0 +1,32 @@
+identifier,pdf_in_corpus,figure_read,printed_field_axis,unit_class,how_established,note
+elsevier_10.1016_0921-4534(96)00225-0,yes,text layer,magnetic field (tesla),tesla,text layer of the figure page,
+elsevier_10.1016_j.ceramint.2024.10.058,yes,Fig. 4,mu0H (T),tesla,figure opened,
+elsevier_10.1016_j.cjph.2024.09.042,yes,Fig. 4,H (T),tesla,figure opened,
+elsevier_10.1016_j.jallcom.2013.04.183,yes,Fig. 8,H (T),tesla,figure opened,axis starts at 0.25 T
+elsevier_10.1016_j.jallcom.2023.170146,mismatch,Fig. 3 of the filed PDF,H (kOe),unresolved,figure opened,"the PDF filed under this DOI is Tamegai et al Physica C 470 (2010) S360, Ba(Fe,Co)2As2 with Tc 24 K and a kOe axis; the record's own data is a user digitisation of an MgB2 ultra-sonicated-boron Jc-versus-H figure with Tc 39 K and fields 0.02-4.9 T; the DOI and the PDF are not the same paper"
+elsevier_10.1016_j.jallcom.2023.170384,yes,not read,,unverified,,mT appears only for Hc1
+elsevier_10.1016_j.jpcs.2026.113652,yes,Figure (9),H (Oe),oersted,figure opened,"field converted correctly; the current axis is A/m2 and was not converted"
+elsevier_10.1016_j.matchemphys.2023.128348,yes,Fig. 5,Magnetic Field H (T),tesla,figure opened,
+elsevier_10.1016_j.matpr.2019.05.078,yes,Fig. 2(a),mu0H [G],gauss,figure opened,field converted correctly
+elsevier_10.1016_j.mtphys.2022.100783,yes,Fig. 6,mu0H (T),tesla,figure opened earlier this session,
+elsevier_10.1016_j.phpro.2012.03.421,yes,not read,,unverified,,one fit and no passing fits
+elsevier_10.1016_j.phpro.2015.06.160,yes,Fig. 3,mu0H (T),tesla,figure opened,
+elsevier_10.1016_j.physc.2009.05.098,abstract only,none,,unverifiable,,"the corpus holds a one-page abstract; nine fits and eight passing fits rest on a figure that cannot be opened here"
+elsevier_10.1016_j.physc.2009.11.051,yes,Jc-versus-H figure,kOe,kilo-oersted,figure opened earlier this session,recorded as tesla
+elsevier_10.1016_j.physc.2010.05.048,yes,Jc-versus-H figure,kOe,kilo-oersted,figure opened earlier this session,recorded as tesla
+elsevier_10.1016_j.physc.2011.02.004,abstract only,none,,unverifiable,,"the corpus holds a one-page abstract; six fits, all passing"
+elsevier_10.1016_j.physc.2013.04.060,yes,Figs. 2 and 3,"Magnetic Field, B, T",tesla,figure opened,
+elsevier_10.1016_j.physc.2016.05.023,yes,Fig. 3,H (kOe),kilo-oersted,figure opened,extraction CSV absent from the corpus
+springer_10.1007_s10854-026-16566-9,yes,Fig. 9,H (T),tesla,figure opened,
+springer_10.1038_s41598-022-24044-5,yes,Fig. 8,mu0H (T),tesla,text layer of the figure page,
+springer_10.1038_s41598-025-95932-9,yes,Fig. 4(a),none,none,figure caption read,the only critical-current figure is a self-field measurement
+iop_10.1088_0953-2048_29_3_035013,no,none,,unverifiable,,PDF not in the corpus
+MAGLAB_11_4_2K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
+MAGLAB_11_6K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
+MAGLAB_Co122_4_2K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
+MAGLAB_La1111_4_2K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
+MAGLAB_Nd1111_10K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
+MAGLAB_Nd1111_4_2K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
+MAGLAB_Ni122_4_2K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
+MAGLAB_P122_4_2K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
+MAGLAB_Sm1111_4_2K,no,none,,not a printed figure,,National High Magnetic Field Laboratory tabulated record
