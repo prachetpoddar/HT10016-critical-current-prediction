@@ -210,7 +210,7 @@ def compare_render(fresh, committed, portable):
         ok, detail = same_pixels(fresh, committed)
         if ok:
             return True, detail + ", and this is the render environment"
-        return None, ("same size, %s: text rasterisation differs here, so "
+        return None, ("same size, %s: edge rasterisation differs here, so "
                       "this cannot be checked from this environment" % detail)
     dw = abs(a.size[0] - b.size[0]) / b.size[0]
     dh = abs(a.size[1] - b.size[1]) / b.size[1]

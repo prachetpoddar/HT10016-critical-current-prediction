@@ -136,7 +136,8 @@ def case_other_platform_same_size(work):
     interior. The rule this replaced was "same size, so compare strictly",
     which called that a broken deposit. It must report n/a here, and it must
     say so for the reason that is actually true rather than borrowing the size
-    wording.
+    wording. "Edge" and not "text": a third of those pixels are on the family
+    curves and the alpha-blended bands, which freetype never touches.
     """
     from PIL import Image
     shutil.copy2(FIG1, os.path.join(work, "fig1.same"))
@@ -148,7 +149,7 @@ def case_other_platform_same_size(work):
         px[0, 0] = (0, 0, 0, 255)
         im.save(FIG1)
         line = regeneration_line()
-        ok = " n/a " in line and "text rasterisation differs" in line
+        ok = " n/a " in line and "edge rasterisation differs" in line
         print("   %-52s %s"
               % ("a same-size pixel difference from another platform",
                  "ok" if ok else "FAILED"))
