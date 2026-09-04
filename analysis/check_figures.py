@@ -17,6 +17,10 @@ Three checks, in the order a stale figure gets there:
      is excluded because its width depends on which Helvetica the renderer
      resolves, and Figure 4 has no generator in this deposit at all, so
      NEITHER of those two has its numeric content checked by anything here.
+     This one check is conditional on where it is run: it compares pixels only
+     in the environment recorded in figures/render_env.json, and reports "n/a"
+     elsewhere. See the comment above SIZE_TOLERANCE for why, and for what
+     that gives up.
   2. Every image embedded in the .docx is the committed PNG for that figure,
      compared pixel by pixel including the alpha channel. This is what catches
      a corrected figure that was never put back into the document.
@@ -27,6 +31,7 @@ Three checks, in the order a stale figure gets there:
 
 Usage:
     python3 analysis/check_figures.py [manuscript.docx ...]
+    python3 analysis/check_figures.py --record   # after redrawing the figures
 """
 import os
 import re
@@ -101,40 +106,111 @@ def same_pixels(a, b):
 
 
 # A regenerated figure is required to match the committed one PIXEL FOR PIXEL
-# only when it comes out at the same size. When it does not, the difference is
-# text metrics, and those are a property of the platform rather than of the
-# deposit: matplotlib saves with bbox_inches="tight", so the canvas is sized
-# from rendered text extents, and freetype rasterises glyphs differently on
-# macOS and Linux. Measured on this deposit, matplotlib 3.8.4 and 3.10.9 on the
-# same machine give byte-identical output for Figures 1, 2 and 5, while the
-# same scripts on macOS give 2731x1538 against 2729x1538 and 2254x2095 against
-# 2253x2095. The version is not the variable; the platform is.
+# in the environment that drew it, and nowhere else. The discriminator is the
+# recorded environment, not the size of the output, and getting that wrong
+# cost two rounds: the first rule here was "same size, so compare strictly",
+# which passed Figures 1 and 2 on macOS (2731x1538 against 2729x1538, and
+# 2254x2095 against 2253x2095, both reported as not comparable) and then
+# failed Figure 5 there at an identical 2796x1330 with a maximum pixel
+# difference of 255. Both come from one cause. matplotlib saves with
+# bbox_inches="tight", so the canvas is sized from rendered text extents, and
+# freetype rasterises glyphs differently per platform; a sub-pixel shift
+# either moves the bounding box, which changes the size, or moves a hairline
+# across a pixel boundary, which flips it from white to black at the same
+# size. Nothing about the size tells you which figure will do which.
 #
-# So a size difference inside this tolerance is reported as not comparable
-# here, with the numbers, rather than as a failure. Calling it a failure told
-# every reader on a different operating system that the deposit was broken,
-# which is worse than saying plainly that this particular property cannot be
-# checked from their machine.
+# Two things were ruled out by measurement rather than assumed. matplotlib
+# 3.8.4 and 3.10.9 installed side by side on this machine give byte-identical
+# output for Figures 1, 2 and 5, so the version is not the variable. Pinning
+# font.family to the bundled DejaVu Serif did not change the macOS output
+# either, so it is not font resolution. The platform's freetype is.
+#
+# What this gives up, stated plainly: on a machine that did not draw the
+# figures, a regenerated figure that really has gone stale is reported as not
+# comparable rather than as a failure, so long as its size stays inside the
+# tolerance below. That check is only available where the figures were drawn.
+# The document comparison is not weakened by any of this, because it compares
+# two committed artifacts rather than a fresh render, and it is what catches a
+# corrected figure that was never re-embedded.
 SIZE_TOLERANCE = 0.01     # 1% in either dimension
+RENDER_ENV = os.path.join("figures", "render_env.json")
 
 
-def compare_render(fresh, committed):
-    """(ok, detail) for a regenerated figure against the committed one."""
+def render_signature():
+    """What decides whether two renders of the same figure can be compared.
+
+    Text is rasterised by freetype, whose build differs per platform, so a
+    sub-pixel glyph shift flips a hairline from white to black. That shows up
+    as a size change on some figures and as a full-range pixel difference at
+    identical size on others, which is why comparing sizes was not enough: a
+    reader on macOS saw Figures 1 and 2 differ by two pixels of width and
+    Figure 5 differ in content at the same size, from the same cause.
+    """
+    import matplotlib
+    import platform
+    sig = {"system": platform.system(),
+           "matplotlib": matplotlib.__version__}
+    try:
+        from matplotlib import ft2font
+        sig["freetype"] = ft2font.__freetype_version__
+    except Exception:
+        sig["freetype"] = "unknown"
+    return sig
+
+
+def describe(sig):
+    return "%s, matplotlib %s, freetype %s" % (
+        sig.get("system", "?"), sig.get("matplotlib", "?"),
+        sig.get("freetype", "?"))
+
+
+def record():
+    """Write figures/render_env.json for the machine drawing the figures.
+
+    Run this in the same session that regenerates and commits the PNGs, and
+    commit the result with them. Running it anywhere else asserts that the
+    committed figures were drawn somewhere they were not, which turns every
+    regeneration check strict on a platform that cannot pass it.
+    """
+    import json
+    sig = render_signature()
+    with open(RENDER_ENV, "w") as fh:
+        json.dump(sig, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+    print("%s records %s" % (RENDER_ENV, describe(sig)))
+    return 0
+
+
+def compare_render(fresh, committed, portable):
+    """(ok, detail) for a regenerated figure against the committed one.
+
+    Pixel comparison only means something where the committed render was made.
+    Elsewhere it reports what it saw and declines to judge, because a
+    difference there is evidence about freetype, not about the deposit.
+    """
     a, b = Image.open(fresh), Image.open(committed)
-    if a.size == b.size:
-        return same_pixels(fresh, committed)
+    same_size = a.size == b.size
+    if portable:
+        if same_size:
+            return same_pixels(fresh, committed)
+        return False, "%dx%d vs %dx%d" % (a.size + b.size)
+    if same_size:
+        ok, detail = same_pixels(fresh, committed)
+        if ok:
+            return True, detail + ", and this is the render environment"
+        return None, ("same size, %s: text rasterisation differs here, so "
+                      "this cannot be checked from this environment" % detail)
     dw = abs(a.size[0] - b.size[0]) / b.size[0]
     dh = abs(a.size[1] - b.size[1]) / b.size[1]
     if max(dw, dh) <= SIZE_TOLERANCE:
         return None, ("%dx%d here against %dx%d committed, %.2f%% in width: "
                       "text metrics differ, so this cannot be checked from "
-                      "this platform"
-                      % (a.size + b.size + (100 * dw,)))
+                      "this environment" % (a.size + b.size + (100 * dw,)))
     return False, "%dx%d vs %dx%d, beyond the %.0f%% tolerance" % (
         a.size + b.size + (100 * SIZE_TOLERANCE,))
 
 
-def regenerates(script, committed, work):
+def regenerates(script, committed, work, portable):
     """Run a generator, compare with the committed PNG, then put it back.
 
     The generators cannot be redirected into a scratch tree. Two of them
@@ -171,7 +247,7 @@ def regenerates(script, committed, work):
             return False, (r.stderr.strip().splitlines() or ["failed"])[-1][:90]
         if not os.path.exists(committed):
             return False, "the generator wrote nothing to %s" % committed
-        return compare_render(committed, keep)
+        return compare_render(committed, keep, portable)
     finally:
         for f, k in saved:
             shutil.copy2(k, f)
@@ -218,12 +294,45 @@ def main():
     check("the regeneration list still holds %d figures" % len(GENERATED),
           len(GENERATED) == 3, "figures %s"
           % ", ".join(str(n) for n, _, _ in GENERATED))
+
+    # Whether a regenerated figure may be compared with the committed one at
+    # all. The recorded signature is part of the deposit, so its absence is a
+    # failure rather than a licence to skip: without it there is no way to
+    # tell a reader on another platform from a figure that really is stale.
+    import json
+    env = None
+    if os.path.exists(RENDER_ENV):
+        try:
+            env = json.load(open(RENDER_ENV))
+        except Exception:
+            env = None
+    here = render_signature()
+    check("the environment the figures were drawn in is recorded",
+          env is not None,
+          RENDER_ENV if env is not None else
+          "%s is missing or unreadable; run this script with --record on the "
+          "machine that draws the figures" % RENDER_ENV)
+    portable = env == here
+    if env is not None and not portable:
+        # Name the fields that differ. All three gate the comparison, but they
+        # are not equally likely to matter: freetype and the system decide the
+        # rasterisation, while matplotlib 3.8.4 and 3.10.9 were measured to
+        # give byte-identical output for these three figures. A reader whose
+        # only difference is the matplotlib version can install the recorded
+        # one and get the strict check back.
+        diff = sorted(set(env) | set(here))
+        diff = [k for k in diff if env.get(k) != here.get(k)]
+        print("\n   the committed figures were drawn in %s\n"
+              "   this is %s\n   differing: %s\n"
+              % (describe(env), describe(here), ", ".join(diff)))
+
     with tempfile.TemporaryDirectory() as work:
         for n, script, png in GENERATED:
             if not os.path.exists(png):
                 check("Figure %d is committed" % n, False, png)
                 continue
-            ok, detail = regenerates(script, png, os.path.join(work, str(n)))
+            ok, detail = regenerates(script, png, os.path.join(work, str(n)),
+                                     portable)
             check("Figure %d regenerates from the current deposit" % n,
                   ok, detail)
 
@@ -246,10 +355,11 @@ def main():
                  and abs(v - float(per.loc[k, "ratio_between_total"])) > 5e-4}
         check("Figure 3's committed render matches the current deposit",
               not drift,
-              "; ".join("%s shows %.4f, deposit %.4f" % (k, a_, b)
+              "; ".join("%s shows %.4f, deposit %.4f; redraw with "
+                        "analysis/figure_4_source.py where Helvetica is "
+                        "installed and update the stamp" % (k, a_, b)
                         for k, (a_, b) in drift.items())
-              or "redraw with analysis/figure_4_source.py where Helvetica is "
-                 "installed, and update the stamp")
+              or "%d ratio(s) agree with the stamp" % len(stamp))
 
     for docx in sys.argv[1:]:
         print("\n%s\n" % os.path.basename(docx))
@@ -305,4 +415,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if "--record" in sys.argv[1:]:
+        sys.exit(record())
     sys.exit(main())
