@@ -272,3 +272,47 @@ value and explain why it is wrong without naming the right one, for example
 reduction, but that ratio compares different cohorts". Those clear the check by
 naming the replacement in the same sentence, which the prose should be doing
 anyway.
+
+
+## What was applied
+
+`analysis/apply_traced_value_edits.py` carries 29 edits into the three
+artifacts and the letter's markdown copy. Every number it writes is recomputed
+from the deposit at run time; it refuses to write if any find misses. The
+checker goes from 25 to 1.
+
+The one that remains is the Nb3Sn sentence, which needs Tables S4, S5 and S6
+regenerated rather than reworded.
+
+## What was deliberately not applied
+
+Four clusters the deposit does not settle on its own.
+
+1. **The printed Tables S4, S5 and S6.** S4 and S5 print rows from papers in
+   `audit/withdrawn_records.csv` that the deposited files no longer hold. S6
+   prints refused predictions as delivered ones, taking `withheld_log_Jc` and
+   showing the refusal column as "none".
+   `analysis/build_supplement_tables.py` regenerates all three from the current
+   deposit and excludes the withdrawn identifiers, but its output differs from
+   the printed tables in more than those rows, so swapping them is an editorial
+   decision rather than a repair.
+
+2. **0.751, 0.929, 1.094 and 2.622.** Nothing in this deposit reproduces the
+   substructure-median field-axis run. Either the run is recovered and
+   deposited, or the sentence goes.
+
+3. **The field-scale audit numbers.** The three documents give three different
+   readings of the same audit: median ratio 0.86 against 0.80, 15 of 77 against
+   15 of 94, and 31 of 80 against 30 of 77. Which is right is not decidable
+   from the fit table alone; the generator that produced them has to be
+   identified first.
+
+4. **The calibration screen.** Table IV's caption no longer claims 123
+   compounds, but the screen's effect cannot be restated until
+   `phase_3_p56_candidate_tier_assignment.csv` is regenerated behind the two
+   window gates. `verify_deposit.py` fails until it is.
+
+Also outstanding, from the review and not from the checker: the supplement's
+"seven distinct cuprate compounds" against the deposit's five, its "4 of 46"
+iron chalcogenide fits against 51, and Table S1's "Paper-reported Hc2" column,
+where two deposited generators give 22 and 13 from the same data.
