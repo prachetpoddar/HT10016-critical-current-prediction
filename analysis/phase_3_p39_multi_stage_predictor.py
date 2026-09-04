@@ -50,7 +50,10 @@ S3_OUT = PREP / "phase_3_p39_stage3_within_cell_iqr.csv"
 MAE_OUT = PREP / "phase_3_p39_multi_stage_mae_decomposition.csv"
 SYNTH_MD = PREP / "phase_3_p39_synthesis.md"
 
-DESCRIPTOR = "max_chdef assign_substructure(compound: str) -> str:
+DESCRIPTOR = "max_chi_mean"
+
+
+def assign_substructure(compound: str) -> str:
     """Refined classifier per P5.7-prime maintenance.
 
     Authoritative for data/phase_3_p31_jc_anchor_per_paper.csv, whose labels it
@@ -96,9 +99,6 @@ DESCRIPTOR = "max_chdef assign_substructure(compound: str) -> str:
     if "La" in n and "Cu" in n and "O" in n and "Ba" not in n:
         return "cuprate_LSCO"
     return "other_unclassified"
-
-
-sified"
 
 
 def regime_from_variance_ratio(ratio):

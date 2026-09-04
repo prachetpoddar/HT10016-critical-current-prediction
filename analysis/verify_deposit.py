@@ -27,6 +27,7 @@ Exit status is non-zero if any check fails.
 Run from the repository root.
 """
 import glob
+import io
 import os
 import sys
 
@@ -312,6 +313,52 @@ def main():
                    if a.paper_id.str.contains(i.split("/")[-1], regex=False).any()]
         check("no withdrawn record survives in the anchor table",
               not present, "withdrawn: %s" % ", ".join(sorted(ids)))
+
+    # The tier table and the prediction file must agree on which candidates
+    # emit. They are the same question asked of two files, and only one of them
+    # was regenerated when the field-window and temperature-window gates were
+    # applied: the tier table still marks 123 compounds as emitting across three
+    # families, while the prediction file emits 84, all of them MgB2-class, and
+    # the 84 are a strict subset of the 123. Table IV's caption in the
+    # manuscript carries the tier table's number while its body carries the
+    # prediction file's, so the two disagree inside one table. This is the
+    # failure this script was written for, a gate applied to one derived table
+    # and not to the other, and nothing here was asking the question.
+    tier_p = os.path.join("data", "phase_3_p56_candidate_tier_assignment.csv")
+    pred_p = os.path.join("data", "phase_3_p57_de_novo_predictions.csv")
+    if os.path.exists(tier_p) and os.path.exists(pred_p):
+        tt = pd.read_csv(tier_p)
+        pp = pd.read_csv(pred_p)
+        t_em = set(tt.loc[tt.emits_predictions.astype(str).str.lower()
+                          .isin(["yes", "true", "1"]), "compound"])
+        p_em = set(pp.loc[pp.refusal_flag.isna(), "compound_formula"])
+        check("the tier table and the prediction file agree on who emits",
+              t_em == p_em,
+              "tier table %d compounds, prediction file %d, %d marked emitting "
+              "that emit nothing, %d emitting that the tier table does not mark"
+              % (len(t_em), len(p_em), len(t_em - p_em), len(p_em - t_em))
+              + ("; regenerate analysis/phase_3_p56_de_novo_candidate_list.py"
+                 if t_em != p_em else ""))
+
+    # Every deposited script must at least parse. This is the cheapest check in
+    # the file and it went missing until analysis/phase_3_p39_multi_stage_predictor.py
+    # shipped with a string replacement that had cut into a literal at both
+    # ends, leaving DESCRIPTOR = "max_ch on one side and sified" on the other.
+    # It was pushed and sat on the remote, because a script nobody ran that
+    # revision is a script nobody found out was broken, and none of the four
+    # check_* scripts import it. A SyntaxError is not a subtle defect and it
+    # should not need a reader to hit it.
+    import ast
+    import glob as _glob
+    broken = []
+    for f in sorted(_glob.glob(os.path.join("analysis", "*.py"))):
+        try:
+            ast.parse(io.open(f, encoding="utf-8").read(), filename=f)
+        except SyntaxError as e:
+            broken.append("%s line %s: %s" % (os.path.basename(f), e.lineno, e.msg))
+    check("every deposited script parses", not broken,
+          "; ".join(broken) or "%d file(s)"
+          % len(_glob.glob(os.path.join("analysis", "*.py"))))
 
     print()
     if failures:

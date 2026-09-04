@@ -59,12 +59,20 @@ ROLES = [("manuscript", ("HT10016",), ("SUPPLEMENT", "RESPONSE")),
          ("supplement", ("SUPPLEMENTAL", "SUPPLEMENT"), ()),
          ("response", ("RESPONSE",), ())]
 
+# Every phrase here has to say that the value belongs to a PAST state of this
+# work. Six that did not have been removed: "rather than", "against the",
+# "instead of", "before", "in place of", and the bare "was " and "were ". Each
+# of those appears in ordinary present-tense prose, and between them they
+# silenced real flags. "The rank-position error remains 1.11, so Stage 1 serves
+# as a rank-signal step rather than a final predictor" was exempted by "rather
+# than"; the stale 5.1 field-scale factor was reported in the supplement and
+# hidden in the manuscript and the letter, which carry it in past-tense
+# sentences. A marker that fires on the grammar of a sentence rather than on
+# its claim is not a marker.
 MARKERS = [
     "earlier version", "an earlier", "previously", "no longer", "superseded",
-    "withdrawn", "we withdraw", "rather than", "against the", "instead of",
-    "was ", "were ", "before", "historical", "used to", "prior to",
-    "corrected", "correction", "falls to", "falls from", "changes from",
-    "in place of", "replaced",
+    "withdrawn", "we withdraw", "historical", "used to", "prior to",
+    "corrected", "correction", "falls from", "changes from", "replaced",
     # Retraction markers. A sentence that attributes a claim to a past revision
     # of these documents is reporting it, not making it, and the retraction is
     # the point of the sentence. Only past-tense attributions are listed: "we
@@ -88,14 +96,21 @@ SUPERSEDED = {
     r"\b419 temperature-axis fits\b": "414 temperature-axis fits",
     r"\b95 field-axis\b": "88 field-axis fits",
     r"\b93 field-axis\b": "88 field-axis fits",
-    r"\b110 (?:per-paper )?anchors?\b": "105 anchor records",
-    r"\b107 per-paper anchor\b": "105 anchor records",
+    r"\b110 (?:per-paper )?anchors?\b": "96 anchor records",
+    r"\b107 per-paper anchor\b": "96 anchor records",
+    r"\b105 anchor records\b": "96 anchor records",
     r"\b0\.3547\b": "0.3409 aggregate ratio",
     r"\bratio is 0\.73\b": "0.77 for iron chalcogenide 11-type",
     r"\bexplains 76%": "77%",
-    r"\b123 (?:compounds|of the 183)\b": "85 dispatched compounds",
+    r"\b123 (?:compounds|of the 183)\b": "84 dispatched compounds",
     r"\b0\.641 for iron chalcogenide\b": "1.093",
-    r"\b1\.094\b": "1.093, the value rounded from 1.09349",
+    # 1.094 was here and was a false positive. The manuscript prints the p47
+    # column (0.753, 0.973, 1.093, 2.571) in one sentence and a
+    # substructure-median field-axis run (0.751, 0.929, 1.094, 2.622) in the
+    # next, as a stated contrast. Replacing the second with the first
+    # duplicates the sentence before it and deletes the comparison. The real
+    # defect there is that nothing in this deposit reproduces the second four,
+    # which is a missing-provenance problem and not a stale value.
     r"\b3\.07 at this cohort scope\b": "3.13",
     r"\b0\.994 in .H\b": "1.053 under the conditioned predictor",
     r"1\.141 in .H": "1.053 under the conditioned predictor",
@@ -130,22 +145,33 @@ SUPERSEDED = {
     r"Iron other": "reclassified into iron chalcogenide 11 and iron pnictide 122",
     r"44% of the cohort": "43%, three families of seven",
     r"error of 10\.10": "11.37 on the frozen seven-family cohort",
-    r"\b1\.11, with 5 of 9": "0.71, with 6 of 7",
+    r"\b1\.11, with 5 of 9": "1.00, with 6 of 7",
+    # The manuscript carries the bare figure without the ", with 5 of 9" tail,
+    # so the pattern above never reached it.
+    r"rank-position error remains 1\.11": "1.00 over seven held-outs",
     r"\b44% of the substructure cohort": "43%, three families of seven",
     r"\b0\.215\b": "0.962 on the corrected chalcogenide cohort",
     r"\b1\.092 across three compounds": "1.118 across four",
-    r"only as an external validation set": "six cuprate papers are in the fitted cohort",
+    r"only as an external validation set": "five cuprate papers are in the fitted cohort",
     r"lowest error of any family on either axis": "withdrawn with the 0.215",
     r"One row is one physical sample from one paper": "one row is one isotherm "
-                                          "record; 105 records are 69 samples",
+                                          "record; 96 records are 60 samples",
     r"not reproducible from the deposited per-family cohorts": "0.409 dex is deposited",
     r"at least three anchor compounds are available within the family": "K counts "
                                           "measured points supplied per query",
     # Table S5 rows that no longer exist. The tables are generated from the
     # deposit but their introducing prose is not, which is how a description of
     # withdrawn rows outlived the rows themselves.
-    r"Nb3Sn wire rows": "Table S5 no longer contains them",
-    r"Ba\(Fe,Ru\)2As2 row": "Table S5 no longer contains it",
+    # The printed Table S5 does contain the Nb3Sn rows. The defect is that it
+    # should not: that identifier is in audit/withdrawn_records.csv and the fit
+    # file the table says it excerpts holds no rows for it, nor for
+    # physc.2010.03.003 or 0921-4534(94)00021-2, both also printed.
+    r"Nb3Sn wire rows": "withdrawn; the fit file holds no rows for that paper",
+    # Ba(Fe,Ru)2As2 was here and was a false positive. The fit file holds
+    # exactly that row, from phpro.2012.03.421, with used 15.3, default 60.0,
+    # span 0.03268 and beta 19.0568, and the prose reproduces it. The entry was
+    # tracking the regenerated Table S5, which does not select the row, rather
+    # than the deposit.
     r"calibration screen has no deposited implementation": "the screen is deposited "
                                           "as the record-level tier table",
     r"derived from that fact rather than recomputed": "the split recomputes",

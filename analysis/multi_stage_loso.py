@@ -98,6 +98,7 @@ Run from the repository root.
 import argparse
 import json
 import os
+import re
 import sys
 
 import numpy as np
@@ -110,28 +111,45 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # never uses, and scipy is not installed everywhere this deposit is run. The
 # rules are mirrored here so the script runs anywhere pandas does, and
 # _check_classifier asserts the mirror against the original whenever the
-# original can be imported, so the two cannot drift silently.
+# original can be imported, so the two cannot drift silently. That assert has
+# now earned itself once: the canonical rules gained separator normalisation
+# and element-set tests, this copy did not, and the run stopped on
+# Ba_Fe_Co_2As2 rather than quietly scoring it under the wrong family.
 def _assign_local(c):
     c = c or ""
-    if "Nb3Sn" in c or "V3Si" in c or "V3Ga" in c:
+    # Normalise separators first. Ba_Fe_Co_2As2 is the sanitised spelling of
+    # Ba(Fe,Co)2As2 and matched none of the rules below without this.
+    n = re.sub(r"[_(),\s-]", "", c)
+    els = set(re.findall(r"[A-Z][a-z]?", n))
+    if "Nb3Sn" in n or "V3Si" in n or "V3Ga" in n:
         return "conventional_A15"
-    if "MgB2" in c or "MgB(2-x)Cx" in c:
+    if "MgB2" in n or "MgB2xCx" in n or "MgB(2-x)Cx" in c:
         return "conventional_AlB2"
-    if ("FeTe" in c or "FeSe" in c) and "FeAs" not in c:
-        return "iron_chalcogenide_11"
-    if "FeAsO" in c:
+    # 1111 before 122, and on the element set, so that the Materials Project
+    # reduced spelling La2FeAs2O of LaFeAsO is not caught by the FeAs2 rule.
+    # No 122 in this corpus carries oxygen.
+    if "FeAsO" in n or ("Fe" in els and "As" in els and "O" in els):
         return "iron_pnictide_1111"
-    if "Fe2As2" in c or "BaFe" in c or "(Fe" in c:
+    # Element set for the 11-type, so that a dopant sitting between the cation
+    # and the chalcogen cannot hide it: Fe0.975Cu0.025Te0.66Se0.34 is
+    # FeTe0.66Se0.34 with 2.5% Cu on the Fe site.
+    if ("Fe" in els and ("Te" in els or "Se" in els)
+            and "As" not in els and "O" not in els):
+        return "iron_chalcogenide_11"
+    if ("FeTe" in n or "FeSe" in n) and "FeAs" not in n:
+        return "iron_chalcogenide_11"
+    if "Fe2As2" in n or "BaFe" in n or "(Fe" in c or "FeAs2" in n:
         return "iron_pnictide_122"
-    if "YBa" in c or "YBaCuO" in c or "REBCO" in c:
+    if ("YBa" in n or "REBCO" in n or "SmBa" in n or "GdBa" in n
+            or "NdBa" in n or "YBaCuO" in n):
         return "cuprate_RBCO"
-    if "Hg" in c and "Cu" in c and ("Ba" in c or "Sr" in c):
+    if "Hg" in n and "Cu" in n and ("Ba" in n or "Sr" in n):
         return "cuprate_HBCCO"
-    if "BSCCO" in c or "Bi-22" in c:
+    if "BSCCO" in n or "Bi-22" in c or "Bi22" in n:
         return "cuprate_BSCCO"
-    if "Bi" in c and "Sr" in c and "Cu" in c:
+    if "Bi" in n and "Sr" in n and "Cu" in n:
         return "cuprate_BSCCO"
-    if "La" in c and "Cu" in c and "O" in c and "Ba" not in c:
+    if "La" in n and "Cu" in n and "O" in n and "Ba" not in n:
         return "cuprate_LSCO"
     return "other_unclassified"
 
