@@ -19,11 +19,22 @@ depend on the cohort and change with it.
 Run from the repository root; writes into figures/.
 """
 import matplotlib; matplotlib.use("Agg")
+import logging as _logging
+# font.family carries fallbacks for other machines, so matplotlib warns
+# once per missing family per text element. Several hundred lines that
+# look like failures, on a render that succeeded.
+_logging.getLogger("matplotlib.font_manager").setLevel(_logging.ERROR)
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 from figure_counts import UPSTREAM
 
-plt.rcParams.update({"font.family":"serif","font.size":8.6,"mathtext.fontset":"dejavuserif"})
+# font.family was the generic "serif", which matplotlib resolves from the
+# font.serif list and therefore differently per machine: this figure
+# regenerated bit-identically on the machine that drew it and differed by
+# one or two pixels of width elsewhere, which analysis/check_figures.py
+# correctly called a failure. DejaVu Serif is what it was drawn in and
+# ships with matplotlib, so pinning it makes the figure reproduce anywhere.
+plt.rcParams.update({"font.family":["DejaVu Serif"],"font.size":8.6,"mathtext.fontset":"dejavuserif"})
 fig,ax=plt.subplots(figsize=(6.9,6.5)); ax.set_xlim(0,10); ax.set_ylim(0,12.6); ax.axis("off")
 
 INK="#1A1D23"; EDGE="#7A828E"; FILL="#F2F4F7"; HL="#3B4A8C"; HLFILL="#E8ECF7"; REF="#A24A3E"

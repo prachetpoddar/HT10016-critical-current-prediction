@@ -135,9 +135,24 @@ def _write_stamp(df, family):
         "%s %.4f" % (k, v) for k, v in sorted(drawn.items())))
 
 
+def _quiet_findfont():
+    """Silence matplotlib's per-fallback findfont warnings.
+
+    font.family is a list with fallbacks for other machines, so matplotlib logs
+    a warning for every family it cannot find even when the first one resolves.
+    On macOS that is Nimbus Sans and Liberation Sans, twice per text element,
+    which buries a successful render under several hundred lines that look like
+    failures. _report_font() states which family was actually used, so the
+    warnings carry nothing the run does not already say.
+    """
+    import logging
+    logging.getLogger("matplotlib.font_manager").setLevel(logging.ERROR)
+
+
 def _need_plt():
     global plt
     if plt is None:
+        _quiet_findfont()
         import matplotlib.pyplot as _plt
         _plt.rcParams.update(RC_PARAMS)
         plt = _plt

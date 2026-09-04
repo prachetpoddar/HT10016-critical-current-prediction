@@ -21,6 +21,11 @@ Run from the repository root; writes into figures/.
 import json, numpy as np, matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import logging as _logging
+# font.family carries fallbacks for other machines, so matplotlib warns
+# once per missing family per text element. Several hundred lines that
+# look like failures, on a render that succeeded.
+_logging.getLogger("matplotlib.font_manager").setLevel(_logging.ERROR)
 from matplotlib.lines import Line2D
 
 P=json.load(open("data/family_params.json"))
@@ -48,7 +53,13 @@ H_MIN_VALID=0.30                # field-axis applicability bound, Eq. (1)
 T_MAX_VALID=0.70                # temperature-axis applicability bound, Eq. (1)
 H_REF=0.50                      # reduced field for the left panel, inside the window
 
-plt.rcParams.update({"font.family":"serif","font.size":9,"axes.linewidth":0.8,
+# font.family was the generic "serif", which matplotlib resolves from the
+# font.serif list and therefore differently per machine: this figure
+# regenerated bit-identically on the machine that drew it and differed by
+# one or two pixels of width elsewhere, which analysis/check_figures.py
+# correctly called a failure. DejaVu Serif is what it was drawn in and
+# ships with matplotlib, so pinning it makes the figure reproduce anywhere.
+plt.rcParams.update({"font.family":["DejaVu Serif"],"font.size":9,"axes.linewidth":0.8,
                      "xtick.direction":"in","ytick.direction":"in",
                      "xtick.top":True,"ytick.right":True,"mathtext.fontset":"dejavuserif"})
 fig,(axL,axR)=plt.subplots(1,2,figsize=(7.1,3.15))
