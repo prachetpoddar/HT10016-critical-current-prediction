@@ -24,7 +24,9 @@ import pandas as pd
 
 STATE = {
     # defective, with the reason and where it was established
-    "10.1016_j.mtphys.2022.100783":      ("defective", "polycrystal record is a copy of the single crystal, shifted"),
+    # mtphys splits by sample: the two records are not defective to the same standard
+    "10.1016_j.mtphys.2022.100783|Polycrystal":    ("defective", "13x to 69x above the repo's own re-extraction of Fig. 6(b); read against the single-crystal decade"),
+    "10.1016_j.mtphys.2022.100783|Single crystal": ("weak", "1.3x to 1.7x above the traced Fig. 6(a) at 0.5 to 4 T, 283x at 6 T; every isotherm is the previous shifted by a constant"),
     "10.1007_s10854-026-16566-9":        ("defective", "all four series exceed their own panels, 2.6x to 33x"),
     "10.1016_j.physc.2009.05.098":       ("defective", "field axis is kilo-oersted, recorded as tesla"),
     "10.1016_j.physc.2009.11.051":       ("defective", "field axis is kilo-oersted, recorded as tesla"),
@@ -69,13 +71,15 @@ def main():
     f["k"] = f.arxiv_id.map(key)
     a["k"] = a.paper_id.map(key)
 
-    def state(k):
+    def state(k, sample=None):
         if k.startswith("MAGLAB"):
             return ("no figure", "tabulated database record")
+        if sample is not None and "%s|%s" % (k, sample) in STATE:
+            return STATE["%s|%s" % (k, sample)]
         return STATE.get(k, ("UNCLASSIFIED", ""))
 
-    f["state"] = [state(k)[0] for k in f.k]
-    a["state"] = [state(k)[0] for k in a.k]
+    f["state"] = [state(k, s)[0] for k, s in zip(f.k, f.sample_identifier)]
+    a["state"] = [state(k, s)[0] for k, s in zip(a.k, a.sample_id)]
 
     if (f.state == "UNCLASSIFIED").any():
         print("UNCLASSIFIED papers:", sorted(f.loc[f.state == "UNCLASSIFIED", "k"].unique()))
@@ -83,7 +87,7 @@ def main():
     ok = f[f.physicality == "ok"]
     print("the fit cohort\n")
     print("%-12s %8s %8s %8s %8s" % ("state", "papers", "fits", "passing", "anchors"))
-    order = ["defective", "clean", "unresolved", "no figure", "UNCLASSIFIED"]
+    order = ["defective", "weak", "clean", "unresolved", "no figure", "UNCLASSIFIED"]
     for s in order:
         m = f.state == s
         if not m.any():
@@ -94,10 +98,13 @@ def main():
     print("%-12s %8d %8d %8d %8d"
           % ("total", f.k.nunique(), len(f), len(ok), len(a)))
 
-    print("\ndefective papers, by passing fits\n")
-    d = ok[ok.state == "defective"].groupby("k").size().sort_values(ascending=False)
-    for k, v in d.items():
-        print("   %-34s %3d   %s" % (k, v, STATE[k][1]))
+    for label in ("defective", "weak"):
+        print("\n%s records, by passing fits\n" % label)
+        sub = ok[ok.state == label]
+        for (k, s), v in sub.groupby(["k", "sample_identifier"]).size().sort_values(ascending=False).items():
+            why = STATE.get("%s|%s" % (k, s), STATE.get(k, ("", "")))[1]
+            print("   %-34s %-16s %3d   %s" % (k, str(s)[:16], v, why))
+    d = ok[ok.state == "defective"].groupby("k").size()
     z = sorted(set(f.loc[f.state == "defective", "k"]) - set(d.index))
     print("\n   defective but contributing no passing fits: %d papers" % len(z))
     for k in z:
