@@ -87,7 +87,7 @@ def render(spec):
 
 # ---------------------------------------------------------- frame detection
 
-def detect_frame(arr, darkness=110, min_frac=0.55):
+def detect_frame(arr, darkness=110, min_frac=0.55, row_frac=None, col_frac=None):
     """Find the plot box as the outermost long dark horizontal/vertical runs.
 
     Returns (x_left, x_right, y_top, y_bottom) in pixel indices.
@@ -95,11 +95,23 @@ def detect_frame(arr, darkness=110, min_frac=0.55):
     A published plot frame is the longest straight dark line in the crop. Taking
     the outermost qualifying rows and columns rather than the darkest avoids
     latching onto a gridline or a dense run of markers.
+
+    row_frac and col_frac override min_frac per axis. One fraction is enough
+    only while the crop is the axes box. Fig. 6(b) of mtphys.2022.100783 is not:
+    its legend overlaps the frame's right edge, so a crop tight enough to
+    exclude the legend cuts the frame, and a crop wide enough to contain the
+    legend leaves the horizontal frame lines spanning three quarters of the
+    width while the vertical ones still span nine tenths of the height. No
+    single fraction accepts both, and the failure is silent in the worst way:
+    the detector returns two adjacent columns near the left edge and calls that
+    the plot box.
     """
     dark = arr.mean(axis=2) < darkness
     h, w = dark.shape
-    rows = np.where(dark.sum(axis=1) >= min_frac * w)[0]
-    cols = np.where(dark.sum(axis=0) >= min_frac * h)[0]
+    rf = min_frac if row_frac is None else row_frac
+    cf = min_frac if col_frac is None else col_frac
+    rows = np.where(dark.sum(axis=1) >= rf * w)[0]
+    cols = np.where(dark.sum(axis=0) >= cf * h)[0]
     if len(rows) < 2 or len(cols) < 2:
         raise ValueError(
             "could not find a plot frame: %d qualifying rows, %d columns. "
@@ -430,7 +442,11 @@ def digitize(spec):
                                      pix.samples)).astype(np.int16)
 
     frame = detect_frame(arr, darkness=int(spec.get("frame_darkness", 110)),
-                         min_frac=float(spec.get("frame_min_frac", 0.55)))
+                         min_frac=float(spec.get("frame_min_frac", 0.55)),
+                         row_frac=(float(spec["frame_row_frac"])
+                                   if "frame_row_frac" in spec else None),
+                         col_frac=(float(spec["frame_col_frac"])
+                                   if "frame_col_frac" in spec else None))
     x0, x1, y0, y1 = frame
 
     def px2pt_x(px):
@@ -442,7 +458,15 @@ def digitize(spec):
     frame_pt = (px2pt_x(x0), px2pt_x(x1), px2pt_y(y0), px2pt_y(y1))
     search = pymupdf.Rect(clip.x0 - 40, clip.y0 - 20, clip.x1 + 20, clip.y1 + 40)
 
-    dark = arr.mean(axis=2) < int(spec.get("frame_darkness", 110))
+    # The frame and the ticks want different thresholds when the frame is drawn
+    # lighter than the data, which happens when the figure is an embedded raster
+    # rescaled by the typesetter. Fig. 6 of mtphys.2022.100783 needs 190 to find
+    # its frame at all, and at 190 the curve pixels crowding the bottom axis
+    # read as tick marks and the tick spacing stops being uniform. One knob
+    # cannot serve both, so the tick mask takes its own and falls back to the
+    # frame's when it is not given.
+    dark = arr.mean(axis=2) < int(spec.get("tick_darkness",
+                                           spec.get("frame_darkness", 110)))
     geom_diag = {}
 
     def _axis_ticks(name, px2pt):
@@ -476,6 +500,20 @@ def digitize(spec):
 
     txt = text_mask(page, clip, scale, arr.shape[:2]) \
         if spec.get("mask_text", True) else None
+
+    # A legend drawn inside the axes box hides part of the data and, worse,
+    # puts a marker of every series into the plot area where the extractor will
+    # read it as a data point at whatever field the legend happens to sit at.
+    # The text mask does not help: it covers the labels, not the symbols beside
+    # them, and on a figure that is an embedded raster there is no text to mask
+    # at all. "exclude_boxes" takes rectangles as fractions of the crop,
+    # [left, top, right, bottom], and removes them from every series.
+    for box in spec.get("exclude_boxes", []):
+        l_, t_, r_, b_ = box
+        h_, w_ = arr.shape[:2]
+        if txt is None:
+            txt = np.zeros((h_, w_), dtype=bool)
+        txt[int(t_ * h_):int(b_ * h_), int(l_ * w_):int(r_ * w_)] = True
 
     rows, report = [], []
     for s in spec["series"]:

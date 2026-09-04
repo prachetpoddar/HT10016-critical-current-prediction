@@ -1,0 +1,54 @@
+{
+ "paper_id": "10.1016/j.mtphys.2022.100783",
+ "page": 6,
+ "panel": "Fig. 6(a)",
+ "pdf": "10.1016_j.mtphys.2022.100783.pdf",
+ "clip": [
+  0.08,
+  0.0726,
+  0.42,
+  0.2581
+ ],
+ "dpi_scale": 4.0,
+ "image_px": [
+  811,
+  590
+ ],
+ "frame_px": {
+  "x_left": 103,
+  "x_right": 799,
+  "y_top": 15,
+  "y_bottom": 563
+ },
+ "major_tick_px": [
+  197.0,
+  289.5,
+  383.0,
+  475.0,
+  568.5,
+  660.5,
+  753.5
+ ],
+ "px_per_major": 92.75,
+ "implied_step_per_major": 1.0,
+ "axes_supplied": {
+  "x_first": 1.0,
+  "x_last": 7.0,
+  "y_bottom": 1000.0,
+  "y_top": 1000000.0
+ },
+ "axis_span_from_frame": {
+  "x": [
+   -0.0135,
+   7.4906
+  ],
+  "y": [
+   1000.0,
+   1000000.0
+  ]
+ },
+ "n_points": 356,
+ "per_series": {
+  "4.2K": 356
+ }
+}
