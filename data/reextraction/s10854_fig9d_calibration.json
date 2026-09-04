@@ -1,0 +1,134 @@
+{
+  "frame_px": {
+    "x_left": 108,
+    "x_right": 728,
+    "y_top": 51,
+    "y_bottom": 463
+  },
+  "dpi_scale": 4.0,
+  "image_px": [
+    741,
+    561
+  ],
+  "x_ticks_read": [
+    [
+      0.0,
+      371.384
+    ],
+    [
+      1.0,
+      397.384
+    ],
+    [
+      2.0,
+      423.509
+    ],
+    [
+      3.0,
+      449.384
+    ],
+    [
+      4.0,
+      475.384
+    ],
+    [
+      5.0,
+      501.634
+    ]
+  ],
+  "y_ticks_read": [
+    [
+      100.0,
+      679.912
+    ],
+    [
+      1000.0,
+      662.787
+    ],
+    [
+      10000.0,
+      645.537
+    ],
+    [
+      100000.0,
+      628.412
+    ],
+    [
+      1000000.0,
+      611.287
+    ],
+    [
+      10000000.0,
+      594.287
+    ]
+  ],
+  "geometry_calibration": {
+    "x": {
+      "length_threshold": 8.0,
+      "n_major": 6,
+      "positions": [
+        154.5,
+        258.5,
+        363.0,
+        466.5,
+        570.5,
+        675.5
+      ],
+      "spacing_px": 104.2,
+      "uniformity": 0.00422,
+      "tick_direction": "outward",
+      "tick_side": "bottom",
+      "implied_step_per_major": 1.0,
+      "axis_increases_with_pixel": true,
+      "step_is_round": true
+    },
+    "y": {
+      "length_threshold": 7.0,
+      "n_major": 6,
+      "positions": [
+        52.0,
+        120.0,
+        188.5,
+        257.0,
+        326.0,
+        394.5
+      ],
+      "spacing_px": 68.5,
+      "uniformity": 0.00292,
+      "tick_direction": "outward",
+      "tick_side": "right",
+      "implied_step_per_major": -1.0,
+      "axis_increases_with_pixel": false,
+      "step_is_round": true
+    }
+  },
+  "x_fit": {
+    "slope": 0.038413929990362236,
+    "intercept": -14.265636226064847,
+    "log": false,
+    "max_tick_residual_frac": 0.000852
+  },
+  "y_fit": {
+    "slope": -0.05835740566181154,
+    "intercept": 41.67579922924544,
+    "log": true,
+    "max_tick_residual_frac": 0.001044
+  },
+  "axis_span_from_ticks": {
+    "x": [
+      -0.4459,
+      5.5083
+    ],
+    "y": [
+      9.9668,
+      10218059.8811
+    ]
+  },
+  "n_points": 60,
+  "per_series": {
+    "5K": 20,
+    "7K": 20,
+    "10K": 20
+  },
+  "reprojection_residual_px": 0.005
+}

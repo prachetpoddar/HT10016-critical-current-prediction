@@ -1,0 +1,83 @@
+{
+  "paper_id": "10.1016/j.jallcom.2013.04.183",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.jallcom.2013.04.183.pdf",
+  "page": 6,
+  "clip": [
+    0.04,
+    0.055,
+    0.5,
+    0.295
+  ],
+  "dpi_scale": 4.0,
+  "tick_darkness": 110,
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.25,
+      "last_major": 1.75
+    }
+  },
+  "y": {
+    "log": false,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 100000.0,
+      "last_major": 20000.0,
+      "tick_min_len": 8
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.68,
+      0.03,
+      1.0,
+      0.42
+    ]
+  ],
+  "series": [
+    {
+      "name": "N1",
+      "temperature_K": 10.0,
+      "rgb": [
+        240,
+        79,
+        34
+      ],
+      "tol": 45
+    },
+    {
+      "name": "N2",
+      "temperature_K": 10.0,
+      "rgb": [
+        201,
+        88,
+        161
+      ],
+      "tol": 45
+    },
+    {
+      "name": "N3",
+      "temperature_K": 10.0,
+      "rgb": [
+        45,
+        54,
+        148
+      ],
+      "tol": 45
+    },
+    {
+      "name": "N4",
+      "temperature_K": 10.0,
+      "rgb": [
+        34,
+        31,
+        31
+      ],
+      "tol": 45
+    }
+  ],
+  "open_frame": true
+}

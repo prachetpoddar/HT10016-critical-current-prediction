@@ -1,0 +1,74 @@
+{
+  "paper_id": "10.1007/s10854-026-16566-9",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p20_springer_pdfs/10.1007_s10854-026-16566-9.pdf",
+  "page": 14,
+  "clip": [
+    0.3,
+    0.735,
+    0.612,
+    0.905
+  ],
+  "dpi_scale": 4.0,
+  "tick_darkness": 150,
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.0,
+      "last_major": 5.0
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 1000000.0,
+      "last_major": 100.0
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.13,
+      0.6,
+      0.45,
+      0.95
+    ]
+  ],
+  "series": [
+    {
+      "name": "5K",
+      "temperature_K": 5.0,
+      "rgb": [
+        0,
+        0,
+        126
+      ],
+      "tol": 55
+    },
+    {
+      "name": "7K",
+      "temperature_K": 7.0,
+      "rgb": [
+        254,
+        0,
+        131
+      ],
+      "tol": 55
+    },
+    {
+      "name": "10K",
+      "temperature_K": 10.0,
+      "rgb": [
+        0,
+        131,
+        0
+      ],
+      "tol": 55
+    }
+  ],
+  "note": "panel c, x=2% MWCNT",
+  "frame_min_frac": 0.42,
+  "frame_darkness": 175
+}

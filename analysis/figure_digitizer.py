@@ -87,7 +87,8 @@ def render(spec):
 
 # ---------------------------------------------------------- frame detection
 
-def detect_frame(arr, darkness=110, min_frac=0.55, row_frac=None, col_frac=None):
+def detect_frame(arr, darkness=110, min_frac=0.55, row_frac=None, col_frac=None,
+                 open_frame=False):
     """Find the plot box as the outermost long dark horizontal/vertical runs.
 
     Returns (x_left, x_right, y_top, y_bottom) in pixel indices.
@@ -112,10 +113,27 @@ def detect_frame(arr, darkness=110, min_frac=0.55, row_frac=None, col_frac=None)
     cf = min_frac if col_frac is None else col_frac
     rows = np.where(dark.sum(axis=1) >= rf * w)[0]
     cols = np.where(dark.sum(axis=0) >= cf * h)[0]
+    if open_frame:
+        # An L-shaped chart draws only the left and bottom axes. Both of the
+        # lines the calibration actually needs are present; only the closing
+        # top and right edges are missing, and those serve just to bound the
+        # crop. Taking them from the crop edge keeps every measured quantity
+        # measured: the tick walks start from the real axes either way.
+        if len(rows) < 1 or len(cols) < 1:
+            raise ValueError(
+                "open_frame: found no axis line at all (%d rows, %d columns). "
+                "Adjust the clip or lower min_frac." % (len(rows), len(cols)))
+        x0 = int(cols[0])
+        y1 = int(rows[-1])
+        x1 = int(cols[-1]) if len(cols) > 1 and int(cols[-1]) > x0 + 20 else w - 1
+        y0 = int(rows[0]) if len(rows) > 1 and int(rows[0]) < y1 - 20 else 0
+        return x0, x1, y0, y1
     if len(rows) < 2 or len(cols) < 2:
         raise ValueError(
             "could not find a plot frame: %d qualifying rows, %d columns. "
-            "Adjust --clip so the crop is the axes box, or lower min_frac."
+            "Adjust --clip so the crop is the axes box, or lower min_frac. "
+            "If the chart draws only its left and bottom axes, set "
+            "\"open_frame\": true."
             % (len(rows), len(cols)))
     return int(cols[0]), int(cols[-1]), int(rows[0]), int(rows[-1])
 
@@ -194,7 +212,7 @@ def read_ticks(page, rect, frame_pt, axis, log):
 
 
 def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
-                   max_uniformity=0.02):
+                   max_uniformity=0.02, min_len=6, max_len=60, side=None):
     """Calibrate an axis from tick geometry plus the two end major-tick values.
 
     Why this exists. `read_ticks` reads the tick labels out of the PDF text
@@ -227,8 +245,16 @@ def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
     from the frame and a data curve reaching the axis reads as a long tick. The
     function returns nothing rather than guessing.
     """
-    side = "bottom" if axis == "x" else "left"
-    ticks_px, used = find_ticks_dir(dark, frame, side)
+    # A multi-panel figure often puts the value labels, and their ticks, on the
+    # right of the right-hand panels and the top of the top ones. Walking only
+    # the left and bottom axes finds nothing there, which is how Fig. 9(b) and
+    # 9(d) of s10854-026-16566-9 refused to calibrate.
+    if side is None:
+        side = "bottom" if axis == "x" else "left"
+    if (axis == "x") != (side in ("bottom", "top")):
+        raise ValueError("tick_side %r is not a side of the %s axis" % (side, axis))
+    ticks_px, used = find_ticks_dir(dark, frame, side, min_len=min_len,
+                                    max_len=max_len)
     maj = uniform_majors(ticks_px, max_uniformity=max_uniformity)
     if maj is None:
         raise ValueError(
@@ -243,6 +269,7 @@ def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
                     px2pt(p)) for i, p in enumerate(pos))
     diag = dict(maj)
     diag["tick_direction"] = used
+    diag["tick_side"] = side
     diag["implied_step_per_major"] = round(step, 8)
     # first_major/last_major are read in the order the ticks are found, which is
     # left to right on x and TOP TO BOTTOM on y. Getting the y pair the wrong way
@@ -482,6 +509,7 @@ def digitize(spec):
 
     frame = detect_frame(arr, darkness=int(spec.get("frame_darkness", 110)),
                          min_frac=float(spec.get("frame_min_frac", 0.55)),
+                         open_frame=bool(spec.get("open_frame", False)),
                          row_frac=(float(spec["frame_row_frac"])
                                    if "frame_row_frac" in spec else None),
                          col_frac=(float(spec["frame_col_frac"])
@@ -504,8 +532,18 @@ def digitize(spec):
     # read as tick marks and the tick spacing stops being uniform. One knob
     # cannot serve both, so the tick mask takes its own and falls back to the
     # frame's when it is not given.
-    dark = arr.mean(axis=2) < int(spec.get("tick_darkness",
-                                           spec.get("frame_darkness", 110)))
+    _grey = arr.mean(axis=2)
+    dark = _grey < int(spec.get("tick_darkness",
+                                spec.get("frame_darkness", 110)))
+
+    def _tick_mask(name):
+        """Per-axis tick threshold. A panel whose value labels sit on the right
+        draws its left ticks lighter than its bottom ones, so one threshold does
+        not serve both; Fig. 9(b) and 9(d) of s10854-026-16566-9 need 130 on x
+        and 150 on y."""
+        g = spec[name].get("geometry") or {}
+        d_ = g.get("tick_darkness")
+        return dark if d_ is None else (_grey < int(d_))
     geom_diag = {}
 
     def _axis_ticks(name, px2pt):
@@ -523,9 +561,14 @@ def digitize(spec):
                 "%s axis: no tick labels in the PDF text layer and no "
                 "'geometry' block in the spec giving first_major and "
                 "last_major" % name)
-        t, d = geometry_ticks(dark, frame, name, log,
+        t, d = geometry_ticks(_tick_mask(name), frame, name, log,
                               float(g["first_major"]), float(g["last_major"]),
-                              px2pt, float(g.get("max_uniformity", 0.02)))
+                              px2pt, float(g.get("max_uniformity", 0.02)),
+                              int(g.get("tick_min_len",
+                                        spec.get("tick_min_len", 6))),
+                              int(g.get("tick_max_len",
+                                        spec.get("tick_max_len", 60))),
+                              g.get("tick_side"))
         geom_diag[name] = d
         check_step(name, d, bool(g.get("allow_odd_step", False)))
         return t

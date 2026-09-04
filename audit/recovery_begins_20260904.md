@@ -70,3 +70,53 @@ right.
 
 `jallcom.2013.04.183` Fig. 8 and `s10854-026-16566-9` Fig. 9 are the next two,
 carrying 4 anchor rows and 12 passing fits respectively.
+
+## Second and third papers
+
+**`jallcom.2013.04.183` Fig. 8.** An L-shaped chart with no top or right frame,
+which the frame detector required; added `open_frame`. Four series, 40 points
+each, tick residuals 0.0012 and 0.0021 of span. The traced values match a
+separate reading of the page to under 2 per cent:
+
+| sample | deposited | traced | ×10 repair on file |
+|---|---:|---:|---:|
+| N1 | 8000 | 93350 | 0.86 |
+| N2 | 7200 | 44628 | 1.61 |
+| N3 | 6400 | 42265 | 1.51 |
+| N4 | 9000 | 85047 | 1.06 |
+
+The planned `rescaled x10` repair would leave N2 and N3 half again too high.
+Tracing is materially better than the repair on file. The ranking is also
+corrected: the deposit has N4 above N1, the page has N1 above N4.
+
+**`s10854-026-16566-9` Fig. 9, all four panels.** Two more tool gaps: the
+right-hand panels put their value labels and ticks on the right, and the tool
+only ever walked the left axis, so they refused to calibrate. Added `tick_side`,
+and a per-axis `tick_darkness` because a panel labelled on the right draws its
+left ticks lighter than its bottom ones.
+
+| panel | substitution | deposited anchor | traced at 0.5 T | ratio |
+|---|---|---:|---:|---:|
+| a | x=0% | 1000000 | 32784 | 30.5 |
+| b | x=1% | 1500000 | 66796 | 22.5 |
+| c | x=2% | 1800000 | 323668 | 5.6 |
+| d | x=3% | 2100000 | 841180 | 2.5 |
+
+**The traced zero-field 5 K value for the 3 per cent sample is 1.18e6 against
+the paper's own stated maximum of 1.1e6**, a seven per cent agreement reached
+without using that sentence. That is the strongest independent check available
+on this figure.
+
+Spread across substitution at 0.5 T: **1.41 dex traced, 0.32 dex deposited**.
+The same pattern as `ceramint`. The deposit compresses a real and large
+conditioning signal into a small one.
+
+### One thing the guards did not catch
+
+Panel (c) first calibrated a decade high because its top major tick was missed,
+so five majors were read as 1e7 down to 1e3 when they were 1e6 down to 1e2. Both
+readings imply a step of exactly one decade, so `check_step` passed. What caught
+it was that the four panels' anchors stopped being monotone in substitution, and
+that the tick pixel positions of panel (c) were the same as panels (a), (b) and
+(d) minus their topmost. A cross-panel position check would catch this class
+automatically and is not yet written.
