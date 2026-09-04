@@ -307,10 +307,10 @@ Four clusters the deposit does not settle on its own.
    from the fit table alone; the generator that produced them has to be
    identified first.
 
-4. **The calibration screen.** Table IV's caption no longer claims 123
-   compounds, but the screen's effect cannot be restated until
-   `phase_3_p56_candidate_tier_assignment.csv` is regenerated behind the two
-   window gates. `verify_deposit.py` fails until it is.
+4. ~~**The calibration screen.**~~ **Done.**
+   `analysis/repair_tier_table_emission.py` recomputes the six
+   prediction-derived columns of `phase_3_p56_candidate_tier_assignment.csv`
+   from the prediction file. `verify_deposit.py` passes.
 
 Also outstanding, from the review and not from the checker: the supplement's
 "seven distinct cuprate compounds" against the deposit's five, its "4 of 46"
@@ -359,3 +359,41 @@ prediction target rather than a candidate, so a row refused on the field axis
 can still carry the temperature-axis value the remaining gates allow, and 321 of
 the 540 such rows do, in `predicted_log_Jc` itself. That is what the paragraph
 now says.
+
+
+## The tier table, repaired
+
+Six columns of `data/phase_3_p56_candidate_tier_assignment.csv` are a function
+of the prediction file and were all stale, not only the ones that decide who
+emits: not one of the 84 compounds that still emit carried the right
+`n_viable_predictions` either.
+
+| quantity | before | after |
+|---|---:|---:|
+| emitting compounds | 123 | 84 |
+| emitting records | 173 | 86 |
+| viable predictions summed over records | 4104 | 175 |
+
+The candidate set is not regenerated and does not need to be: the prediction
+file still covers the same 183 compounds through the same 233 records, and the
+script refuses to write if that stops being true. Regenerating it would need
+`3DSC_MP.csv`, which is not in this deposit.
+
+`tier` and `refusal_detail` are untouched. They come from the
+calibration-domain screen, which is a transition-temperature rule against an
+empirical floor and does not read the prediction file, so neither window gate
+can have moved them. `analysis/calibration_domain_screen.py` confirms it: 233
+records, 212 retained, 21 refused, 82 high confidence, 130 graded, all
+unchanged and all matching the manuscript.
+
+Two cross-checks that were not tautological and now pass. No
+calibration-refused record is marked as emitting. And Table IV's body
+reproduces from the repaired table exactly as printed: 49 / 29 / 0 for iron
+chalcogenide 11-type, 79 / 51 / 0 for iron pnictide 122-type, 105 / 103 / 84
+for MgB2-class, 233 / 183 / 84 in total.
+
+Section III.E's "removes six predictions across two iron-chalcogenide
+candidates" also holds. `Fe1Te1` and `Fe1Se0.05Te0.95` carry nine grid tuples
+each; six of the eighteen carry a computed value the screen acts on, three per
+compound, and the other twelve are refused for a target temperature above the
+transition temperature with no value at all.
