@@ -288,7 +288,7 @@ regenerated rather than reworded.
 
 Four clusters the deposit does not settle on its own.
 
-1. **The printed Tables S4, S5 and S6.** S4 and S5 print rows from papers in
+1. ~~**The printed Tables S4, S5 and S6.**~~ **Done, see below.** S4 and S5 print rows from papers in
    `audit/withdrawn_records.csv` that the deposited files no longer hold. S6
    prints refused predictions as delivered ones, taking `withheld_log_Jc` and
    showing the refusal column as "none".
@@ -316,3 +316,46 @@ Also outstanding, from the review and not from the checker: the supplement's
 "seven distinct cuprate compounds" against the deposit's five, its "4 of 46"
 iron chalcogenide fits against 51, and Table S1's "Paper-reported Hc2" column,
 where two deposited generators give 22 and 13 from the same data.
+
+
+## The printed tables, rebuilt
+
+`analysis/apply_supplement_table_rebuild.py` replaces Tables S4, S5 and S6 with
+the rows `analysis/build_supplement_tables.py` generates from the deposit, and
+rewrites the prose that names rows. `check_documents.py` now reports no
+superseded value stated as current, and all four checkers pass.
+
+What came out:
+
+- Three rows of Table S4, one from `physc.2010.03.003` and two from
+  `S0011-2275(97)00151-3`, and three of Table S5, those two papers plus
+  `0921-4534(94)00021-2`. All are in `audit/withdrawn_records.csv` and the
+  deposited files hold no rows for any of them.
+- The three `Co0.05Fe0.95Se` rows of Table S6 at 4.2 K, printed as delivered
+  predictions with the refusal column reading "none". In the deposit those rows
+  carry `predicted_log_Jc` of NaN with the flags
+  `H_below_validated_reduced_field`, `H_below_validated_reduced_field` and
+  `family_fails_field_axis_validation`; the printed numbers are
+  `withheld_log_Jc`.
+
+Two changes to the generator were needed first. `REFUSAL_PROSE` had no entry
+for `T_above_validated_reduced_temperature`, so the newest refusal code printed
+as a raw identifier. And Table S5's selection rule sorted the refused fits on
+span alone, which picks the three cuprates at the regression ceiling and drops
+the scale-resolution failure the prose is about. The rule now also keeps the fit
+whose resolved scale sits furthest below its literature value. That is
+`LaFeAsO`, 5.8 T resolved against 86 T in the literature, and not the
+`Ba(Fe,Ru)2As2` the old prose named, which is a smaller shortfall.
+
+## A correction to this ledger's own account of Table S6
+
+The entry above first said the supplement's claim that a refused row carries
+"no value" is wrong because 1187 refused rows carry a withheld value. That
+reasoning was wrong: `withheld_log_Jc` is a separate column and those rows carry
+no prediction.
+
+The claim is still wrong, for a different reason. `Hc2_unavailable` refuses one
+prediction target rather than a candidate, so a row refused on the field axis
+can still carry the temperature-axis value the remaining gates allow, and 321 of
+the 540 such rows do, in `predicted_log_Jc` itself. That is what the paragraph
+now says.

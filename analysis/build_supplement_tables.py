@@ -42,6 +42,7 @@ REFUSAL_PROSE = {
     "non_monotonic_Jc_T": "non-monotonic Jc(T)",
     "H_below_validated_reduced_field": "H below validated range",
     "family_fails_field_axis_validation": "family fails field axis",
+    "T_above_validated_reduced_temperature": "T above validated range",
 }
 
 FORM = {"bulk": "Bulk", "wire": "Wire", "thin_film": "Thin film",
@@ -117,9 +118,20 @@ def table_s5(banned):
     # paper six times.
     ok = (f[f.physicality == "ok"].sort_values("SE_beta")
           .drop_duplicates("arxiv_id").head(3))
-    bound = (f[f.physicality == "H_axis_applicability_bound"]
-             .sort_values("H_axis_range_normalized")
+    b = f[f.physicality == "H_axis_applicability_bound"].copy()
+    # Three narrowest spans, which are the ceiling cases, plus the one fit whose
+    # resolved scale sits furthest below its literature value. That last row is
+    # the scale-resolution failure Sec. III.F quantifies, and picking on span
+    # alone drops it: the three narrowest are all cuprates sitting at the
+    # regression ceiling, which shows the filter firing but not why a resolved
+    # scale can be wrong. Selecting it by rule rather than by hand is the point
+    # of this file.
+    b["scale_shortfall"] = b.Hc2_T_default / b.Hc2_T_used
+    worst = b.sort_values("scale_shortfall", ascending=False).head(1)
+    bound = (b.sort_values("H_axis_range_normalized")
              .drop_duplicates("arxiv_id").head(3))
+    bound = pd.concat([bound, worst]).drop_duplicates(subset=["arxiv_id",
+                                                              "sample_identifier"])
     rows = [dict(source=short(r.arxiv_id), compound=r.compound_formula,
                  hc2="%.1f / %.1f" % (r.Hc2_T_used, r.Hc2_T_default),
                  provenance=("Tier 1, %s" % ("direct match"
@@ -204,7 +216,8 @@ def table_s6(_banned):
                                      else "%.1f T" % r.Hc2_T_anchor),
             scope=r.predictor_method_scope.replace(
                 "sample_form_conditional_median:", "Stage 2, ").replace(
-                "substructure_aggregate_median", "Stage 3, aggregate"),
+                "substructure_aggregate_median", "Stage 3, aggregate")
+            .replace("_", " "),
             t="%.1f" % r.T_K, h="%.1f" % r.H_T,
             log_jc="%.3f" % r.predicted_log_Jc if has else "none",
             interval=("%.3f to %.3f" % (r.predicted_log_Jc_lower_95,
