@@ -1,0 +1,109 @@
+{
+  "paper_id": "10.1016/j.phpro.2015.06.160",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.phpro.2015.06.160.pdf",
+  "page": 3,
+  "clip": [
+    0.1,
+    0.34,
+    0.47,
+    0.55
+  ],
+  "dpi_scale": 4.0,
+  "frame_darkness": 190,
+  "frame_min_frac": 0.42,
+  "note": "Fig. 3 left panel, BaFe1.91Ni0.09As2, H//c. Series order top to bottom is 1.46, 4.2, 7, 10, 13, 15 K per the arrow and the label T=15,13,10,7,4.2,1.46K.",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 2.5,
+      "last_major": 12.5,
+      "tick_min_len": 5,
+      "tick_darkness": 110
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 100000.0,
+      "last_major": 1000.0,
+      "tick_side": "right",
+      "tick_min_count": 3,
+      "tick_min_len": 5,
+      "tick_darkness": 110
+    }
+  },
+  "series": [
+    {
+      "name": "1.46K",
+      "temperature_K": 1.46,
+      "rgb": [
+        254,
+        0,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "4.2K",
+      "temperature_K": 4.2,
+      "rgb": [
+        0,
+        0,
+        254
+      ],
+      "tol": 60
+    },
+    {
+      "name": "7K",
+      "temperature_K": 7.0,
+      "rgb": [
+        0,
+        128,
+        0
+      ],
+      "tol": 55
+    },
+    {
+      "name": "10K",
+      "temperature_K": 10.0,
+      "rgb": [
+        0,
+        255,
+        1
+      ],
+      "tol": 60
+    },
+    {
+      "name": "13K",
+      "temperature_K": 13.0,
+      "rgb": [
+        128,
+        1,
+        128
+      ],
+      "tol": 55
+    },
+    {
+      "name": "15K",
+      "temperature_K": 15.0,
+      "rgb": [
+        15,
+        15,
+        15
+      ],
+      "tol": 50,
+      "exclude_boxes": [
+        [
+          0.45,
+          0.0,
+          1.0,
+          1.0
+        ]
+      ]
+    }
+  ]
+}

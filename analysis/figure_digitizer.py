@@ -212,7 +212,8 @@ def read_ticks(page, rect, frame_pt, axis, log):
 
 
 def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
-                   max_uniformity=0.02, min_len=6, max_len=60, side=None):
+                   max_uniformity=0.02, min_len=6, max_len=60, side=None,
+                   min_ticks=4):
     """Calibrate an axis from tick geometry plus the two end major-tick values.
 
     Why this exists. `read_ticks` reads the tick labels out of the PDF text
@@ -255,7 +256,12 @@ def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
         raise ValueError("tick_side %r is not a side of the %s axis" % (side, axis))
     ticks_px, used = find_ticks_dir(dark, frame, side, min_len=min_len,
                                     max_len=max_len)
-    maj = uniform_majors(ticks_px, max_uniformity=max_uniformity)
+    # A three-decade log axis has three major ticks and no more. Requiring four
+    # refuses it outright, which is what happened to Fig. 2(a) of
+    # matpr.2019.05.078, an axis running 10 to 1000. Three collinear points
+    # still determine a line and still leave one residual to check.
+    maj = uniform_majors(ticks_px, min_ticks=min_ticks,
+                         max_uniformity=max_uniformity)
     if maj is None:
         raise ValueError(
             "%s axis: no set of equally spaced major ticks found, so the axis "
@@ -568,7 +574,8 @@ def digitize(spec):
                                         spec.get("tick_min_len", 6))),
                               int(g.get("tick_max_len",
                                         spec.get("tick_max_len", 60))),
-                              g.get("tick_side"))
+                              g.get("tick_side"),
+                              int(g.get("tick_min_count", 4)))
         geom_diag[name] = d
         check_step(name, d, bool(g.get("allow_odd_step", False)))
         return t
@@ -598,13 +605,31 @@ def digitize(spec):
             txt = np.zeros((h_, w_), dtype=bool)
         txt[int(t_ * h_):int(b_ * h_), int(l_ * w_):int(r_ * w_)] = True
 
+    def _series_mask(sr):
+        """Text and annotation that only one series' colour picks up.
+
+        The global exclude_boxes remove a region from every series, which is
+        right for a legend and wrong for an arrow drawn in the same black as one
+        curve: excluding it globally would also cut whatever real data any other
+        series has there. Fig. 3 of phpro.2015.06.160 has exactly that, an arrow
+        and a caption block in the same near-black as its 15 K curve.
+        """
+        boxes = sr.get("exclude_boxes")
+        if not boxes:
+            return txt
+        h_, w_ = arr.shape[:2]
+        m = np.zeros((h_, w_), dtype=bool) if txt is None else txt.copy()
+        for l_, t_, r_, b_ in boxes:
+            m[int(t_ * h_):int(b_ * h_), int(l_ * w_):int(r_ * w_)] = True
+        return m
+
     rows, report = [], []
     for s in spec["series"]:
         if spec.get("method", "curve") == "curve":
             pts = extract_curve(arr, s["rgb"], float(s.get("tol", 60)), frame,
                                 n_bins=int(s.get("n_bins", spec.get("n_bins", 40))),
                                 min_col_px=int(s.get("min_col_px", 2)),
-                                exclude=txt,
+                                exclude=_series_mask(s),
                                 inset=int(s.get("inset", spec.get("inset", 6))))
         else:
             pts = find_markers(arr, s["rgb"], float(s.get("tol", 60)), frame,

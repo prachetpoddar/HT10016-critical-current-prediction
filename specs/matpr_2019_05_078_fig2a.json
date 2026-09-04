@@ -1,0 +1,61 @@
+{
+  "paper_id": "10.1016/j.matpr.2019.05.078",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.matpr.2019.05.078.pdf",
+  "page": 4,
+  "clip": [
+    0.05,
+    0.08,
+    0.44,
+    0.34
+  ],
+  "dpi_scale": 4.0,
+  "open_frame": true,
+  "frame_darkness": 170,
+  "frame_min_frac": 0.42,
+  "note": "printed field axis is mu0H in GAUSS; the geometry values below are the same ticks expressed in tesla, 10000 G = 1 T, so the output is in tesla",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.0,
+      "last_major": 4.0,
+      "tick_darkness": 150,
+      "tick_min_len": 5
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 1000.0,
+      "last_major": 10.0,
+      "tick_min_count": 3,
+      "tick_min_len": 6,
+      "tick_darkness": 110
+    }
+  },
+  "series": [
+    {
+      "name": "multi-5K",
+      "temperature_K": 5.0,
+      "rgb": [
+        253,
+        0,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "mono-5K",
+      "temperature_K": 5.0,
+      "rgb": [
+        20,
+        20,
+        20
+      ],
+      "tol": 55
+    }
+  ]
+}
