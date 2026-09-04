@@ -43,10 +43,12 @@ UNITS = os.path.join("audit", "field_axis_units.csv")
 
 # the only unit classes a row may claim
 VOCAB = {"tesla", "kilo-oersted", "oersted", "gauss", "millitesla", "none",
+         "consistent with tesla", "probable kilo-oersted",
          "not a printed figure", "unverified", "unverifiable", "unresolved"}
 
 # a class in this set means the axis was not established from a printed figure
-UNSETTLED = {"unverified", "unverifiable", "unresolved"}
+UNSETTLED = {"unverified", "unverifiable", "unresolved",
+             "consistent with tesla", "probable kilo-oersted"}
 
 TO_TESLA = {"tesla": 1.0, "kilo-oersted": 0.1, "oersted": 1e-4,
             "gauss": 1e-4, "millitesla": 1e-3}
