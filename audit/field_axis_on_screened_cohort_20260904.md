@@ -1,38 +1,33 @@
 # What the field axis supports once the flagged scales are removed
 
-Recorded 2026-09-04. `analysis/field_axis_on_screened_cohort.py`. Nothing is
-changed; this establishes what is left.
+Recorded 2026-09-04. **Rewritten the same day.** The first version of this file
+was computed from a screen whose two main tests were wrong, and its conclusion
+was wrong with them. What it said, and what is actually the case:
 
-## Repair does not rescue the flagged fits
+| | first version | corrected |
+|---|---|---|
+| flagged papers | 7 | **3** |
+| flagged fits, of 94 passing | 60 | **36** |
+| MgB2-class fits flagged | 20 of 20 | **0 of 20** |
+| families losing their field-axis validation | 2 of 3 | **none** |
 
-Two of the seven flagged papers have a correct critical field recorded in their
-own extraction file and simply do not use it. Substituting it:
+The first version concluded that of the three dispatched families only the MgB2
+class kept a field-axis validation worth the name. That was an artefact. The
+MgB2 class is untouched, and removing the three genuinely defective papers
+improves the other two families rather than destroying them.
 
-| paper | scale used | scale recorded | reduced span | passes the 0.3 bound |
-|---|---:|---:|---|---|
-| `phpro.2015.06.160` | 9.0 T | 26 T | 0.778 to 0.269 | 6 of 6 to **0 of 6** |
-| `s10854-026-16566-9` | 9.2 T | 78.1 T | 0.489 to 0.058 | 12 of 12 to **0 of 12** |
+## The corrected cohort
 
-Correcting the scale upward moves those 18 fits from admitted to refused. That
-is the applicability filter's selection effect running backwards, and it means
-the question is not what the numbers become after repair but what the field axis
-can support at all.
+Of the 94 field-axis fits that pass physicality, 58 remain.
 
-## The surviving cohort
+| family | as published | screened |
+|---|---|---|
+| MgB2-class | 20 fits, 7 compounds | 20 fits, 7 compounds |
+| iron chalcogenide 11 | 21 fits, 3 compounds | 13 fits, 2 compounds |
+| iron pnictide 1111 | 17 fits, 4 compounds | 17 fits, 4 compounds |
+| iron pnictide 122 | 36 fits, 5 compounds | 8 fits, 3 compounds |
 
-Of the 94 field-axis fits that pass physicality, 34 survive the screen.
-
-| family | as published | screened | of the survivors, unchecked |
-|---|---|---|---|
-| MgB2-class | 20 fits, 7 compounds | 14 fits, 7 compounds | 14 fits, 7 compounds |
-| iron chalcogenide 11 | 21 fits, 3 compounds | **1 fit, 1 compound** | 1 fit |
-| iron pnictide 1111 | 17 fits, 4 compounds | 17 fits, 4 compounds | 17 fits |
-| iron pnictide 122 | 36 fits, 5 compounds | **2 fits, 2 compounds** | 2 fits |
-
-Unflagged is not verified. Every surviving fit in the MgB2 class and in the
-1111 family comes from a paper whose extraction file is not deposited, so it
-could not be tested against its own measured field range and is reported
-unchecked rather than clean.
+Every family still has enough compounds to hold one out.
 
 ## The four numbers the manuscript states
 
@@ -41,38 +36,39 @@ screened column comparable.
 
 | family | published, conditioned | published, median | screened, conditioned | screened, median |
 |---|---:|---:|---:|---:|
-| MgB2-class | 0.7532 | 0.7506 | **0.8961** | **0.8839** |
-| iron chalcogenide 11 | 1.0935 | 1.0943 | not testable | not testable |
+| MgB2-class | 0.7532 | 0.7506 | 0.7532 | 0.7506 |
+| iron chalcogenide 11 | 1.0935 | 1.0943 | **0.6276** | **0.6276** |
 | iron pnictide 1111 | 2.5713 | 2.6222 | 2.5713 | 2.6222 |
-| iron pnictide 122 | 0.9729 | 0.9295 | 0.8348 | 0.8348 |
+| iron pnictide 122 | 0.9729 | 0.9295 | **0.5083** | **0.4093** |
 
-MgB2-class survives with all seven compounds and an error 19 per cent larger.
-The 1111 family is untouched, because none of its fits is flagged. Iron
-chalcogenide 11-type falls to a single compound, which leaves nothing to hold
-out, so it has no field-axis validation at all. Iron pnictide 122-type keeps two
-compounds and two fits, which is testable only in the arithmetic sense.
+Two families are untouched and the other two get better. Removing the three
+defective papers does not weaken the field-axis result; it strengthens the two
+families that contained them, which is what one would expect if those papers
+were adding noise rather than signal.
 
-## What this means for the paper
+That cuts both ways, and the caution belongs here rather than in a footnote:
+iron pnictide 122-type falls from five compounds to three and iron chalcogenide
+11-type from three to two, so the improved errors rest on less evidence. A
+smaller cohort with a smaller error is not automatically a better result.
 
-Of the three families the dispatch routine addresses, only the MgB2 class
-retains a field-axis validation worth the name, and it is the only family that
-actually dispatches. That is the reason this is not fatal.
+## Repair versus removal, which is unchanged
 
-What does not survive is the claim that the field axis is validated across the
-dispatched families. Two of the three lose it, one of them entirely.
+Two papers in the first version's flag list record a correct critical field in
+their own extraction file and do not use it, and substituting it refuses their
+fits: `phpro.2015.06.160` at 26 T instead of 9 T drops its reduced span from
+0.778 to 0.269, and `s10854-026-16566-9` at 78.1 T instead of 9.2 T from 0.489
+to 0.058, so all 18 fail the 0.3 bound. That arithmetic is right, but it is no
+longer a finding about those papers, because both of those larger values are
+zero-temperature extrapolations and the scales in use are legitimate. It is
+kept here only as the reason that substituting a bigger Hc2 is not a free fix
+in general.
 
-## A mistake made and corrected in this file
+## What this does not decide
 
-The first version of this script passed `min_train_compounds=3` to the
-leave-one-out, on the reading that the paper requires three anchor compounds
-within a family, and reported iron chalcogenide 11-type as untestable even as
-published. That is the family-size reading of K, and `8d43b4c` already reverted
-it on the implementation: `K_MIN` and `K_MAX` bound `len(anchors)`, an anchor is
-one measured triple, and Fig. 4 varies K from one to three while holding the
-cuprate cohort at three compounds, which a family-size reading forbids. K counts
-measured points supplied with a query. The published leave-one-compound-out
-applies no compound gate, so neither does this, and the published column now
-reproduces the deposit to four decimal places.
-
-The only condition left is the method's own: leave-one-compound-out needs at
-least two compounds to have anything to train on.
+Thirty-six of the 94 passing field-axis fits come from three papers with a
+demonstrably wrong critical-field scale, and two of those three have separate
+defects found by reading the source: `physc.2009.11.051`'s field axis is in
+kilo-oersted and `mtphys.2022.100783`'s polycrystal record is a copy of its
+single crystal. Whether to withdraw them is still a decision, and the numbers
+above say what it costs: nothing in two families, and a smaller but better
+cohort in the other two.

@@ -4,59 +4,63 @@ audit_tier1_critical_fields.py
 
 Screen the critical-field scale behind every Form 3 field-axis fit.
 
-Why. The provenance tier is not evidence. Tier 1 means an extraction said the
-value came from the paper, not that anyone checked it did, and it is the tier
-the applicability filter admits: 82 of the 94 passing fits are Tier 1, against
-8 of 61 for the Tier 3 literature default.
+ONE test survives. Two earlier ones were wrong, and both were wrong in the
+direction that made the screen look productive. They are described below rather
+than deleted, because each looked like a finding and neither was.
 
-A first version of this screen keyed on the caption text each extraction
-recorded, and an adversarial review took it apart. Two of its three tests were
-wrong, and both were wrong in the direction that flatters the screen:
+The test that survives: WITHIN A SAMPLE, the assigned scale must fall with
+temperature. Upper critical fields fall, irreversibility fields fall, and
+nothing legitimate rises. Grouped by sample, never averaged across samples: an
+earlier version regressed after averaging and physc.2013.04.060 appeared to
+rise when the rise was entirely sample composition, three samples at 4.2 K and
+five different ones at 10 K.
 
-  * It regressed the assigned scale against temperature after averaging across
-    samples, so physc.2013.04.060 appeared to rise when the rise was entirely
-    sample composition: three samples at 4.2 K, five different ones at 10 K.
-    Three papers rise within a sample, not four; 36 fits, not 44.
-  * It called six papers wrong for taking their scale from a
-    critical-current-versus-field figure. Five of those papers state that as
-    their own method, and it is a standard one: matchemphys.2023.128348 and
-    physc.2013.04.060 both define the irreversibility field as where Jc falls
-    to 100 A/cm2, and mtphys.2022.100783 uses a Kramer extrapolation of the
-    same curves. Reading Hirr off Jc(H) is not a defect.
+It flags three papers and 36 of the 159 fits, and all three were independently
+read at source before this screen existed. That is the honest strength of the
+result: the screen confirms three known cases and finds no new ones.
 
-It also cleared the worst case in the corpus. phpro.2015.06.160 states
-"we estimate the value of upper critical field (Hc2(0)) approximately 26 T and
-31 T", its extraction records both, and the fits use 9.0 T at every
-temperature, which is the ac-susceptibility rig's ceiling, "in field up to 9 T"
-in the caption's own words. The caption named a real measurement, so the
-keyword test passed it.
+--------------------------------------------------------------------------
+The two tests that were wrong
 
-So this version tests the numbers instead. Each test either cannot be argued
-with or names the exact confrontation a reader should check.
+WRONG: "the scale sits at or below the largest field measured". It compared
+Hc2_T_used against the maximum field in the paper's raw extraction file. The
+pipeline filters points to those below the scale BEFORE fitting, so the raw
+file legitimately extends past it. Checked directly: the recorded
+H_axis_range_normalized equals the span of the retained points exactly on every
+fit examined, and no fit in the table has a span at or above 1, the maximum
+being 0.9987. The test was measuring the extraction file and calling it a
+property of the fit. It flagged five papers and 42 fits, two of which
+(matchemphys.2023.128348 and matpr.2019.05.078) it flagged on nothing else.
 
-  1. WITHIN A SAMPLE, the assigned scale must fall with temperature. Upper
-     critical fields fall, and so do irreversibility fields; nothing legitimate
-     rises. Grouped by sample, never averaged across them.
+WRONG: "a constant scale with a larger one unused in the same file". In both
+cases it fired on, the larger value is a zero-temperature extrapolation.
+s10854-026-16566-9's 78.1 T is a WHH row with NO temperature recorded, sitting
+beside a proper Hc2(T) curve that falls from 9.2 T at 11 K to 0.0 at 16 K.
+phpro.2015.06.160's 26 T and 31 T are Hc2(0) values tagged with each compound's
+transition temperature, 18.9 K and 25.5 K, and its 9.0 T at 17.7 K is an
+ordinary Hc2(T) point: an ac-susceptibility transition reaching 17.7 K on the
+9 T curve is Hc2(17.7 K) = 9 T. Both papers' fits then use the lowest-temperature
+Hc2 available as a low-temperature anchor, which is the deposit's documented
+extrapolated_to_low_T_anchor convention and is conservative rather than wrong.
+It flagged two papers and 18 fits.
 
-  2. The scale must exceed the largest field the curve was measured at. A scale
-     at or below the measured maximum makes the reduced field reach or pass 1,
-     where the fitted form is undefined.
+Between them those two tests were most of the screen: 60 flagged fits became
+36, and the claim that every MgB2-class field-axis fit rested on a bad scale
+became none of them.
 
-  3. Where a paper's own extraction file carries a LARGER critical field than
-     the fits use, the larger one is named. That is the phpro case, and it is
-     found by comparison rather than by reading prose.
+--------------------------------------------------------------------------
+What is reported but no longer claimed as a finding
 
-  4. The applicability filter's interaction with all of this, which is the
-     finding that outlives any single paper and is reported whether or not any
-     paper is flagged. The criterion admits a curve when
-     (Hmax - Hmin) / Hc2 > 0.3, so a scale that is too small widens the reduced
-     window and lets the curve through. It selects for the error it cannot see.
+The screen still prints how the applicability filter divides flagged from
+unflagged fits, because the pattern is worth seeing. It is no longer offered as
+a mechanism. On three papers it is as consistent with those three papers being
+unusual as with the filter selecting for the error, and a claim that needs the
+first version's 60 fits to be interesting is a claim that was resting on the
+two broken tests.
 
     python3 analysis/audit_tier1_critical_fields.py [--csv]
 
-Run from the repository root. The per-paper extraction files it reads for
-tests 2 and 3 are not deposited; where they are absent those tests report
-"unchecked" rather than passing.
+Run from the repository root. Changes nothing.
 """
 import argparse
 import csv
@@ -125,53 +129,10 @@ def main():
                                      p.iloc[-1], p.index[-1]))
                     break
 
-        # 2. the scale sits at or below the measured maximum
-        mm = measured_max(pid)
-        if mm is None:
-            detail.append("no extraction file, exposure unchecked")
-        else:
-            over = []
-            for _i, r in g.iterrows():
-                m = mm.get(round(float(r.fixed_axis_value), 3))
-                if m and float(r.Hc2_T_used) <= m:
-                    over.append("%g K: measured to %.3g T against a scale of "
-                                "%.3g T" % (r.fixed_axis_value, m,
-                                            r.Hc2_T_used))
-            if over:
-                flags.append("scale at or below the measured maximum")
-                detail.extend(over[:2])
-
-        # 3. a larger critical field for the same paper goes unused
-        hct = hct_rows(pid)
-        if hct is not None:
-            vals = []
-            for r in hct:
-                try:
-                    vals.append((float(r["field_T"]), r.get("source_term", ""),
-                                 r.get("figure_id", ""), r.get("notes", "")))
-                except (TypeError, ValueError):
-                    pass
-            if vals:
-                biggest = max(vals)
-                used = float(g.Hc2_T_used.max())
-                # Only when the value in use does not vary with temperature.
-                # A zero-temperature extrapolation is SUPPOSED to exceed the
-                # field at a finite temperature, so "something larger exists"
-                # is not by itself a defect and flagged four more papers where
-                # it is the expected relation. What is a defect is a scale that
-                # does not move with temperature at all while a larger,
-                # temperature-resolved value sits unused in the same file. That
-                # is the instrument ceiling case: phpro.2015.06.160 uses 9.0 T
-                # at every temperature, which its own caption calls the limit
-                # of the measurement, "in field up to 9 T", while the paper
-                # estimates Hc2(0) at 26 T and 31 T.
-                constant = g.groupby("fixed_axis_value").Hc2_T_used.mean().nunique() == 1
-                if biggest[0] > used * 1.5 and constant and g.fixed_axis_value.nunique() > 1:
-                    flags.append("a constant scale, with a larger one unused")
-                    detail.append("%.3g T recorded as %s in %s, fits use up to "
-                                  "%.3g T" % (biggest[0], biggest[1] or "?",
-                                              biggest[2] or "?", used))
-
+        # Tests 2 and 3 lived here and were removed; see the module
+        # docstring. What remains needs neither the extraction file nor the
+        # supplementary file, so the screen no longer depends on anything
+        # outside the deposit.
         rows.append(dict(
             paper_id=pid, fits=len(g),
             tiers=";".join(sorted(set(g.tier.dropna()))),
@@ -200,7 +161,11 @@ def main():
 
     # 4. what the applicability filter does with all of it
     flagged = f.arxiv_id.isin(set(bad.paper_id))
-    print("\nthe applicability filter against the scale it cannot see\n")
+    print("\nhow the applicability filter divides the two groups\n")
+    print("   Reported, not claimed. On three papers this is as consistent "
+          "with those\n   three being unusual as with the filter selecting "
+          "for the error, and the\n   stronger reading rested on two tests "
+          "that turned out to be wrong.\n")
     ct = pd.crosstab(flagged, f.physicality)
     print(ct.rename(index={True: "flagged", False: "unflagged"}).to_string())
     print("\n   median reduced span   flagged %.3f   unflagged %.3f"
@@ -209,10 +174,10 @@ def main():
     print("\n   by provenance tier:")
     print(pd.crosstab(f.tier, f.physicality).to_string())
     print("\n   The criterion admits a curve when (Hmax - Hmin) / Hc2 exceeds "
-          "0.3.\n   A scale that is too small widens that ratio, so the filter "
-          "selects for\n   the error it cannot see. That is why the "
-          "highest-confidence tier supplies\n   most of the passing cohort and "
-          "the literature default supplies almost none.")
+          "0.3, so a\n   scale that is too small widens that ratio. Whether "
+          "the filter therefore\n   selects for the error is a hypothesis this "
+          "screen cannot test on three\n   papers. The tier split below is "
+          "the observation that suggested it.")
 
     if args.csv:
         os.makedirs("audit", exist_ok=True)
