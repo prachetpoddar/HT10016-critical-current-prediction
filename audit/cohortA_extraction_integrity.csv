@@ -1,0 +1,19 @@
+file,route,verdict,tier,n_points,n_series,round_fraction,signatures,detail,paper,beta_T_fits
+0906.0444v1_LONG.csv,named,CHECK,C,88,8,0.9091,,,0906.0444v1,11
+2207.06629v1_LONG.csv,named,CHECK,,136,8,0.8824,,,2207.06629v1,17
+2308.10492v1_LONG.csv,named,CHECK,,80,5,0.8625,,,2308.10492v1,16
+1009.4896v1_LONG.csv,named,CHECK,,66,6,0.8485,,,1009.4896v1,11
+0806.2839v1_LONG.csv,named,CHECK,,44,4,0.8409,,,0806.2839v1,11
+0903.0004v2_LONG.csv,named,CHECK,,45,3,0.8222,,,0903.0004v2,15
+1104.0477v2_LONG.csv,named,CHECK,,95,5,0.8,,,1104.0477v2,19
+2510.10264v1_LONG.csv,named,CHECK,,52,4,0.7885,,,2510.10264v1,13
+1002.0208v2_LONG.csv,named,CHECK,,119,7,0.7479,,,1002.0208v2,17
+1611.08455v1_LONG.csv,named,CHECK,,75,5,0.7333,,,1611.08455v1,15
+1111.3923v1_LONG.csv,named,CHECK,,54,6,0.7222,,,1111.3923v1,9
+0907.0147v2_LONG.csv,named,CHECK,,70,5,0.6857,,,0907.0147v2,14
+2012.13723v3_LONG.csv,named,CHECK,,56,7,0.625,,,2012.13723v3,8
+1108.0407v1_LONG.csv,named,CHECK,,88,8,0.5682,,,1108.0407v1,11
+2305.10034v1_LONG.csv,named,CHECK,,39,3,0.5385,,,2305.10034v1,13
+1903.00866v2_LONG.csv,named,CHECK,,231,7,0.5281,non_monotonic,non_monotonic: ?/2 K/T=2.0 11 rises with field | non_monotonic: ?/5 K/T=5.0 12 rises with field | non_monotonic: ?/10 K/T=10.0 12 rises with field | non_monotonic: ?/15 K/T=15.0 12 rises with field | non_monotonic: ?/20 K/T=20.0 12 rises with field | non_monotonic: ?/25 K/T=25.0 12 rises with field | non_monotonic: ?/30 K/T=30.0 13 rises with field,1903.00866v2,21
+2511.19058v1_LONG.csv,named,PASS,,133,7,0.4361,,,2511.19058v1,19
+1502.05345v1_LONG.csv,named,PASS,,128,7,0.3906,,,1502.05345v1,18
