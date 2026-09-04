@@ -27,6 +27,12 @@ import zipfile
 CHECK = os.path.join("analysis", "check_figures.py")
 GEN1 = os.path.join("analysis", "manuscript_figure_1.py")
 FIG1 = os.path.join("figures", "manuscript_figure_1.png")
+ENV = os.path.join("figures", "render_env.json")
+
+# What a reader on macOS has: the same deposit, a different freetype. Written
+# over the recorded signature to put the checker in that reader's position
+# without needing that machine.
+FOREIGN = '{"freetype": "2.11.1", "matplotlib": "3.8.4", "system": "Darwin"}\n'
 
 failures = []
 
@@ -71,6 +77,132 @@ def case_committed_figure_edited(work):
                    "the pixel comparison is not sensitive")
     finally:
         shutil.copy2(os.path.join(work, "fig1"), FIG1)
+
+
+def widen(path, extra):
+    """Pad a PNG on the right, standing in for a wider render elsewhere."""
+    from PIL import Image
+    im = Image.open(path).convert("RGBA")
+    out = Image.new("RGBA", (im.size[0] + extra, im.size[1]),
+                    (255, 255, 255, 255))
+    out.paste(im, (0, 0))
+    out.save(path)
+
+
+def regeneration_line(figure=1):
+    """The one line under test, isolated from the rest of the run.
+
+    Damaging a committed PNG also makes the document comparison fail, which is
+    correct and is not what these cases are about, so the exit code cannot be
+    the assertion for them.
+    """
+    _code, out = run(*ARGS)
+    return next((l for l in out.splitlines()
+                 if "Figure %d regenerates" % figure in l), "")
+
+
+def case_other_platform(work):
+    """A render that differs only in size, within tolerance, is NOT a failure.
+
+    This is what a reader on another operating system sees: matplotlib sizes
+    the canvas from rendered text extents, and freetype rasterises glyphs
+    differently per platform, so Figures 1, 2 and 5 come out one or two pixels
+    wider on macOS than on the Linux machine that drew them. Reporting that as
+    a failure told every such reader the deposit was broken. The suite must
+    stay green and say the property is not comparable there.
+    """
+    shutil.copy2(FIG1, os.path.join(work, "fig1.plat"))
+    shutil.copy2(ENV, os.path.join(work, "env.plat"))
+    try:
+        open(ENV, "w").write(FOREIGN)
+        widen(FIG1, 2)
+        line = regeneration_line()
+        ok = " n/a " in line and "text metrics differ" in line
+        print("   %-52s %s" % ("a two-pixel-wider render from another platform",
+                               "ok" if ok else "FAILED"))
+        if not ok:
+            failures.append("a cross-platform size difference is not reported "
+                            "as not-comparable: %s" % line.strip()[:80])
+    finally:
+        shutil.copy2(os.path.join(work, "fig1.plat"), FIG1)
+        shutil.copy2(os.path.join(work, "env.plat"), ENV)
+
+
+def case_other_platform_same_size(work):
+    """Same size, different pixels, on a platform that did not draw it.
+
+    Figure 5 on macOS: 2796x1330 on both sides, maximum pixel difference 255,
+    with every one of the 40993 differing pixels on an edge and none in a flat
+    interior. The rule this replaced was "same size, so compare strictly",
+    which called that a broken deposit. It must report n/a here, and it must
+    say so for the reason that is actually true rather than borrowing the size
+    wording.
+    """
+    from PIL import Image
+    shutil.copy2(FIG1, os.path.join(work, "fig1.same"))
+    shutil.copy2(ENV, os.path.join(work, "env.same"))
+    try:
+        open(ENV, "w").write(FOREIGN)
+        im = Image.open(FIG1).convert("RGBA")
+        px = im.load()
+        px[0, 0] = (0, 0, 0, 255)
+        im.save(FIG1)
+        line = regeneration_line()
+        ok = " n/a " in line and "text rasterisation differs" in line
+        print("   %-52s %s"
+              % ("a same-size pixel difference from another platform",
+                 "ok" if ok else "FAILED"))
+        if not ok:
+            failures.append("a same-size cross-platform pixel difference is "
+                            "not reported as not-comparable: %s"
+                            % line.strip()[:80])
+    finally:
+        shutil.copy2(os.path.join(work, "fig1.same"), FIG1)
+        shutil.copy2(os.path.join(work, "env.same"), ENV)
+
+
+def case_other_platform_gross(work):
+    """Not comparable is bounded. A large size difference still fails.
+
+    The concession made for other platforms is a tolerance, not an amnesty. A
+    render 20% wider than the committed one is not freetype, and reporting it
+    as not comparable would turn the whole check off for every reader who is
+    not on the recording machine.
+    """
+    shutil.copy2(FIG1, os.path.join(work, "fig1.gross"))
+    shutil.copy2(ENV, os.path.join(work, "env.gross"))
+    try:
+        open(ENV, "w").write(FOREIGN)
+        from PIL import Image
+        widen(FIG1, int(0.2 * Image.open(FIG1).size[0]))
+        line = regeneration_line()
+        ok = "FAILED" in line
+        print("   %-52s %s"
+              % ("a 20% size difference is still a failure",
+                 "ok" if ok else "SURVIVED"))
+        if not ok:
+            failures.append("a gross size difference is excused as a platform "
+                            "difference: %s" % line.strip()[:80])
+    finally:
+        shutil.copy2(os.path.join(work, "fig1.gross"), FIG1)
+        shutil.copy2(os.path.join(work, "env.gross"), ENV)
+
+
+def case_no_render_env(work):
+    """The recorded environment is part of the deposit, so losing it is red.
+
+    Without it there is nothing to tell a reader on another platform from a
+    figure that has genuinely gone stale, and the safe reading of "I cannot
+    tell" is not silence.
+    """
+    shutil.copy2(ENV, os.path.join(work, "env.gone"))
+    try:
+        os.remove(ENV)
+        expect_red("the recorded render environment deleted",
+                   "the checker cannot say where the figures were drawn and "
+                   "does not complain")
+    finally:
+        shutil.copy2(os.path.join(work, "env.gone"), ENV)
 
 
 def case_stretched_extent(work):
@@ -142,6 +274,10 @@ def main():
     with tempfile.TemporaryDirectory() as work:
         case_generator_writes_nothing(work)
         case_committed_figure_edited(work)
+        case_other_platform(work)
+        case_other_platform_same_size(work)
+        case_other_platform_gross(work)
+        case_no_render_env(work)
         case_stretched_extent(work)
         case_swapped_images(work)
 

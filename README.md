@@ -26,7 +26,10 @@ exists only in the text.
 | Fig. 4, anchor-count sensitivity | `analysis/figure_3_source.py` | constants, see below |
 | Fig. 5, family-scope envelopes | `analysis/figure_5_source.py` | the fit tables via the predictor |
 
-Figures 1 and 2 are schematics and have no data generator.
+Figures 1 and 2 are drawn by `analysis/manuscript_figure_1.py` and
+`analysis/manuscript_figure_2.py` from the deposit, with the four upstream
+counts they show, which no deposited table holds, named in
+`analysis/figure_counts.py`.
 
 Figure 4's generator carries its validation results as constants rather than
 recomputing them, so it plots numbers rather than deriving them. Its previous
@@ -45,6 +48,31 @@ itself: a withdrawal that was applied to the source tables and not to the
 derived decomposition, and a unit correction that reached two fields out of
 four. Both are invisible to an author reading the prose and obvious to a reader
 running the code.
+
+    python analysis/check_figures.py MANUSCRIPT.docx
+
+does the same for the figures, which the other checks cannot see: they read
+`word/document.xml`, so a number drawn inside an embedded image is invisible to
+them. It regenerates Figures 1, 2 and 5 and compares them with the committed
+PNGs, compares every image in the document with its committed PNG, and checks
+that every display extent matches its image's aspect ratio.
+
+The first of those three is conditional on where you run it. matplotlib sizes
+the canvas from rendered text extents, and the glyph and path rasterisers in
+two platform builds assign edge coverage differently, so a regenerated figure
+can differ from the committed one by a pixel of width, or by a flipped
+hairline at identical size, on a machine that did not draw it.
+`audit/figure_5_cross_platform_20260904.md` measures one such case and shows
+that every differing pixel is on an edge and none in a flat interior, which is
+what separates a rendering difference from a figure drawn from other numbers. `figures/render_env.json` records the machine
+that did; away from it, that check reports `n/a` with the numbers rather than
+claiming the deposit is broken. The other two checks compare committed
+artifacts and hold everywhere. After redrawing and committing the figures, run
+
+    python analysis/check_figures.py --record
+
+in the same session and commit the result. `analysis/test_check_figures.py`
+plants nine known defects and requires the checker to catch each one.
 
 Current cohort, computed rather than quoted:
 
