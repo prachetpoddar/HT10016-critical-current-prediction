@@ -8,19 +8,38 @@ cent, 24.3 per cent, 1.592, 1.166, 41.8 per cent, 2.81).
 Each entry names the deposited file the new value comes from. Nothing here is
 carried over from a previous write-up.
 
+**Brought to the current deposit on 2026-09-04.** Six numbers in this file were
+correct when it was written and moved afterwards, so they are updated in place
+rather than left to mislead a reader who takes this as guidance. Both causes
+are recorded, and both are in the repository history:
+
+  * `2631975`, "Withdraw two more records after reading their source papers",
+    removed `10.1016/j.physc.2009.03.028` and `10.1016/j.physc.2014.03.020`.
+    Papers went 64 to **62**, compounds 39 to **38**, extracted points 4211 to
+    **4146**, per-paper anchors 103 to **96**, three-family anchor records 59
+    to 52, and Fig. 3 markers 41 to 34.
+  * `b17da65`, "Fix the substructure classifier", moved four rows out of
+    `other_unclassified` and into the three plotted families. Three-family
+    records went 52 to **56** and markers 34 to **37**.
+
+The manuscript already carries the current values; it was this file that had
+fallen behind. `analysis/verify_redline_numbers.py` asserts every number here
+against the deposit and now also asserts that each one appears in this file, so
+the two cannot drift apart again.
+
 ---
 
 ## 1. Table I
 
 | row | from | to | source |
 |---|---|---|---|
-| Papers contributing fitted curves | 69 | **64** | `provenance_table_fitcohort_full.csv` |
-| Distinct compounds with fitted curves | 43 | **39** | same |
-| Critical-current data points extracted | 4387 | **4211** | same, `n_Jc_points` summed |
+| Papers contributing fitted curves | 69 | **62** | `provenance_table_fitcohort_full.csv` |
+| Distinct compounds with fitted curves | 43 | **38** | same |
+| Critical-current data points extracted | 4387 | **4146** | same, `n_Jc_points` summed |
 | Temperature-axis partial fits | 419 | **260** | `phase_3_p44_post_UCLA_beta_T_fits.csv` |
 | Field-axis partial fits passing physicality | 95 | **94** | `phase_3_form3_fits_partial_cohortB_v2.csv` |
 | ... from N source papers | 17 | **16** | same, distinct `arxiv_id` among passing |
-| Per-paper anchors behind Fig. 3 | 110 | **103** | `phase_3_p31_jc_anchor_per_paper.csv` |
+| Per-paper anchors behind Fig. 3 | 110 | **96** | `phase_3_p31_jc_anchor_per_paper.csv` |
 | Candidate compounds evaluated | 185 | **183** | `phase_3_p56_candidate_tier_assignment.csv` |
 
 The candidate-compound row is the one change not caused by this audit. The
@@ -43,7 +62,7 @@ temperature-axis fit table.
 
 The same sentence appears in the supplement, Sec. on provenance, with the same
 figures, and the supplement additionally says "the 69 source papers" twice.
-Both become **64**.
+Both become **62**.
 
 ---
 
@@ -52,8 +71,8 @@ Both become **64**.
 **From:** "Of the 110 per-paper anchor records of Table I, 61 fall in the three
 families shown ... The 61 collapse to the 44 markers drawn"
 
-**To:** "Of the 103 per-paper anchor records of Table I, 59 fall in the three
-families shown ... The 59 collapse to the 41 markers drawn"
+**To:** "Of the 96 per-paper anchor records of Table I, 56 fall in the three
+families shown ... The 56 collapse to the 37 markers drawn"
 
 Source: the anchor table filtered to `iron_chalcogenide_11`,
 `iron_pnictide_122` and `conventional_AlB2`, then aggregated per physical sample
@@ -378,8 +397,8 @@ right.
 The provenance table was static and still described a 69-paper cohort with
 three families that no longer contribute. `analysis/rebuild_supplement_table_s1.py`
 recomputes it from `provenance_table_fitcohort_full.csv`. Iron other,
-Conventional A15 and Cuprate HBCCO leave the table, and the total becomes 64
-papers, 39 compounds and 4211 points, matching Table I.
+Conventional A15 and Cuprate HBCCO leave the table, and the total becomes 62
+papers, 38 compounds and 4146 points, matching Table I.
 
 **One column needs your eye.** "Paper-reported Hc2" is recomputed as the count
 of papers whose critical field carries a Tier 1 or Tier 2 provenance, which
