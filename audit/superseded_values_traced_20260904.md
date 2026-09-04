@@ -497,3 +497,53 @@ anchors 96 against 103, Figure 3 records 56 against 59, and markers 37 against
 41. The deposit and the manuscript agree on all six; it is the redline that
 describes the superseded cohort. That is an internal audit note rather than a
 submitted artifact, so it is recorded here rather than repaired.
+
+
+## Three more, found by the review rather than by the checker
+
+- The supplement said the cuprate substructures contribute **7** distinct
+  compounds to the fitted cohort. `provenance_table_fitcohort_full.csv` holds
+  five cuprate papers and five distinct cuprate compounds, and the supplement's
+  own Table S1 sums to the same five. Corrected to five.
+- The supplement said **4 of 46** iron chalcogenide 11-type fits reach the
+  imposed ceiling. The denominator is the whole field-axis fit table by family,
+  which is the cohort the adjacent "1 of 22 iron pnictide 1111-type fits" uses,
+  and that family holds 51 fits. The numerators are right: 28 fits sit at the
+  ceiling, BSCCO 20, RBCO 3, chalcogenide 4 and 1111 one. Corrected to 4 of 51.
+- `check_documents.py` carried an entry claiming the supplement's retraction of
+  the 0.41 dex correlated propagation should say "0.409 dex is deposited". A
+  false positive twice over. The retraction is true, since nothing here
+  reproduces the pair correlations of +0.80, +0.40 and +0.80 it withdrew; and
+  0.409 is not deposited either, appearing only as an unrelated beta_T value in
+  four pre-withdrawal snapshots. The `phase_3_p47_synthesis.md` the retraction
+  cited does not exist anywhere in this repository. Entry removed.
+
+## The repair plan, counted properly
+
+An earlier note in this deposit put the unapplied repairs at 13.
+`audit/repair_plan.csv` marks 20 of its 109 rows non-sound, and against the
+current anchor table they stand as:
+
+| state | rows |
+|---|---:|
+| gone from the anchor table, so the withdrawal was applied | 7 |
+| present with a changed value, so the rescale was applied | 8 |
+| present with the original value, not applied | **5** |
+
+The five are two rows of `physc.2009.11.051` and two of `physc.2011.05.018`,
+all marked "withdrawn (re-extract)", and one row of `mtphys.2022.100783` marked
+"dropped (duplicate)".
+
+**That last label looks wrong and should be checked before it is acted on.**
+The two `mtphys.2022.100783` rows are a polycrystal and a single crystal of the
+same compound, with different anchors, 5.903 against 5.954, and different point
+counts, 40 against 60. They are not duplicates of each other, and no exact
+duplicate of either exists anywhere in the anchor table. They are also the pair
+the supplement's Table S4 prose uses as its within-paper sample-form contrast,
+and the polycrystal row feeds the variance decomposition the conditioning
+result rests on. Dropping it on a label this deposit cannot substantiate would
+be a change in the wrong direction.
+
+Neither of the two completed re-extractions in `data/reextraction/`, for
+2012.13723 and 2207.06629, covers any of the four "withdrawn (re-extract)"
+rows.

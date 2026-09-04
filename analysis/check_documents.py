@@ -156,7 +156,14 @@ SUPERSEDED = {
     r"lowest error of any family on either axis": "withdrawn with the 0.215",
     r"One row is one physical sample from one paper": "one row is one isotherm "
                                           "record; 96 records are 60 samples",
-    r"not reproducible from the deposited per-family cohorts": "0.409 dex is deposited",
+    # "not reproducible from the deposited per-family cohorts" was here, with
+    # a replacement of "0.409 dex is deposited". It is a false positive twice
+    # over. The sentence is a retraction and it is true: nothing in this
+    # deposit reproduces the pair correlations of +0.80, +0.40 and +0.80 that
+    # the withdrawn 0.41 dex came from. And 0.409 is not deposited either; it
+    # appears only as an unrelated beta_T value in four pre-withdrawal
+    # snapshots, and the phase_3_p47_synthesis.md the retraction cited does not
+    # exist anywhere in this repository.
     r"at least three anchor compounds are available within the family": "K counts "
                                           "measured points supplied per query",
     # Table S5 rows that no longer exist. The tables are generated from the
