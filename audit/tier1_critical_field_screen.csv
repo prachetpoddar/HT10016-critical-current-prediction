@@ -1,0 +1,32 @@
+paper_id,fits,tiers,passing,hc2_min,hc2_max,median_span,verdict,detail
+springer_10.1007_s10854-026-16566-9,12,Tier_1,12,9.2,9.2,0.4891,"a constant scale, with a larger one unused","78.1 T recorded as Hc2 in Table, fits use up to 9.2 T"
+elsevier_10.1016_j.physc.2016.05.023,10,Tier_3,0,30.0,30.0,0.0433,none,
+elsevier_10.1016_j.physc.2009.05.098,9,Tier_3,8,86.0,86.0,0.5302,none,"no extraction file, exposure unchecked"
+elsevier_10.1016_j.jallcom.2013.04.183,8,Tier_3,0,100.0,100.0,0.015,none,
+elsevier_10.1016_j.physc.2013.04.060,8,Tier_1,8,10.5,11.9,0.5715,none,"no extraction file, exposure unchecked"
+elsevier_10.1016_j.cjph.2024.09.042,7,Tier_3,0,47.0,47.0,0.0957,none,
+iop_10.1088_0953-2048_29_3_035013,7,Tier_3,0,47.0,47.0,0.1914,none,"no extraction file, exposure unchecked"
+elsevier_10.1016_j.jallcom.2023.170146,6,Tier_1,6,1.5,5.0,0.9213,none,"no extraction file, exposure unchecked"
+elsevier_10.1016_j.jpcs.2026.113652,6,Tier_3,0,100.0,100.0,0.005,none,
+elsevier_10.1016_j.physc.2011.02.004,6,Tier_1,6,6.021,24.401,0.9035,none,"no extraction file, exposure unchecked"
+springer_10.1038_s41598-025-95932-9,6,Tier_3,0,100.0,100.0,0.009,none,
+elsevier_10.1016_j.ceramint.2024.10.058,5,Tier_3,0,50.0,50.0,0.09,none,
+springer_10.1038_s41598-022-24044-5,5,Tier_1,0,18.0,18.0,0.9437,none,"no extraction file, exposure unchecked"
+elsevier_10.1016_0921-4534(96)00225-0,3,Tier_3,0,130.0,130.0,0.0385,none,
+elsevier_10.1016_j.jallcom.2023.170384,3,Tier_1,2,5.75,9.2,0.3745,none,"no extraction file, exposure unchecked"
+MAGLAB_11_4_2K,1,Tier_2,0,29.94,29.94,0.2672,none,"no extraction file, exposure unchecked"
+MAGLAB_11_6K,1,Tier_2,1,26.86,26.86,0.5957,none,"no extraction file, exposure unchecked"
+MAGLAB_Co122_4_2K,1,Tier_2,0,39.89,39.89,0.2006,none,"no extraction file, exposure unchecked"
+MAGLAB_La1111_4_2K,1,Tier_2,0,50.25,50.25,0.1692,none,"no extraction file, exposure unchecked"
+MAGLAB_Nd1111_10K,1,Tier_2,0,115.2,115.2,0.1389,none,"no extraction file, exposure unchecked"
+MAGLAB_Nd1111_4_2K,1,Tier_2,0,119.15,119.15,0.0755,none,"no extraction file, exposure unchecked"
+MAGLAB_Ni122_4_2K,1,Tier_2,1,24.09,24.09,0.934,none,"no extraction file, exposure unchecked"
+MAGLAB_P122_4_2K,1,Tier_2,1,20.59,20.59,0.4371,none,"no extraction file, exposure unchecked"
+MAGLAB_Sm1111_4_2K,1,Tier_2,1,51.3,51.3,0.8772,none,"no extraction file, exposure unchecked"
+elsevier_10.1016_j.phpro.2012.03.421,1,Tier_1,0,15.3,15.3,0.0327,none,
+elsevier_10.1016_j.mtphys.2022.100783,20,Tier_1,20,4.5,7.0,0.7778,rises within a sample;scale at or below the measured maximum,Polycrystal: 4.5 T at 4.2 K to 7 T at 21 K | 4.2 K: measured to 6 T against a scale of 4.5 T | 6 K: measured to 6 T against a scale of 4.5 T
+elsevier_10.1016_j.physc.2009.11.051,8,Tier_1,8,2.5,5.5,0.56,rises within a sample;scale at or below the measured maximum,irradiated: 2.5 T at 2 K to 5.5 T at 20 K | 2 K: measured to 20 T against a scale of 2.5 T | 10 K: measured to 20 T against a scale of 4.5 T
+elsevier_10.1016_j.physc.2010.05.048,8,Tier_1,8,3.5,12.5,0.5489,rises within a sample;scale at or below the measured maximum,FeTe0.59Se0.41: 3.5 T at 2 K to 12.5 T at 9 K | 2 K: measured to 50 T against a scale of 3.5 T | 3 K: measured to 50 T against a scale of 3.8 T
+elsevier_10.1016_j.matchemphys.2023.128348,4,Tier_1,4,3.0,3.0,0.6667,scale at or below the measured maximum,20 K: measured to 3 T against a scale of 3 T | 20 K: measured to 3 T against a scale of 3 T
+elsevier_10.1016_j.matpr.2019.05.078,2,Tier_1,2,2.5,2.5,0.68,scale at or below the measured maximum,5 K: measured to 4 T against a scale of 2.5 T | 5 K: measured to 4 T against a scale of 2.5 T
+elsevier_10.1016_j.phpro.2015.06.160,6,Tier_1,6,9.0,9.0,0.7778,"scale at or below the measured maximum;a constant scale, with a larger one unused","18 K: measured to 10 T against a scale of 9 T | 16 K: measured to 10 T against a scale of 9 T | 31 T recorded as Hc2 in BodyText, fits use up to 9 T"
