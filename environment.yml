@@ -17,6 +17,14 @@
 # pymupdf, anthropic and openai are needed only by the extraction audit scripts
 # (paired_extraction_agreement.py, audit_archive_integrity.py and the rest); the
 # fitting and aggregation chain needs only numpy, scipy and pandas.
+#
+# matplotlib, python-docx and pillow were missing from this file until
+# 2026-09-04. Fifteen scripts import matplotlib, eight import docx and four
+# import PIL, so an environment created from the earlier version could not
+# regenerate a single figure or run any document check, while the Data
+# Availability statement says the repository provides figure generation
+# scripts. Run analysis/preflight.py after creating the environment; it imports
+# what the scripts actually import and names anything absent.
 
 name: ht10016
 channels:
@@ -26,8 +34,11 @@ dependencies:
   - numpy=1.26
   - scipy=1.11
   - pandas=2.1
+  - matplotlib=3.8
+  - pillow
   - pip
   - pip:
+      - python-docx
       - pymupdf==1.24.9
       - anthropic
       - openai
