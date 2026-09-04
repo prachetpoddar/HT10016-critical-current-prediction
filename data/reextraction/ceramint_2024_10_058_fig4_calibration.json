@@ -1,0 +1,179 @@
+{
+  "frame_px": {
+    "x_left": 157,
+    "x_right": 1016,
+    "y_top": 107,
+    "y_bottom": 800
+  },
+  "dpi_scale": 4.0,
+  "image_px": [
+    1073,
+    826
+  ],
+  "x_ticks_read": [
+    [
+      0.5,
+      89.99
+    ],
+    [
+      1.0,
+      107.99
+    ],
+    [
+      1.5,
+      125.74
+    ],
+    [
+      2.0,
+      143.74
+    ],
+    [
+      2.5,
+      161.49
+    ],
+    [
+      3.0,
+      179.365
+    ],
+    [
+      3.5,
+      197.24
+    ],
+    [
+      4.0,
+      215.24
+    ],
+    [
+      4.5,
+      232.99
+    ],
+    [
+      5.0,
+      256.454
+    ],
+    [
+      5.5,
+      268.74
+    ]
+  ],
+  "y_ticks_read": [
+    [
+      200.0,
+      624.504
+    ],
+    [
+      400.0,
+      608.754
+    ],
+    [
+      600.0,
+      593.004
+    ],
+    [
+      800.0,
+      577.504
+    ],
+    [
+      1000.0,
+      561.629
+    ],
+    [
+      1200.0,
+      546.004
+    ],
+    [
+      1400.0,
+      530.254
+    ],
+    [
+      1600.0,
+      514.629
+    ],
+    [
+      1800.0,
+      498.754
+    ],
+    [
+      2000.0,
+      483.004
+    ]
+  ],
+  "geometry_calibration": {
+    "x": {
+      "length_threshold": 8.0,
+      "n_major": 11,
+      "positions": [
+        229.0,
+        301.0,
+        372.0,
+        444.0,
+        515.0,
+        586.5,
+        658.0,
+        730.0,
+        801.0,
+        894.8545454545455,
+        944.0
+      ],
+      "spacing_px": 71.5,
+      "uniformity": 0.06673,
+      "tick_direction": "inward",
+      "implied_step_per_major": 0.5,
+      "axis_increases_with_pixel": true,
+      "step_is_round": true
+    },
+    "y": {
+      "length_threshold": 13.0,
+      "n_major": 10,
+      "positions": [
+        170.0,
+        233.0,
+        296.5,
+        359.0,
+        422.0,
+        484.5,
+        548.0,
+        610.0,
+        673.0,
+        736.0
+      ],
+      "spacing_px": 62.888888888888886,
+      "uniformity": 0.00589,
+      "tick_direction": "inward",
+      "implied_step_per_major": -200.0,
+      "axis_increases_with_pixel": false,
+      "step_is_round": true
+    }
+  },
+  "x_fit": {
+    "slope": 0.02764630290719939,
+    "intercept": -1.9737725076181103,
+    "log": false,
+    "max_tick_residual_frac": 0.023245
+  },
+  "y_fit": {
+    "slope": -12.727765299075182,
+    "intercept": 8148.6879543851055,
+    "log": false,
+    "max_tick_residual_frac": 0.000916
+  },
+  "axis_span_from_ticks": {
+    "x": [
+      0.0165,
+      5.9535
+    ],
+    "y": [
+      -3.4973,
+      2201.5881
+    ]
+  },
+  "n_points": 189,
+  "per_series": {
+    "LSCO-CS": 36,
+    "Vac-1": 40,
+    "Vac-2": 38,
+    "Nitrogen-1": 40,
+    "Nitrogen-2": 35
+  },
+  "reprojection_residual_px": 0.004942
+}

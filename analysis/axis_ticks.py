@@ -58,18 +58,55 @@ LOG_FRACS = [math.log10(n) for n in range(1, 11)]
 LOG_GAPS = np.diff(LOG_FRACS)
 
 
-def find_ticks(dark, frame, side, min_len=6, max_len=60):
+def find_ticks(dark, frame, side, min_len=6, max_len=60, direction="inward"):
     """Tick positions along one side of the frame, in pixels.
 
     A tick is a short dark run perpendicular to the axis, starting at the frame
-    edge and pointing inward. Requiring it to start at the edge is what
-    separates ticks from gridlines and from data.
+    edge. Requiring it to start at the edge is what separates ticks from
+    gridlines and from data.
+
+    `direction` says which way the ticks point. Published figures do it both
+    ways and the choice is not cosmetic: a detector that only walks inward
+    finds nothing at all on an outward-ticked axis, which is how this returned
+    two frame corners and no ticks on Fig. 6(c) of jallcom.2023.170384.
+
+      "inward"   walk into the plot area. The original behaviour, and the
+                 default, so every existing call is unchanged.
+      "outward"  walk away from the plot area, into the margin.
+      "auto"     try inward, and fall back to outward when inward finds fewer
+                 than three ticks. Which one produced the answer is returned by
+                 find_ticks_dir, so the choice is visible rather than silent.
+
+    Outward walking has one hazard inward walking does not: the axis label text
+    sits in the margin, so `max_len` must stay short enough not to run into it.
+    The default of 60 px at dpi_scale 4 is about 3.75 pt, well inside the gap.
     """
+    if direction == "auto":
+        return find_ticks_dir(dark, frame, side, min_len, max_len)[0]
+    if direction not in ("inward", "outward"):
+        raise ValueError("direction must be inward, outward or auto")
+    out = _walk(dark, frame, side, min_len, max_len, direction)
+    return out
+
+
+def find_ticks_dir(dark, frame, side, min_len=6, max_len=60, min_ticks=3):
+    """find_ticks with direction="auto", returning (ticks, direction_used)."""
+    inw = _walk(dark, frame, side, min_len, max_len, "inward")
+    if len(inw) >= min_ticks:
+        return inw, "inward"
+    outw = _walk(dark, frame, side, min_len, max_len, "outward")
+    if len(outw) > len(inw):
+        return outw, "outward"
+    return inw, "inward"
+
+
+def _walk(dark, frame, side, min_len, max_len, direction):
     x0, x1, y0, y1 = frame
+    flip = -1 if direction == "outward" else 1
     pos = []
     if side in ("bottom", "top"):
         edge = y1 if side == "bottom" else y0
-        step = -1 if side == "bottom" else 1
+        step = (-1 if side == "bottom" else 1) * flip
         for x in range(x0 + 1, x1):
             n = 0
             for k in range(1, max_len):
@@ -81,7 +118,7 @@ def find_ticks(dark, frame, side, min_len=6, max_len=60):
                 pos.append((x, n))
     else:
         edge = x0 if side == "left" else x1
-        step = 1 if side == "left" else -1
+        step = (1 if side == "left" else -1) * flip
         for y in range(y0 + 1, y1):
             n = 0
             for k in range(1, max_len):

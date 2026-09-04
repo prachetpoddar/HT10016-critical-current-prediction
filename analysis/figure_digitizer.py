@@ -57,7 +57,7 @@ import re
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from axis_ticks import find_ticks, uniform_majors
+from axis_ticks import find_ticks, find_ticks_dir, uniform_majors
 
 try:
     import pymupdf
@@ -228,8 +228,8 @@ def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
     function returns nothing rather than guessing.
     """
     side = "bottom" if axis == "x" else "left"
-    maj = uniform_majors(find_ticks(dark, frame, side),
-                         max_uniformity=max_uniformity)
+    ticks_px, used = find_ticks_dir(dark, frame, side)
+    maj = uniform_majors(ticks_px, max_uniformity=max_uniformity)
     if maj is None:
         raise ValueError(
             "%s axis: no set of equally spaced major ticks found, so the axis "
@@ -242,7 +242,15 @@ def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
     ticks = sorted(((10.0 ** (a + step * i)) if log else (a + step * i),
                     px2pt(p)) for i, p in enumerate(pos))
     diag = dict(maj)
+    diag["tick_direction"] = used
     diag["implied_step_per_major"] = round(step, 8)
+    # first_major/last_major are read in the order the ticks are found, which is
+    # left to right on x and TOP TO BOTTOM on y. Getting the y pair the wrong way
+    # round inverts the axis, and an inverted log axis does not look wrong: it
+    # returns values inside the plotted range that rise where the curve falls.
+    # That is the same shape of defect this corpus is full of, so it is checked
+    # rather than left to the reader.
+    diag["axis_increases_with_pixel"] = bool(b > a)
     diag["step_is_round"] = _round_step(step)
     return ticks, diag
 
@@ -269,8 +277,13 @@ def _round_step(step):
     ten, which is what an axis actually printed by a plotting package uses. A
     False here means one of the two typed values is wrong, or the major ticks
     were miscounted."""
-    if step <= 0:
+    # A descending axis has a negative step and is not odd. Every y axis whose
+    # values fall down the page is descending, so rejecting negatives rejected
+    # the normal case; only the magnitude is a roundness question. Zero is still
+    # rejected, since it means the two supplied values are equal.
+    if step == 0:
         return False
+    step = abs(step)
     e = math.floor(math.log10(step))
     m = step / (10.0 ** e)
     return any(abs(m - k) < 0.02 for k in (1.0, 2.0, 2.5, 5.0, 10.0))
@@ -429,6 +442,32 @@ class FittedAxis:
         return (v - self.c) / self.m
 
 
+def _check_orientation(spec, geom_diag):
+    """Refuse a y axis whose values rise down the page.
+
+    On the left axis the ticks are found from the top of the frame downward, so
+    the spec's first_major is the TOP value and last_major the bottom. Reversing
+    them produces a silently inverted axis: every recovered point still lands
+    inside the plotted range, and the curve simply runs the wrong way. Nothing
+    downstream would catch it, because a rising Jc(H) is not impossible, only
+    unusual.
+
+    A figure that genuinely increases downward sets "allow_inverted": true on
+    the axis and says so.
+    """
+    d = geom_diag.get("y")
+    if not d or not d.get("axis_increases_with_pixel"):
+        return
+    if spec.get("y", {}).get("allow_inverted"):
+        return
+    raise ValueError(
+        "y axis is inverted: first_major is smaller than last_major, but the "
+        "left axis is measured from the top of the frame downward, so "
+        "first_major must be the value at the TOPMOST major tick. Swap them, "
+        "or set \"allow_inverted\": true on the y axis if the figure really "
+        "does increase downward.")
+
+
 def digitize(spec):
     doc = pymupdf.open(spec["pdf"])
     page = doc[spec["page"] - 1]
@@ -493,6 +532,7 @@ def digitize(spec):
 
     xt = _axis_ticks("x", px2pt_x)
     yt = _axis_ticks("y", px2pt_y)
+    _check_orientation(spec, geom_diag)
     mx, cx, rx = fit_axis(xt, spec["x"].get("log", False))
     my, cy, ry = fit_axis(yt, spec["y"].get("log", False))
     ax = FittedAxis(mx, cx, spec["x"].get("log", False), rx, xt)

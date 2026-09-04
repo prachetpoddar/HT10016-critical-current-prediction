@@ -1,0 +1,93 @@
+{
+  "paper_id": "10.1016/j.ceramint.2024.10.058",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.ceramint.2024.10.058.pdf",
+  "page": 5,
+  "clip": [
+    0.055,
+    0.555,
+    0.505,
+    0.815
+  ],
+  "dpi_scale": 4.0,
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.5,
+      "last_major": 5.5,
+      "max_uniformity": 0.12
+    }
+  },
+  "y": {
+    "log": false,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 2000.0,
+      "last_major": 200.0,
+      "max_uniformity": 0.03
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.55,
+      0.02,
+      1.0,
+      0.36
+    ]
+  ],
+  "series": [
+    {
+      "name": "LSCO-CS",
+      "temperature_K": 5.0,
+      "rgb": [
+        64,
+        64,
+        64
+      ],
+      "tol": 60
+    },
+    {
+      "name": "Vac-1",
+      "temperature_K": 5.0,
+      "rgb": [
+        227,
+        30,
+        36
+      ],
+      "tol": 90
+    },
+    {
+      "name": "Vac-2",
+      "temperature_K": 5.0,
+      "rgb": [
+        0,
+        114,
+        210
+      ],
+      "tol": 95
+    },
+    {
+      "name": "Nitrogen-1",
+      "temperature_K": 5.0,
+      "rgb": [
+        0,
+        166,
+        81
+      ],
+      "tol": 95
+    },
+    {
+      "name": "Nitrogen-2",
+      "temperature_K": 5.0,
+      "rgb": [
+        150,
+        110,
+        200
+      ],
+      "tol": 90
+    }
+  ],
+  "tick_darkness": 150
+}
