@@ -80,6 +80,243 @@ def render(panel, scale=4.0):
     return img
 
 
+def column_runs(ink, arr, x_left, x_right, y_top, y_bot, min_run=2, merge=10):
+    """Every vertical run of marker ink in each column, with its mean colour.
+
+    A run is one symbol's cross-section, or two overlapping symbols of the same
+    curve. Runs are the unit the tracer works in, because a run is a thing the
+    image actually contains, whereas "the point of series k in column j" is a
+    thing the extractor has to decide.
+    """
+    out = {}
+    for j in range(x_left + 2, x_right - 1):
+        col = np.nonzero(ink[:, j])[0]
+        if not len(col):
+            continue
+        runs, grp = [], [col[0]]
+        for y in col[1:]:
+            # An open symbol crosses a column as TWO thin runs, its upper and
+            # its lower arc, with white between them. Splitting on a two-pixel
+            # gap therefore returns two runs per marker, and the tracer follows
+            # the top edge and the bottom edge as two different curves that
+            # keep swapping. Merging across the symbol height puts them back
+            # together.
+            if y - grp[-1] > merge:
+                if len(grp) >= min_run:
+                    runs.append(grp)
+                grp = []
+            grp.append(y)
+        if len(grp) >= min_run:
+            runs.append(grp)
+        made = []
+        for g in runs:
+            px = arr[g, j]
+            # The ink of an open symbol is its outline; its interior is white,
+            # and averaging the run gives grey whatever colour the symbol is.
+            # Six of the first tracks came back at [102, 102, 102] for exactly
+            # that reason. Take the most chromatic quarter instead.
+            chroma = px.max(axis=1) - px.min(axis=1)
+            k = max(1, len(px) // 4)
+            sel = px[np.argsort(-chroma)[:k]]
+            made.append((float(np.mean(g)), len(g), sel.mean(axis=0)))
+        out[j] = made
+    return out
+
+
+def trace(runs, x_left, x_right, max_jump=6.0, min_len=40, max_gap=6):
+    """Follow each curve from the right edge leftwards, run to run.
+
+    Colour discrimination fails on this figure: three of the twelve series are
+    dark blues whose printed values differ by a few units, and clustering the
+    ink returns the blends rather than the inks. Continuity does not care. The
+    curves are ordered and non-crossing over most of the field range, and they
+    are widely separated at the right edge where each ends, so a track started
+    there and extended one column at a time stays on its own curve. Colour is
+    then used once, on the whole track, to say which temperature it is, which
+    is a far easier question than asking it of a single pixel.
+    """
+    # One pass per column, not per run, so a track is extended at most once in
+    # a column. Matching run by run lets two runs of different curves both
+    # claim the same track in a crowded column, and the track then jumps
+    # between curves; the greedy pairing below gives each track its closest
+    # unclaimed run and leaves the rest to start their own.
+    cols = sorted([j for j in runs], reverse=True)
+    tracks = []
+    for j in cols:
+        pairs = []
+        for ri, (y, n, c) in enumerate(runs[j]):
+            for ti, t in enumerate(tracks):
+                gap = t["last_col"] - j
+                if gap <= 0 or gap > max_gap:
+                    continue
+                # Predict where this track should be, from its own recent
+                # slope. A fixed window around the last y breaks every curve
+                # into fragments on the steep left-hand side, which is what the
+                # first version did: 46 tracks, none spanning the axis.
+                pred = t["y"] + t["slope"] * (-gap)
+                tol = max_jump + abs(t["slope"]) * gap
+                d = abs(pred - y)
+                if d <= tol:
+                    pairs.append((d, ri, ti))
+        pairs.sort()
+        used_r, used_t = set(), set()
+        for d, ri, ti in pairs:
+            if ri in used_r or ti in used_t:
+                continue
+            used_r.add(ri)
+            used_t.add(ti)
+            y, n, c = runs[j][ri]
+            t = tracks[ti]
+            prev_y, prev_col = t["y"], t["last_col"]
+            t["pts"].append((float(j), y, n))
+            t["cols"].append(c)
+            step = (y - prev_y) / max(1, prev_col - j)
+            t["slope"] = 0.7 * t["slope"] + 0.3 * (-step)
+            t["y"] = y
+            t["last_col"] = j
+        for ri, (y, n, c) in enumerate(runs[j]):
+            if ri not in used_r:
+                tracks.append(dict(pts=[(float(j), y, n)], cols=[c], y=y,
+                                   last_col=j, slope=0.0))
+    return stitch([t for t in tracks if len(t["pts"]) >= 8], min_len=min_len)
+
+
+def _endslope(pts, k=12):
+    """Slope in rows per column at the low-column end of a track."""
+    p = sorted(pts)[:k]
+    if len(p) < 3:
+        return 0.0
+    x = np.array([q[0] for q in p]); y = np.array([q[1] for q in p])
+    return float(np.polyfit(x, y, 1)[0])
+
+
+def stitch(tracks, min_len=40, max_gap=40, tol=10.0, colour_tol=70.0):
+    """Join track fragments that continue one another.
+
+    A single tracing pass fragments: a marker missing from a few columns, or
+    two curves brushing past each other, ends a track and starts another, and
+    on this figure that left less than half the plotted data in tracks long
+    enough to use. Fragments of one curve are recognisable, though. They are
+    adjacent in x, they continue each other's slope, and they are the same
+    colour. Joining on all three is what a single pass cannot do, because at
+    the moment a track breaks there is nothing yet to join it to.
+    """
+    tracks = [dict(t) for t in tracks]
+    for t in tracks:
+        t["pts"] = sorted(t["pts"])
+        t["x0"], t["x1"] = t["pts"][0][0], t["pts"][-1][0]
+        t["rgb"] = np.median(np.array(t["cols"]), axis=0)
+    changed = True
+    while changed:
+        changed = False
+        tracks.sort(key=lambda t: -len(t["pts"]))
+        for a in tracks:
+            if a.get("dead"):
+                continue
+            best, bd = None, None
+            for b in tracks:
+                if b is a or b.get("dead"):
+                    continue
+                gap = a["x0"] - b["x1"]
+                if not (0 < gap <= max_gap):
+                    continue
+                if np.abs(a["rgb"] - b["rgb"]).sum() > colour_tol:
+                    continue
+                pred = a["pts"][0][1] + _endslope(a["pts"]) * (-gap)
+                d = abs(pred - b["pts"][-1][1])
+                if d <= tol + 0.5 * gap and (bd is None or d < bd):
+                    best, bd = b, d
+            if best is not None:
+                a["pts"] = sorted(a["pts"] + best["pts"])
+                a["cols"] = a["cols"] + best["cols"]
+                a["x0"] = a["pts"][0][0]
+                a["rgb"] = np.median(np.array(a["cols"]), axis=0)
+                best["dead"] = True
+                changed = True
+    return [t for t in tracks
+            if not t.get("dead") and len(t["pts"]) >= min_len]
+
+
+def traced_series(arr, frame, lx0, ly1):
+    """Trace every curve, then name each trace by its colour. STAGED, NOT DONE.
+
+    Status, so the next person does not repeat the four models that failed.
+
+      * a per-series colour tolerance returned about 650 points for each of the
+        twelve series, which is one curve twelve times;
+      * connected components merged whole runs of markers, because the symbols
+        touch, and the size bound then dropped the merged blobs;
+      * a topmost-run-per-column rule is right only for the topmost curve and
+        strung readings across several curves for the other eleven;
+      * a median-row-per-column rule with nearest-colour assignment follows the
+        curves broadly but loses the three dark blues into each other, whose
+        printed inks differ by a few units, and left the 20 K series with four
+        points.
+
+    What is here now traces runs by continuity and stitches the fragments, and
+    it recovers long tracks: several span most of the axis. It is still not
+    good enough to deposit. Fragments remain, the run-merge height trades
+    fragmentation against fusing two adjacent curves, and a third of the traces
+    come back grey because the ink they captured is an anti-aliased blend
+    rather than a symbol outline.
+
+    What it needs is a marker model: the symbols are squares, circles,
+    triangles and diamonds of a known size, so matching a template per series
+    would separate curves that a colour test and a continuity test both lose.
+    That is the next thing to build, and it is why this returns nothing unless
+    asked.
+    """
+    x_left, x_right, y_top, y_bot = frame
+    ink = arr.max(axis=2) < 215
+    ink[:y_top + 2] = False
+    ink[y_bot - 1:] = False
+    ink[:, :x_left + 2] = False
+    ink[:, x_right - 1:] = False
+    ink[y_top:int(ly1), int(lx0):] = False
+    runs = column_runs(ink, arr, x_left, x_right, y_top, y_bot, merge=10)
+    tracks = trace(runs, x_left, x_right, max_gap=12)
+    tracks.sort(key=lambda t: -len(t["pts"]))
+
+    # name each track by its nearest legend colour, one series per track
+    pal = {k: np.array(v[1], dtype=float) for k, v in SERIES.items()}
+    out, taken = {}, set()
+    for t in tracks:
+        best, bd = None, None
+        for k, c in pal.items():
+            if k in taken:
+                continue
+            d = float(np.abs(t["rgb"] - c).sum())
+            if bd is None or d < bd:
+                best, bd = k, d
+        if best is None:
+            break
+        taken.add(best)
+        out[best] = [(p[0], p[1], p[2]) for p in t["pts"]]
+    return out
+
+
+def _despike(pts, win=21, tol_px=9.0):
+    """Drop readings that disagree with their neighbours along the curve.
+
+    A misassigned pixel puts a reading on a different curve, and a single one
+    is invisible in a table of six hundred. Against a rolling median of the
+    same series it is not: a curve is smooth on the scale of a few columns and
+    an intruder is not. Points that survive are reported; the count of those
+    dropped is reported too, because a series losing most of its readings here
+    means the colour assignment failed rather than that the curve is noisy.
+    """
+    if len(pts) < 5:
+        return pts
+    pts = sorted(pts)
+    ys = np.array([p[1] for p in pts], dtype=float)
+    n = len(ys)
+    half = max(2, win // 2)
+    med = np.array([np.median(ys[max(0, i - half):min(n, i + half + 1)])
+                    for i in range(n)])
+    keep = np.abs(ys - med) <= tol_px
+    return [p for p, k in zip(pts, keep) if k]
+
+
 def find_markers_mask(mask, min_px=6, max_px=900):
     """Centroids of connected blobs in a boolean mask, with size bounds.
 
@@ -177,7 +414,8 @@ def frame_and_ticks(arr):
     return (x_left, x_right, y_top, y_bot), keep, float(steps.mean())
 
 
-def extract(panel, scale=4.0, overlay=False):
+def extract(panel, scale=4.0, overlay=False, spec_tol_px=9.0,
+            use_trace=False):
     img = render(panel, scale)
     arr = np.asarray(img).astype(int)
     frame, majors, step = frame_and_ticks(arr)
@@ -208,6 +446,10 @@ def extract(panel, scale=4.0, overlay=False):
     # which is the same curve twelve times. Nearest-colour assignment makes the
     # series mutually exclusive by construction, and the distance cut then only
     # has to separate marker ink from the white ground.
+    traced = {}
+    if use_trace:
+        traced = traced_series(arr, frame, lx0, ly1)
+
     rows, report = [], []
     mx, mn = arr.max(axis=2), arr.min(axis=2)
     names = list(SERIES)
@@ -250,14 +492,33 @@ def extract(panel, scale=4.0, overlay=False):
                         break
                     grp.append(y)
                 pts.append((float(j), (grp[0] + grp[-1]) / 2.0, len(grp)))
+        elif use_trace:
+            pts = traced.get(name, [])
         else:
-            # The eleven coloured series are dense enough that their markers
-            # touch, so connected components merge whole runs of them and the
-            # counts come out meaningless. Separating them needs a marker model
-            # rather than a blob finder, which this script does not have.
-            pts = [(cx, cy, n) for cx, cy, n in
-                   find_markers_mask(m, min_px=int(6 * (scale / 4.0) ** 2),
-                                     max_px=int(900 * (scale / 4.0) ** 2))]
+            # One reading per column, from the median row of this series' own
+            # pixels in that column.
+            #
+            # Two earlier models failed here and are worth naming. Connected
+            # components merge whole runs of markers, because the symbols touch
+            # on a dense curve, so the counts came out meaningless. A
+            # topmost-run rule reads whatever sits highest in the column, which
+            # is only ever right for the topmost curve and strung readings
+            # across several curves for the other eleven.
+            #
+            # An open symbol contributes its outline to a column, so the median
+            # row of that outline is the symbol's centre, and where consecutive
+            # symbols overlap in one column the median stays on the curve
+            # because they sit at almost the same height. What this cannot fix
+            # is a pixel assigned to the wrong series, so the readings are then
+            # required to agree with their own neighbours.
+            pts = []
+            for j in range(x_left + 2, x_right - 1):
+                col = np.nonzero(m[:, j])[0]
+                if len(col) < int(3 * (scale / 4.0)):
+                    continue
+                pts.append((float(j), float(np.median(col)), int(len(col))))
+            pts = _despike(pts, win=int(21 * (scale / 4.0)) | 1,
+                           tol_px=float(spec_tol_px))
         pts.sort()
         for px, py, npix in pts:
             rows.append(dict(paper_id="10.1016/j.mtphys.2022.100783",
@@ -287,7 +548,12 @@ def extract(panel, scale=4.0, overlay=False):
                 per_series={k: v for k, v in report})
 
     os.makedirs(OUT, exist_ok=True)
-    stem = os.path.join(OUT, "mtphys_2022_100783_fig6%s" % panel)
+    # The staged tracer must not be able to overwrite the deposited extraction.
+    # It already did once in testing, replacing a validated 478-point 4.2 K
+    # series with 340 traced points of uncertain identity, and nothing but the
+    # console output said so.
+    stem = os.path.join(OUT, "mtphys_2022_100783_fig6%s%s"
+                        % (panel, "_staged" if use_trace else ""))
     import csv
     with open(stem + "_points.csv", "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
@@ -319,6 +585,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--panel", choices=["a", "b"], default="b")
     ap.add_argument("--overlay", action="store_true")
+    ap.add_argument("--trace", action="store_true",
+                    help="use the staged curve tracer for the coloured series. "
+                         "Not deposit quality; see traced_series().")
     ap.add_argument("--series", default=None,
                     help="extract only this series, e.g. 4.2K")
     a = ap.parse_args()
@@ -327,7 +596,7 @@ def main():
     if a.series:
         keep = {a.series: SERIES[a.series]}
         SERIES.clear(); SERIES.update(keep)
-    extract(a.panel, overlay=a.overlay)
+    extract(a.panel, overlay=a.overlay, use_trace=a.trace)
     return 0
 
 
