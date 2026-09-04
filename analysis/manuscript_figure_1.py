@@ -34,7 +34,13 @@ from figure_counts import from_deposit, UPSTREAM
 # that moves the data.
 C = from_deposit()
 
-plt.rcParams.update({"font.family":"serif","font.size":8.6,"mathtext.fontset":"dejavuserif"})
+# font.family was the generic "serif", which matplotlib resolves from the
+# font.serif list and therefore differently per machine: this figure
+# regenerated bit-identically on the machine that drew it and differed by
+# one or two pixels of width elsewhere, which analysis/check_figures.py
+# correctly called a failure. DejaVu Serif is what it was drawn in and
+# ships with matplotlib, so pinning it makes the figure reproduce anywhere.
+plt.rcParams.update({"font.family":["DejaVu Serif"],"font.size":8.6,"mathtext.fontset":"dejavuserif"})
 fig=plt.figure(figsize=(7.1,4.5))
 gs=fig.add_gridspec(1,2,width_ratios=[1.32,1.0],wspace=0.22)
 axA=fig.add_subplot(gs[0]); axB=fig.add_subplot(gs[1])
