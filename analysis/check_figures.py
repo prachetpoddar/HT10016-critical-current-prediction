@@ -114,10 +114,22 @@ def same_pixels(a, b):
 # failed Figure 5 there at an identical 2796x1330 with a maximum pixel
 # difference of 255. Both come from one cause. matplotlib saves with
 # bbox_inches="tight", so the canvas is sized from rendered text extents, and
-# freetype rasterises glyphs differently per platform; a sub-pixel shift
+# the two platform builds assign edge coverage differently; a sub-pixel shift
 # either moves the bounding box, which changes the size, or moves a hairline
 # across a pixel boundary, which flips it from white to black at the same
 # size. Nothing about the size tells you which figure will do which.
+#
+# Measured on the macOS render of Figure 5, in
+# audit/figure_5_cross_platform_20260904.md: 40993 pixels differ, 67% of them
+# by 8 or less out of 255, two by the full range, and NOT ONE of them lies in
+# a locally flat region of the committed image. Every difference is on an
+# edge. A figure drawn from different numbers moves a filled band or a marker
+# and so differs in flat interiors; this does not. A third of the differing
+# pixels are coloured, on the family curves and the alpha-blended bands, which
+# Agg's path rasteriser draws and freetype never touches, so this is not text
+# alone. The generator has no random number generator and both machines ran it
+# from the same commit over the same inputs, so the plotted content is
+# identical by construction.
 #
 # Two things were ruled out by measurement rather than assumed. matplotlib
 # 3.8.4 and 3.10.9 installed side by side on this machine give byte-identical

@@ -131,10 +131,12 @@ def case_other_platform(work):
 def case_other_platform_same_size(work):
     """Same size, different pixels, on a platform that did not draw it.
 
-    Figure 5 on macOS: 2796x1330 on both sides, maximum pixel difference 255.
-    The rule this replaced was "same size, so compare strictly", which called
-    that a broken deposit. It must report n/a here, and it must say so for the
-    reason that is actually true rather than borrowing the size wording.
+    Figure 5 on macOS: 2796x1330 on both sides, maximum pixel difference 255,
+    with every one of the 40993 differing pixels on an edge and none in a flat
+    interior. The rule this replaced was "same size, so compare strictly",
+    which called that a broken deposit. It must report n/a here, and it must
+    say so for the reason that is actually true rather than borrowing the size
+    wording.
     """
     from PIL import Image
     shutil.copy2(FIG1, os.path.join(work, "fig1.same"))

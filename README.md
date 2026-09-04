@@ -58,10 +58,13 @@ PNGs, compares every image in the document with its committed PNG, and checks
 that every display extent matches its image's aspect ratio.
 
 The first of those three is conditional on where you run it. matplotlib sizes
-the canvas from rendered text extents and freetype rasterises glyphs
-differently per platform, so a regenerated figure can differ from the committed
-one by a pixel of width, or by a flipped hairline at identical size, on a
-machine that did not draw it. `figures/render_env.json` records the machine
+the canvas from rendered text extents, and the glyph and path rasterisers in
+two platform builds assign edge coverage differently, so a regenerated figure
+can differ from the committed one by a pixel of width, or by a flipped
+hairline at identical size, on a machine that did not draw it.
+`audit/figure_5_cross_platform_20260904.md` measures one such case and shows
+that every differing pixel is on an edge and none in a flat interior, which is
+what separates a rendering difference from a figure drawn from other numbers. `figures/render_env.json` records the machine
 that did; away from it, that check reports `n/a` with the numbers rather than
 claiming the deposit is broken. The other two checks compare committed
 artifacts and hold everywhere. After redrawing and committing the figures, run
