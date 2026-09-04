@@ -73,6 +73,40 @@ def case_committed_figure_edited(work):
         shutil.copy2(os.path.join(work, "fig1"), FIG1)
 
 
+def case_other_platform(work):
+    """A render that differs only in size, within tolerance, is NOT a failure.
+
+    This is what a reader on another operating system sees: matplotlib sizes
+    the canvas from rendered text extents, and freetype rasterises glyphs
+    differently per platform, so Figures 1, 2 and 5 come out one or two pixels
+    wider on macOS than on the Linux machine that drew them. Reporting that as
+    a failure told every such reader the deposit was broken. The suite must
+    stay green and say the property is not comparable there.
+    """
+    from PIL import Image
+    shutil.copy2(FIG1, os.path.join(work, "fig1.plat"))
+    try:
+        im = Image.open(FIG1).convert("RGBA")
+        wide = Image.new("RGBA", (im.size[0] + 2, im.size[1]), (255, 255, 255, 255))
+        wide.paste(im, (0, 0))
+        wide.save(FIG1)
+        # Assert on the regeneration line only. Widening the committed PNG
+        # also makes the document comparison fail, correctly, because the
+        # .docx still holds the narrower image, so the suite's exit code is
+        # not the thing under test here.
+        _code, out = run(*ARGS)
+        line = next((l for l in out.splitlines()
+                     if "Figure 1 regenerates" in l), "")
+        ok = " n/a " in line and "text metrics differ" in line
+        print("   %-52s %s" % ("a two-pixel-wider render from another platform",
+                               "ok" if ok else "FAILED"))
+        if not ok:
+            failures.append("a cross-platform size difference is not reported "
+                            "as not-comparable: %s" % line.strip()[:80])
+    finally:
+        shutil.copy2(os.path.join(work, "fig1.plat"), FIG1)
+
+
 def case_stretched_extent(work):
     """A display extent that does not match the image's aspect ratio."""
     src = ARGS[0]
@@ -142,6 +176,7 @@ def main():
     with tempfile.TemporaryDirectory() as work:
         case_generator_writes_nothing(work)
         case_committed_figure_edited(work)
+        case_other_platform(work)
         case_stretched_extent(work)
         case_swapped_images(work)
 

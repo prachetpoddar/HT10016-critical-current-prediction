@@ -70,11 +70,17 @@ IN_DOCUMENT = {
 }
 
 failures = []
+skipped = []
 
 
 def check(label, ok, detail=""):
-    print("   %-56s %s   %s" % (label, "ok" if ok else "FAILED", detail))
-    if not ok:
+    """ok True passes, False fails, None means the property is not checkable
+    here and is reported as such rather than counted either way."""
+    word = "ok" if ok else ("n/a" if ok is None else "FAILED")
+    print("   %-56s %s   %s" % (label, word, detail))
+    if ok is None:
+        skipped.append(label)
+    elif not ok:
         failures.append(label)
 
 
@@ -92,6 +98,40 @@ def same_pixels(a, b):
     d = np.abs(np.asarray(ia).astype(int) - np.asarray(ib).astype(int))
     worst = int(d.max())
     return worst == 0, "max pixel difference %d" % worst
+
+
+# A regenerated figure is required to match the committed one PIXEL FOR PIXEL
+# only when it comes out at the same size. When it does not, the difference is
+# text metrics, and those are a property of the platform rather than of the
+# deposit: matplotlib saves with bbox_inches="tight", so the canvas is sized
+# from rendered text extents, and freetype rasterises glyphs differently on
+# macOS and Linux. Measured on this deposit, matplotlib 3.8.4 and 3.10.9 on the
+# same machine give byte-identical output for Figures 1, 2 and 5, while the
+# same scripts on macOS give 2731x1538 against 2729x1538 and 2254x2095 against
+# 2253x2095. The version is not the variable; the platform is.
+#
+# So a size difference inside this tolerance is reported as not comparable
+# here, with the numbers, rather than as a failure. Calling it a failure told
+# every reader on a different operating system that the deposit was broken,
+# which is worse than saying plainly that this particular property cannot be
+# checked from their machine.
+SIZE_TOLERANCE = 0.01     # 1% in either dimension
+
+
+def compare_render(fresh, committed):
+    """(ok, detail) for a regenerated figure against the committed one."""
+    a, b = Image.open(fresh), Image.open(committed)
+    if a.size == b.size:
+        return same_pixels(fresh, committed)
+    dw = abs(a.size[0] - b.size[0]) / b.size[0]
+    dh = abs(a.size[1] - b.size[1]) / b.size[1]
+    if max(dw, dh) <= SIZE_TOLERANCE:
+        return None, ("%dx%d here against %dx%d committed, %.2f%% in width: "
+                      "text metrics differ, so this cannot be checked from "
+                      "this platform"
+                      % (a.size + b.size + (100 * dw,)))
+    return False, "%dx%d vs %dx%d, beyond the %.0f%% tolerance" % (
+        a.size + b.size + (100 * SIZE_TOLERANCE,))
 
 
 def regenerates(script, committed, work):
@@ -131,8 +171,7 @@ def regenerates(script, committed, work):
             return False, (r.stderr.strip().splitlines() or ["failed"])[-1][:90]
         if not os.path.exists(committed):
             return False, "the generator wrote nothing to %s" % committed
-        ok, detail = same_pixels(committed, keep)
-        return ok, detail
+        return compare_render(committed, keep)
     finally:
         for f, k in saved:
             shutil.copy2(k, f)
@@ -252,10 +291,16 @@ def main():
                   ok, detail)
 
     print()
+    if skipped:
+        print("%d check(s) not comparable on this platform:" % len(skipped))
+        for s_ in skipped:
+            print("   %s" % s_)
+        print()
     if failures:
         print("%d check(s) FAILED: %s" % (len(failures), "; ".join(failures)))
         return 1
-    print("all checks passed")
+    print("all checks passed%s"
+          % (" (%d not comparable here)" % len(skipped) if skipped else ""))
     return 0
 
 
