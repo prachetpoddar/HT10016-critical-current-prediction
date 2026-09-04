@@ -81,7 +81,10 @@ plt = None
 
 def _report_font():
     """Say which font family was actually used, so nobody has to interpret the
-    findfont warnings to know whether the deposited typeface changed."""
+    findfont warnings to know whether the deposited typeface changed.
+
+    Returns the family name, or None if nothing from the list resolved.
+    """
     from matplotlib import font_manager
     for want in RC_PARAMS["font.family"]:
         try:
@@ -93,9 +96,43 @@ def _report_font():
         if want not in ("Helvetica", "Arial"):
             print("WARNING: the deposited figure was drawn in %s, not Helvetica "
                   "or Arial. Do not commit this render." % want)
-        return
+        return want
     print("WARNING: no family from the list resolved; matplotlib fell back to "
           "its default. Do not commit this render.")
+    return None
+
+
+def _write_stamp(df, family):
+    """Record the ratios this render displays, but only for a valid render.
+
+    analysis/check_figures.py compares this stamp against the deposit and fails
+    when they differ, which is how a stale Figure 3 is caught. Writing it by
+    hand is how it silently stops matching the PNG beside it, so the renderer
+    writes it, and only when the typeface is the deposited one. A substituted
+    font leaves the stamp alone, so a render that must not be committed cannot
+    also certify itself.
+    """
+    import json
+    if family not in ("Helvetica", "Arial"):
+        print("stamp not written: %s is not the deposited typeface, so this "
+              "render should not be committed" % (family or "the fallback"))
+        return
+    dec = compute_variance_decomposition(df)
+    per = dec[dec["scope"] == "per_substructure"]
+    drawn = {r.substructure: round(float(r.ratio_between_total), 4)
+             for _, r in per.iterrows()
+             if r.substructure in PANEL_SUBSTRUCTURES
+             and r.ratio_between_total == r.ratio_between_total}
+    STAMP.write_text(json.dumps(
+        {"drawn_from": drawn,
+         "font": family,
+         "note": ("Ratios the committed figures/manuscript_figure_3.png "
+                  "displays. Written by analysis/figure_4_source.py on a "
+                  "render in the deposited typeface, and checked against the "
+                  "deposit by analysis/check_figures.py. Do not edit by "
+                  "hand.")}, indent=1) + "\n")
+    print("stamp written: %s" % ", ".join(
+        "%s %.4f" % (k, v) for k, v in sorted(drawn.items())))
 
 
 def _need_plt():
@@ -114,6 +151,7 @@ ROOT = HERE.parent
 # so the deposited figure could not be regenerated from the deposited data.
 JC_ANCHOR_CSV = ROOT / "data" / "phase_3_p31_jc_anchor_per_paper.csv"
 OUT = ROOT / "figures" / "manuscript_figure_3.png"
+STAMP = ROOT / "figures" / "manuscript_figure_3.stamp.json"
 
 RC_PARAMS = {
     "font.family": ["Helvetica", "Nimbus Sans", "Arial", "Liberation Sans", "DejaVu Sans"],
@@ -128,6 +166,12 @@ RC_PARAMS = {
     "xtick.direction": "in",
     "ytick.direction": "in",
 }
+
+# The three families Figure 3 draws, in panel order. Hoisted to module scope
+# so _write_stamp records exactly what was plotted rather than a second
+# list that could drift from it.
+PANEL_SUBSTRUCTURES = ["iron_chalcogenide_11", "iron_pnictide_122",
+                    "conventional_AlB2"]
 
 SUB_COLORS = {
     "iron_chalcogenide_11": "#1B9E77",
@@ -441,8 +485,7 @@ def main():
 
     plt = _need_plt()
     fig, axes = plt.subplots(1, 3, figsize=(7.01, 3.3), sharey=True)
-    subs_ordered = ["iron_chalcogenide_11", "iron_pnictide_122",
-                    "conventional_AlB2"]
+    subs_ordered = PANEL_SUBSTRUCTURES
 
     for i, (ax, sub) in enumerate(zip(axes, subs_ordered)):
         sub_df = df[df["substructure"] == sub].copy()
@@ -473,7 +516,8 @@ def main():
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.97])
     plt.savefig(OUT, dpi=300, bbox_inches="tight")
-    _report_font()
+    family = _report_font()
+    _write_stamp(df, family)
     print(f"wrote {OUT}")
 
 
