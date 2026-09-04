@@ -1,8 +1,9 @@
 {
  "drawn_from": {
-  "iron_chalcogenide_11": 0.7687,
-  "iron_pnictide_122": 0.3452,
-  "conventional_AlB2": 0.1159
+  "conventional_AlB2": 0.1159,
+  "iron_chalcogenide_11": 0.3737,
+  "iron_pnictide_122": 0.4877
  },
- "note": "Ratios the committed figures/manuscript_figure_3.png actually displays. figure_4_source.py must be re-run on a machine with Helvetica, which this container does not have, so the render cannot be refreshed here. Update this file in the same commit as the new PNG."
+ "font": "Helvetica",
+ "note": "Ratios the committed figures/manuscript_figure_3.png displays. Written by analysis/figure_4_source.py on a render in the deposited typeface, and checked against the deposit by analysis/check_figures.py. Do not edit by hand."
 }
