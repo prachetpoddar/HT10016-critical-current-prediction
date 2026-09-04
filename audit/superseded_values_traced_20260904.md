@@ -92,11 +92,12 @@ exactly, gives 0.751, 0.929, 1.094 and 2.622." The p47 column is the first
 sentence. The second is a different predictor, and the two are stated as a
 contrast.
 
-The real defect is that no deposited file reproduces 0.751, 0.929, 1.094 or
-2.622. They are unreproducible rather than stale, which is a heavier problem and
-needs the substructure-median field-axis run recovered or the sentence cut. The
-checker's `\b1\.094\b` pattern is a false positive as written and should be
-removed.
+~~The real defect is that no deposited file reproduces 0.751, 0.929, 1.094 or
+2.622.~~ **Retracted, see the section on the two remaining clusters below.** The
+four reproduce exactly from the deposited tables, and
+`analysis/verify_redline_numbers.py` was already asserting them when this was
+written. The checker's `\b1\.094\b` pattern is a false positive as written and
+is removed.
 
 ### 6. "leaving 123 compounds reported" (manuscript, Table IV caption)
 Stale, and it exposes a stale deposited table.
@@ -397,3 +398,102 @@ candidates" also holds. `Fe1Te1` and `Fe1Se0.05Te0.95` carry nine grid tuples
 each; six of the eighteen carry a computed value the screen acts on, three per
 compound, and the other twelve are refused for a target temperature above the
 transition temperature with no value at all.
+
+
+## The last two clusters
+
+### The four that were called unreproducible: 0.751, 0.929, 1.094, 2.622
+
+**This ledger was wrong about them, and the code that shows it was already in
+the repository when the claim was written.**
+
+They are the field-axis leave-one-compound-out error with sample-form
+conditioning switched off, which is
+`analysis/compound_leave_one_out.loo(frame, "beta", False)`. The conditioned
+half of the same contrast, `loo(frame, "beta", True)`, is the deposited p47
+column. Run today on the current deposit:
+
+| substructure | conditioned | substructure median |
+|---|---:|---:|
+| conventional_AlB2 | 0.7532 | 0.7506 |
+| iron_pnictide_122 | 0.9729 | 0.9295 |
+| iron_chalcogenide_11 | 1.0935 | 1.0943 |
+| iron_pnictide_1111 | 2.5713 | 2.6222 |
+
+Rounded, that is the manuscript's 0.753, 0.973, 1.093, 2.571 and its 0.751,
+0.929, 1.094, 2.622, all eight exact.
+`analysis/verify_redline_numbers.py` lines 87 to 97 has asserted the pair since
+`2d0fb33`, a day before this ledger claimed they had no source.
+
+The real gap was narrower and is now closed. `run()` in
+`compound_leave_one_out.py` called `loo` with `form_conditioned=True` hardcoded
+on the field axis, so only the conditioned column was ever written to
+`data/phase_3_p47_compound_leave_out_MAE.csv`. The unconditioned run existed as
+a code path and an assertion and in no file, which is why it read as unsourced.
+It is now two more columns in that CSV, `substructure_median_loo_mae` and
+`substructure_median_loo_median_residual`, and all eight values are bound in
+`analysis/check_claims_against_deposit.py`, which takes it from 62 bound
+numbers to 70. The bindings were demonstrated to fire: changing 2.622 to 2.900
+in the deposit makes the check report the disagreement.
+
+A defect in the checker turned up while adding them. Its patterns capture with
+`([\d.]+)`, which at the end of a sentence swallows the full stop, so a
+document reading "2.571." disagreed with a deposit reading 2.571. The captured
+token now has a trailing period stripped, which fixes every pattern rather than
+the one that exposed it.
+
+### The field-scale audit, three documents and three readings
+
+The supplement's readings have a generator and the manuscript's have none.
+
+`analysis/recompute_supplement_numbers.py` computes them, and its own docstring
+says why it exists: "Both were static numbers with no generator, which is how
+they came to describe a cohort that no longer exists." Its results were carried
+into the documents by `analysis/apply_manuscript_edits.py`, but the two edits
+sit in `SUPP_EDITS` with no counterpart in `MS_EDITS`. The supplement was
+corrected and the manuscript and the letter were not. That is the whole
+mechanism.
+
+| quantity | manuscript and letter | supplement | recomputes here |
+|---|---|---|---|
+| median measured maximum over assigned scale | 0.86 | 0.80 | needs the extraction dataset |
+| curves above 0.9 | 15 of 77 | 15 of 94 | needs the extraction dataset |
+| three-family field-axis curves | 80 | 77 | **77** |
+| irreversibility field or unlabelled | 31 of 80 | 30 of 77 | **30 of 77** |
+| taking their scale from the eight audited papers | 54 of 80, 68% | 54 of 80, 68% | **56 of 77, 73%** |
+
+The 80 is not recoverable. No deposited fit table produces it and neither does
+any of the six pre-correction snapshots in `audit/`; every one gives 77 for the
+three dispatched families. The manuscript and the letter now carry the
+supplement's numbers.
+
+One caveat is recorded rather than hidden. The exposure ratio needs the
+per-point extraction dataset, which this deposit does not carry, so 0.80 and 15
+of 94 cannot be recomputed here. Reconstructing that dataset from the per-paper
+extraction files reproduces the median exactly at 0.800 and matches 90 of the
+94 curves, giving 14 of 90; the four unmatched curves are the whole difference.
+The irreversibility split does not depend on it and recomputes from deposited
+tables alone.
+
+The eight-paper count was wrong in both documents and is now recomputable.
+`audit/dual_model_critical_field_agreement.csv` is deposited, sixteen papers
+with a verdict each, and the eight that matter are the AGREE_NO_DATA rows where
+both extraction models independently found the paper prints no critical field.
+`recompute_supplement_numbers.py` joins it to the fit table under a rule stated
+in the code, stripping the publisher prefix the fit table's `arxiv_id` carries
+and the audit table does not. Seven of the eight contribute curves, 56 of 77,
+73%. `physc.2011.05.018` contributes none.
+
+`recompute_supplement_numbers.py` also no longer requires `--source`. The
+classification and the eight-paper count read deposited tables only, and
+demanding an argument nobody can supply made them unreachable.
+
+## Still open, and not from the checker
+
+`analysis/verify_redline_numbers.py` reports six numbers in
+`audit/manuscript_redline_20260903.md` that no longer match the deposit: papers
+62 against 64, compounds 38 against 39, extracted points 4146 against 4211,
+anchors 96 against 103, Figure 3 records 56 against 59, and markers 37 against
+41. The deposit and the manuscript agree on all six; it is the redline that
+describes the superseded cohort. That is an internal audit note rather than a
+submitted artifact, so it is recorded here rather than repaired.

@@ -48,6 +48,17 @@ import pandas as pd
 DATA = "data"
 
 
+def _loo(df, substructure, column):
+    """One cell of data/phase_3_p47_compound_leave_out_MAE.csv."""
+    row = df[df.substructure == substructure]
+    if len(row) != 1 or column not in df.columns:
+        raise SystemExit("phase_3_p47_compound_leave_out_MAE.csv has no single "
+                         "%r row with a %r column; rerun "
+                         "analysis/compound_leave_one_out.py"
+                         % (substructure, column))
+    return float(row.iloc[0][column])
+
+
 def quantities():
     """Every quantity the deposit can compute, with the words used around it.
 
@@ -171,6 +182,37 @@ def quantities():
          float((fh.loc[~same, "Hc2_T_default"]
                 / fh.loc[~same, "Hc2_T_used"]).median()),
          r"median factor of ([\d.]+) smaller", "%.1f"),
+        # The two field-axis leave-one-compound-out runs the manuscript states
+        # as a contrast. Only the conditioned four were ever in a deposited
+        # file; the substructure-median four were a code path and an assertion
+        # in analysis/verify_redline_numbers.py, which is why they read as
+        # unsourced. They are now a column, and both sets are bound here so a
+        # reader does not have to take either on trust.
+        ("field LOO conditioned, MgB2", _loo(loo, "conventional_AlB2",
+                                             "compound_loo_mae"),
+         r"gives ([\d.]+) for MgB2-class", "%.3f"),
+        ("field LOO conditioned, 122", _loo(loo, "iron_pnictide_122",
+                                            "compound_loo_mae"),
+         r"([\d.]+) for iron pnictide 122-type and", "%.3f"),
+        ("field LOO conditioned, chalcogenide",
+         _loo(loo, "iron_chalcogenide_11", "compound_loo_mae"),
+         r"and ([\d.]+) for iron chalcogenide 11-type", "%.3f"),
+        ("field LOO conditioned, 1111", _loo(loo, "iron_pnictide_1111",
+                                             "compound_loo_mae"),
+         r"iron pnictide 1111-type at ([\d.]+)", "%.3f"),
+        ("field LOO substructure median, MgB2",
+         _loo(loo, "conventional_AlB2", "substructure_median_loo_mae"),
+         r"protocol exactly, gives ([\d.]+),", "%.3f"),
+        ("field LOO substructure median, 122",
+         _loo(loo, "iron_pnictide_122", "substructure_median_loo_mae"),
+         r"protocol exactly, gives [\d.]+, ([\d.]+),", "%.3f"),
+        ("field LOO substructure median, chalcogenide",
+         _loo(loo, "iron_chalcogenide_11", "substructure_median_loo_mae"),
+         r"protocol exactly, gives [\d.]+, [\d.]+, ([\d.]+) and", "%.3f"),
+        ("field LOO substructure median, 1111",
+         _loo(loo, "iron_pnictide_1111", "substructure_median_loo_mae"),
+         r"protocol exactly, gives [\d.]+, [\d.]+, [\d.]+ and ([\d.]+),",
+         "%.3f"),
         ("tier 1 fits", int((tiers == "Tier_1").sum()),
          r"(\d+) of the \d+ fits resolve their scale", "%d"),
         ("tier fits total", len(fh),
@@ -244,7 +286,13 @@ def main():
         for qname, value, pat, fmt in Q:
             want = fmt % value
             for m in re.finditer(pat, text):
-                got = m.group(1)
+                # A pattern ending at a sentence boundary captures the full
+                # stop with the number, because [\d.]+ does not know a period
+                # ends a sentence. "2.571." then disagrees with 2.571 and the
+                # check reports a defect that is its own. No number here ends
+                # in a period, so stripping one is safe and fixes every
+                # pattern rather than the one that happened to expose it.
+                got = m.group(1).rstrip(".")
                 spans.add((m.start(1), m.end(1)))
                 if got == want:
                     bound += 1

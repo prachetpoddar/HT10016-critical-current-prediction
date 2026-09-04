@@ -17,6 +17,8 @@ import argparse
 import collections
 import csv
 import os
+
+import pandas as pd
 import re
 import statistics as st
 
@@ -89,6 +91,38 @@ def exposure(source):
     print("   ratio above 0.9                           %d of %d"
           % (sum(1 for x in ratios if x > 0.9), len(ratios)))
 
+    sel = classify()
+
+    q, tot = 0, 0
+    for _i, row in sel.iterrows():
+        k = (row.arxiv_id, row.compound_formula, row.sample_identifier,
+             round(float(row.fixed_axis_value), 3))
+        H = grp.get(k)
+        if not H:
+            continue
+        tot += 1
+        try:
+            dflt = float(row.Hc2_T_default)
+        except (TypeError, ValueError):
+            continue
+        used = [h for h in H if h < dflt]
+        if len(used) >= 2 and (max(used) - min(used)) / dflt > 0.3:
+            q += 1
+    print("   clearing the 0.3 span against Hc2,0       %d of %d" % (q, tot))
+
+
+AGREEMENT = os.path.join("audit", "dual_model_critical_field_agreement.csv")
+
+
+def classify():
+    """How the three dispatched families' field-axis curves get their scale.
+
+    This reads deposited tables only, so it runs whether or not the extraction
+    dataset behind the exposure ratio is available. Splitting it out of
+    exposure() is what makes that possible: it was the only part of the
+    function that did not need --source, and requiring an argument nobody can
+    supply made it unreachable.
+    """
     import sys
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import compound_leave_one_out as clo
@@ -112,37 +146,82 @@ def exposure(source):
         print("   %-41s %d" % (k, v))
     print("   irreversibility field or unlabelled       %d of %d"
           % (lab["irreversibility field"] + lab["unlabelled"], len(sel)))
+    return sel
 
-    q, tot = 0, 0
-    for _i, row in sel.iterrows():
-        k = (row.arxiv_id, row.compound_formula, row.sample_identifier,
-             round(float(row.fixed_axis_value), 3))
-        H = grp.get(k)
-        if not H:
-            continue
-        tot += 1
-        try:
-            dflt = float(row.Hc2_T_default)
-        except (TypeError, ValueError):
-            continue
-        used = [h for h in H if h < dflt]
-        if len(used) >= 2 and (max(used) - min(used)) / dflt > 0.3:
-            q += 1
-    print("   clearing the 0.3 span against Hc2,0       %d of %d" % (q, tot))
+
+def eight_paper_exposure():
+    """How many field-axis curves take their scale from a paper the dual-model
+    audit found carries no critical-field data at all.
+
+    This used to be listed as not recomputable because the audit's paper list
+    was not deposited. It is deposited now, as
+    audit/dual_model_critical_field_agreement.csv, sixteen papers with a
+    verdict each; the eight that matter are the AGREE_NO_DATA rows, where both
+    extraction models independently reported that the paper prints no critical
+    field.
+
+    The join rule, stated here rather than left implicit: the fit table's
+    arxiv_id carries a publisher prefix that the audit table does not, so the
+    prefix is stripped before matching. Nothing else is transformed, and the
+    seven papers that contribute curves all match exactly.
+    """
+    import compound_leave_one_out as clo
+    if not os.path.exists(AGREEMENT):
+        print("\n   %s is missing, so the eight-paper count is not "
+              "recomputable" % AGREEMENT)
+        return
+    ag = pd.read_csv(AGREEMENT)
+    eight = set(ag.loc[ag.verdict == "AGREE_NO_DATA", "paper"])
+    _bt, fr = clo.load(DATA)
+    sel = fr[fr.substructure.isin(THREE)].copy()
+
+    def strip(a):
+        t = str(a)
+        for pre in ("elsevier_", "springer_", "iop_"):
+            t = t.replace(pre, "")
+        return t
+
+    sel["key"] = sel.arxiv_id.map(strip)
+    hit = sel[sel.key.isin(eight)]
+    print("\nthe dual-model critical-field audit")
+    print("   papers audited                            %d" % len(ag))
+    print("   reporting no critical-field data          %d" % len(eight))
+    print("   three-family curves taking their scale")
+    print("      from one of those papers               %d of %d, %.0f%%"
+          % (len(hit), len(sel), 100.0 * len(hit) / len(sel)))
+    for k, n in hit.key.value_counts().items():
+        print("         %-38s %d" % (k, n))
+    unseen = sorted(eight - set(hit.key))
+    if unseen:
+        print("   audited papers contributing no curve      %s"
+              % ", ".join(unseen))
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--source", required=True,
+    ap.add_argument("--source",
                     help="the wide-to-long extraction dataset behind the "
-                         "field-axis fits (agent2_dataset_v3_2_2B.csv)")
+                         "field-axis fits (agent2_dataset_v3_2_2B.csv). Not in "
+                         "this deposit; without it the exposure ratio is "
+                         "skipped and the rest still runs.")
     args = ap.parse_args()
     archive_size()
-    exposure(args.source)
-    print("\nNot recomputable here: the count of curves taking their scale from "
-          "the eight papers of the dual-model critical-field audit, whose list "
-          "is not deposited; and the count qualifying after the magnetic-field "
-          "unit corrections, which needs the pre-correction extraction dataset.")
+    if args.source:
+        exposure(args.source)
+    else:
+        # The ratio needs the per-point extraction dataset, which this deposit
+        # does not carry. Saying so is better than requiring an argument nobody
+        # can supply and thereby making the parts that DO recompute
+        # unreachable: the three-family count, the irreversibility split and
+        # the eight-paper exposure all read deposited tables only.
+        print("\nscale of the exposure")
+        print("   skipped: pass --source with the extraction dataset behind "
+              "the field-axis fits")
+        classify()
+    eight_paper_exposure()
+    print("\nNot recomputable here: the count qualifying after the "
+          "magnetic-field unit corrections, which needs the pre-correction "
+          "extraction dataset.")
 
 
 if __name__ == "__main__":

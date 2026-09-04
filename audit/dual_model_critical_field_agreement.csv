@@ -1,0 +1,17 @@
+paper,n_pages,verdict,reason,n_a,n_b,n_matched,fraction_matched
+10.1016_j.jallcom.2023.170146,3,AGREE_NO_DATA,both report no critical-field data,0,0,0,0.0
+10.1016_j.jallcom.2023.170384,10,DISAGREE,one model failed,0,0,0,0.0
+10.1016_j.matchemphys.2023.128348,8,AGREE_NO_DATA,both report no critical-field data,0,0,0,0.0
+10.1016_j.matpr.2019.05.078,4,AGREE_NO_DATA,both report no critical-field data,0,0,0,0.0
+10.1016_j.mtphys.2022.100783,5,AGREE_NO_DATA,both report no critical-field data,0,0,0,0.0
+10.1016_j.phpro.2012.03.421,4,DISAGREE,only 27% of points agree,10,11,3,0.273
+10.1016_j.phpro.2015.06.160,6,DISAGREE,existence verdict differs,0,0,0,0.0
+10.1016_j.physb.2025.417755,5,DISAGREE,existence verdict differs,0,0,0,0.0
+10.1016_j.physc.2009.11.051,3,AGREE_NO_DATA,both report no critical-field data,0,0,0,0.0
+10.1016_j.physc.2010.03.003,3,DISAGREE,only 44% of points agree,15,16,7,0.438
+10.1016_j.physc.2010.05.048,3,AGREE_NO_DATA,both report no critical-field data,0,0,0,0.0
+10.1016_j.physc.2011.05.018,5,AGREE_NO_DATA,both report no critical-field data,0,0,0,0.0
+10.1016_j.physc.2013.04.060,6,AGREE_NO_DATA,both report no critical-field data,0,0,0,0.0
+10.1007_s10854-026-16566-9,5,DISAGREE,quantity differs: H_irr vs Hc2,0,0,0,0.0
+10.1038_s41598-022-24044-5,5,DISAGREE,one model failed,0,0,0,0.0
+10.1038_s41598-025-24806-x,5,DISAGREE,only 36% of points agree,28,17,10,0.357

@@ -286,7 +286,15 @@ def run(base, iters, seed, verbose=True):
         if s.empty:
             continue
         mae, med, _fo, _r = loo(s, "beta", True)
-        out["field"][name] = (mae, med, s.compound_formula.nunique(), len(s))
+        # The same predictor with sample-form conditioning switched off. The
+        # manuscript states both, as a contrast, and only the conditioned half
+        # was ever written to a file: the unconditioned run existed as a code
+        # path and an assertion in analysis/verify_redline_numbers.py and
+        # nowhere else, which is why its four values read as unsourced. They
+        # are not; they are just undeposited.
+        med_mae, med_med, _fo2, _r2 = loo(s, "beta", False)
+        out["field"][name] = (mae, med, s.compound_formula.nunique(), len(s),
+                              med_mae, med_med)
         if verbose:
             dep = DEPOSITED_H.get(name, (float("nan"),))[0]
             note = "   supersedes the deposited %.4f" % SUPERSEDED_H[name] \
@@ -294,6 +302,14 @@ def run(base, iters, seed, verbose=True):
             print("   %-22s %5d %5d %9.4f %10.4f   %9.4f%s"
                   % (name, s.compound_formula.nunique(), len(s), mae, med,
                      dep, note))
+    if verbose:
+        print("\nfield axis, substructure-median predictor, the contrast the "
+              "manuscript states\n")
+        print("   %-22s %9s %10s" % ("substructure", "MAE", "median"))
+        for name in FAMILIES_H:
+            if name in out["field"]:
+                print("   %-22s %9.4f %10.4f"
+                      % (name, out["field"][name][4], out["field"][name][5]))
 
     cond = per_paper_validation(f, 5000, seed, conditioned=True)
     pool = per_paper_validation(f, 5000, seed, conditioned=False)
@@ -490,9 +506,11 @@ def main():
     for name in FAMILIES_H:
         if name not in r["field"]:
             continue
-        mae, med, nc, nf = r["field"][name]
+        mae, med, nc, nf, med_mae, med_med = r["field"][name]
         hrows.append(dict(substructure=name, n_compounds=nc, n_fits=nf,
-                          compound_loo_mae=mae, compound_loo_median_residual=med))
+                          compound_loo_mae=mae, compound_loo_median_residual=med,
+                          substructure_median_loo_mae=med_mae,
+                          substructure_median_loo_median_residual=med_med))
     pd.DataFrame(hrows).to_csv(OUT_H, index=False)
 
     trows = []
