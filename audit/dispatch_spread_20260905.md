@@ -194,3 +194,64 @@ Running the two gate scripts rewrites `audit/field_window_gate.csv` and
 `audit/temperature_window_gate.csv` in place. A first pass committed them in a
 state describing the regenerated table while the shipped prediction table was
 the deposited one. Both are restored.
+
+## Where the regeneration diverges, assessed exhaustively
+
+Recorded 2026-09-05. Script `analysis/where_regeneration_diverges.py`. Asked
+before deciding what to disclose, and the answer narrows the disclosure a long
+way.
+
+### The released file against the generator that shipped with it
+
+Same 2151 rows, aligned one to one, on the same tables, with the two gate
+scripts left off because they postdate the release.
+
+| what differs | rows | size |
+|---|---:|---|
+| `sample_form_commitment`, wire to blank | 18 | |
+| `predictor_method_scope`, conditional to aggregate | 18 | |
+| `predicted_log_Jc` on those 18 rows | 18 | median 0.266, max 0.328 dex |
+| `predicted_log_Jc` on every other row | 337 | median 0.0007, max 0.0138 dex |
+
+Nothing else. Every anchor, every provenance tier, every refusal code, the
+candidate list, the row count: identical. The 337 are the bootstrap draw and
+none exceeds 0.014 dex.
+
+**So the released prediction file is the generator's own output with exactly the
+wire commitments removed and those eighteen rows recomputed on the aggregate
+predictor.** It is one paper wide. `matpr.2019.05.078` carries two fits whose
+sample form is "wire", wire is in the generator's `ENGINEERED_FORMS`, and the
+commitment path has been in the generator since the release commit and has never
+been edited. Nothing else in the repository writes that column. The released
+file also carries 1206 `single_crystal` commitments, exactly as the generator
+produces them, so the mechanism was working and only this one form was removed.
+
+### The deposit against a regeneration on the current tables
+
+| rows moving more than 0.02 dex | n | max |
+|---|---:|---:|
+| emitted, on the wire records | 4 | 0.218 dex |
+| emitted, anything else | 0 | |
+| refused, temperature-axis only | 141 | 3.80 dex |
+
+The 141 are all `iron_pnictide_122` and all carry `Hc2_unavailable`, so they are
+temperature-axis-only predictions that the dispatch refuses. They move because
+beta_T moved with the withdrawals and the anchor repair. That is the corrections
+working, on rows the paper does not report.
+
+**Among rows the paper does report, four predictions change and all four are the
+wire records.** Everything else emitted is identical or differs by less than
+0.02 dex.
+
+Six candidates also come back, 54 rows from `physc.2010.03.003` and
+`physb.2025.417755`, because the withdrawals were applied by editing the CSV
+while the candidate list is rebuilt from the extraction directory. All 54 are
+refused.
+
+### What this means for the disclosure
+
+The reproduction failure is not diffuse. It is one paper, one sample form,
+eighteen rows, four of them emitted, and it was present in the released file
+before any correction in this revision. The withdrawal-enforcement gap is
+separate, affects no emitted prediction, and is a fixable defect in how a
+withdrawal is applied rather than a defect in a reported number.
