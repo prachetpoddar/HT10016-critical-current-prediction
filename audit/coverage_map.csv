@@ -1,0 +1,63 @@
+identifier,flag,family,field_fits,field_passing,temp_fits,pdf,trace,extraction
+10.1016/j.physc.2013.04.060,Cohort B only (β_H partial),conventional_AlB2,8,8,0,True,True,True
+10.1016/j.jallcom.2023.170146,fully fittable,conventional_AlB2,6,6,0,True,False,True
+10.1016/j.matchemphys.2023.128348,fully fittable,conventional_AlB2,4,4,0,True,True,True
+10.1016/j.matpr.2019.05.078,fully fittable,conventional_AlB2,2,2,0,True,True,True
+10.1016/j.jpcs.2026.113652,Cohort B only (β_H partial),cuprate_BSCCO,6,0,0,True,False,True
+10.1016/j.jallcom.2013.04.183,Cohort B only (β_H partial),cuprate_BSCCO,8,0,0,True,True,True
+10.1038/s41598-025-95932-9,Cohort B only (β_H partial),cuprate_BSCCO,6,0,0,True,False,True
+10.1016/j.ceramint.2024.10.058,Cohort B only (β_H partial),cuprate_LSCO,5,0,0,True,True,True
+10.1016/0921-4534(96)00225-0,Cohort B only (β_H partial),cuprate_RBCO,3,0,0,True,False,True
+10.1016/j.jallcom.2022.165358,Cohort A only (β_T partial),iron_chalcogenide_11,0,0,1,True,False,False
+10.1016/j.mtcomm.2022.103433,Cohort A only (β_T partial),iron_chalcogenide_11,0,0,1,False,False,False
+10.1038/s41598-022-24044-5,Cohort B only (β_H partial),iron_chalcogenide_11,5,0,0,False,False,True
+10.1088/0953-2048_29_3_035013,Cohort B only (β_H partial),iron_chalcogenide_11,7,0,0,False,False,True
+10.1016/j.physc.2016.05.023,Cohort B only (β_H partial),iron_chalcogenide_11,10,0,0,True,False,True
+10.1016/j.cjph.2024.09.042,Cohort B only (β_H partial),iron_chalcogenide_11,7,0,0,True,False,True
+MAGLAB_11_4_2K,Cohort B only (β_H partial),iron_chalcogenide_11,1,0,0,False,False,True
+MAGLAB_11_6K,Cohort B only (β_H partial),iron_chalcogenide_11,1,1,0,False,False,True
+10.1007/s10854-026-16566-9,Cohort B only (β_H partial),iron_chalcogenide_11,12,12,0,False,False,True
+10.1016/j.physc.2010.05.048,Cohort B only (β_H partial),iron_chalcogenide_11,8,8,0,True,True,True
+1108.0407v1,fully fittable,iron_chalcogenide_11,0,0,11,True,True,True
+2511.19058v1,fully fittable,iron_chalcogenide_11,0,0,19,True,True,True
+0907.0147v2,fully fittable,iron_chalcogenide_11,0,0,14,True,False,True
+1002.0248v1,fully fittable,iron_chalcogenide_11,0,0,0,True,False,True
+1104.0477v2,fully fittable,iron_chalcogenide_11,0,0,19,True,True,True
+1111.3923v1,fully fittable,iron_chalcogenide_11,0,0,9,True,True,True
+1611.08455v1,fully fittable,iron_chalcogenide_11,0,0,15,True,True,True
+2110.15577v1,fully fittable,iron_pnictide_122,0,0,0,True,False,True
+1009.4896v1,fully fittable,iron_pnictide_111,0,0,11,True,True,True
+1108.5583v3,fully fittable,iron_pnictide_111,0,0,0,True,False,True
+10.1016/j.jallcom.2023.170384,Cohort B only (β_H partial),iron_pnictide_1111,3,2,0,True,True,True
+MAGLAB_La1111_4_2K,Cohort B only (β_H partial),iron_pnictide_1111,1,0,0,False,False,True
+MAGLAB_Nd1111_10K,Cohort B only (β_H partial),iron_pnictide_1111,1,0,0,False,False,True
+MAGLAB_Nd1111_4_2K,Cohort B only (β_H partial),iron_pnictide_1111,1,0,0,False,False,True
+10.1016/j.physc.2011.02.004,Cohort B only (β_H partial),iron_pnictide_1111,0,0,0,True,False,True
+10.1016/j.physc.2009.05.098,Cohort B only (β_H partial),iron_pnictide_1111,9,8,0,True,False,True
+MAGLAB_Sm1111_4_2K,Cohort B only (β_H partial),iron_pnictide_1111,1,1,0,False,False,True
+2305.10034v1,fully fittable,iron_pnictide_1111,0,0,13,True,False,True
+1003.0946v2,fully fittable,iron_pnictide_1111,0,0,0,True,False,True
+1002.0208v2,fully fittable,iron_pnictide_1111,6,6,17,True,True,True
+2510.10264v1,fully fittable,iron_pnictide_1111,0,0,13,True,True,True
+0806.2839v1,fully fittable,iron_pnictide_1111,0,0,11,True,True,True
+0904.2442v1,fully fittable,iron_pnictide_1111,0,0,0,True,False,True
+10.1016/j.mtphys.2022.100783,Cohort B only (β_H partial),iron_pnictide_122,20,20,0,True,True,True
+MAGLAB_Co122_4_2K,Cohort B only (β_H partial),iron_pnictide_122,1,0,0,False,False,True
+10.1016/j.phpro.2012.03.421,Cohort B only (β_H partial),iron_pnictide_122,1,0,0,True,False,True
+10.1016/j.physc.2009.11.051,Cohort B only (β_H partial),iron_pnictide_122,8,8,0,True,True,True
+10.1016/j.phpro.2015.06.160,Cohort B only (β_H partial),iron_pnictide_122,6,6,0,True,True,True
+MAGLAB_Ni122_4_2K,Cohort B only (β_H partial),iron_pnictide_122,1,1,0,False,False,True
+MAGLAB_P122_4_2K,Cohort B only (β_H partial),iron_pnictide_122,1,1,0,False,False,True
+0903.0004v2,fully fittable,iron_pnictide_122,0,0,15,True,True,True
+0906.0444v1,fully fittable,iron_pnictide_122,0,0,11,True,True,True
+1109.5479v1,fully fittable,iron_pnictide_122,0,0,0,True,False,True
+1502.05345v1,fully fittable,iron_pnictide_122,0,0,18,True,True,True
+1612.02839v1,fully fittable,iron_pnictide_122,0,0,0,True,False,True
+1801.05074v1,fully fittable,iron_pnictide_122,0,0,0,True,False,True
+1802.09868v1,fully fittable,iron_pnictide_122,0,0,0,True,False,True
+2012.13723v3,fully fittable,iron_pnictide_122,0,0,8,True,False,True
+2207.06629v1,fully fittable,iron_pnictide_122,0,0,17,True,False,True
+2308.10492v1,fully fittable,iron_pnictide_122,0,0,16,True,True,True
+1204.0339v2,fully fittable,iron_pnictide_122,0,0,0,True,False,True
+1903.00866v2,fully fittable,iron_pnictide_122,0,0,21,True,True,True
+2403.19981v1,fully fittable,iron_pnictide_122,0,0,0,True,False,True
