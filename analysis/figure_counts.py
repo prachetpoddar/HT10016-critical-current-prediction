@@ -43,10 +43,19 @@ UPSTREAM = dict(
 # reason for them ever to differ, so they are pinned here and asserted.
 TABLE_I = dict(articles_screened=934, fitted_curve_papers=50,
                fitted_curve_compounds=35, extracted_points=3303,
-               fittable_compounds=20, anchor_rows=96, anchor_papers=32,
+               fittable_compounds=20, anchor_rows=96,
                temperature_axis_fits=257, field_axis_fits_ok=52,
-               field_axis_ok_papers=12, candidate_compounds=183,
-               dispatched_compounds=84)
+               field_axis_ok_papers=12, candidate_compounds=183)
+
+# Two more quantities the figures print that are NOT Table I rows. They were
+# in TABLE_I, and an independent review pointed out that the assertion then
+# claimed Table I says something it does not: "over 32 papers" appears nowhere
+# in the manuscript, and 84 is a Table IV number. They are still pinned, and
+# still checked, under a name that says where they come from.
+PINNED_ELSEWHERE = dict(
+    anchor_papers=32,          # data/phase_3_p31_jc_anchor_per_paper.csv only
+    dispatched_compounds=84,   # Table IV, combined row
+)
 
 # The family label each substructure key carries in the figures. MgB2 is set
 # in mathtext so the 2 subscripts; the others are plain.
@@ -81,7 +90,11 @@ def _p(name):
 def from_deposit():
     """Recompute every deposit-derived count the figures print.
 
-    Read the repaired cohort, which is what Table I reports. The deposited
+    Read the repaired temperature-axis cohort, which is what Table I
+    reports. The anchor table is read as deposited, because Table I's anchor
+    row is the 96 extracted records and Sec. III.F accounts for the 26 the
+    repair withdraws; the repaired anchor file would give 70 over 23 and
+    contradict Table I. The deposited
     tables are still the input for the pre-repair columns elsewhere in the
     audit, but a figure printed beside Table I has to agree with Table I, and
     reading the unrepaired tables here is how Figure 1 came to print 62, 38 and
@@ -100,7 +113,6 @@ def from_deposit():
     a = pd.read_csv(_p("phase_3_p31_jc_anchor_per_paper.csv"))
     prov = pd.read_csv(_p("provenance_table_fitcohort_full.csv"))
     bt = pd.read_csv(_p("phase_3_p44_post_UCLA_beta_T_fits_repaired.csv"))
-    fh = pd.read_csv(_p("phase_3_form3_fits_partial_cohortB_v2.csv"))
     prot = pd.read_csv(os.path.join("audit", "fit_protocol_applied.csv"))
     # Rows the provenance table still counts as contributing. contributes and
     # second_identifier_for_the_same_paper were added by
@@ -205,19 +217,24 @@ def from_deposit():
     # and their check is a typo guard, which is stated rather than implied.
     checks = [(k, out[k]) for k in
               ("fitted_curve_papers", "fitted_curve_compounds",
-               "extracted_points", "anchor_rows", "anchor_papers",
-               "temperature_axis_fits", "field_axis_fits_ok",
-               "field_axis_ok_papers", "candidate_compounds",
-               "dispatched_compounds")]
+               "extracted_points", "anchor_rows", "temperature_axis_fits",
+               "field_axis_fits_ok", "field_axis_ok_papers",
+               "candidate_compounds")]
     checks += [("fittable_compounds", UPSTREAM["fittable_compounds_v321"]),
                ("articles_screened", UPSTREAM["articles_screened"])]
+    elsewhere = [(k, out[k]) for k in PINNED_ELSEWHERE]
     if set(k for k, _ in checks) != set(TABLE_I):
         raise SystemExit("TABLE_I and the checks have drifted apart: %s"
                          % sorted(set(TABLE_I) ^ set(k for k, _ in checks)))
+    if set(k for k, _ in elsewhere) != set(PINNED_ELSEWHERE):
+        raise SystemExit("PINNED_ELSEWHERE and its checks have drifted "
+                         "apart")
     bad = ["%s: %s computed, %s in Table I" % (k, v, TABLE_I[k])
            for k, v in checks if v != TABLE_I[k]]
+    bad += ["%s: %s computed, %s pinned" % (k, v, PINNED_ELSEWHERE[k])
+            for k, v in elsewhere if v != PINNED_ELSEWHERE[k]]
     if bad:
-        raise SystemExit("Figure 1 would contradict Table I:\n   "
+        raise SystemExit("the figures would contradict the documents:\n   "
                          + "\n   ".join(bad))
     return out
 

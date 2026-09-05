@@ -52,7 +52,8 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox    # noqa: E402
 import matplotlib.image as mpimg                                # noqa: E402
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from figure_counts import REFUSAL_LABEL, from_deposit, UPSTREAM                # noqa: E402
+from figure_counts import REFUSAL_LABEL, from_deposit, UPSTREAM
+from figure_layout import Layout                # noqa: E402
 
 _logging.getLogger("matplotlib.font_manager").setLevel(_logging.ERROR)
 
@@ -89,17 +90,17 @@ ax.add_patch(FancyBboxPatch((0, 0), 152, 105, boxstyle="square,pad=0",
                             facecolor=CANVAS, edgecolor="none", zorder=0))
 
 
+L = Layout(fig, ax)
+
+
 def box(x, y, w, h, fc, ec="#9A9A9A", lw=0.9, r=0.9, z=2, ls="-"):
-    ax.add_patch(FancyBboxPatch(
-        (x, y), w, h, boxstyle="round,pad=0,rounding_size=%.2f" % r,
-        facecolor=fc, edgecolor=ec, linewidth=lw, zorder=z, linestyle=ls))
+    L.box(x, y, w, h, fc, ec=ec, lw=lw, r=r, z=z, ls=ls)
 
 
 def txt(x, y, s, size=7.2, weight="normal", color=INK, ha="center",
         va="center", z=5, style="normal", rot=0):
-    ax.text(x, y, s, fontsize=size, fontweight=weight, color=color, ha=ha,
-            va=va, zorder=z, style=style, linespacing=1.35, rotation=rot,
-            rotation_mode="anchor")
+    L.txt(x, y, s, size=size, weight=weight, color=color, ha=ha, va=va, z=z,
+          style=style, rot=rot)
 
 
 def logo(name, x, y, zoom):
@@ -149,10 +150,10 @@ txt(47.5, 86.0, "2.2M+ structural records", size=7.4)
 box(5.5, 75.5, 27, 8.2, BLUE, ec=BLUE_E)
 txt(19, 82.2, "3DSC canonical cohort", size=8.2, weight="bold")
 logo("3dsc", 9.8, 78.4, 0.26)
-txt(25.0, 79.6, "%d fittable on both axes;"
-    % UPSTREAM["fittable_compounds_v321"], size=7.3)
-txt(25.0, 77.3, "%d field-axis fits admitted" % C["field_axis_fits_ok"],
-    size=7.3)
+txt(23.2, 79.6, "%d fittable on both axes;"
+    % UPSTREAM["fittable_compounds_v321"], size=6.9)
+txt(23.2, 77.3, "%d field-axis fits admitted" % C["field_axis_fits_ok"],
+    size=6.9)
 box(33.5, 75.5, 27, 8.2, BLUE, ec=BLUE_E)
 txt(47, 82.2, "Compositional features", size=8.2, weight="bold")
 logo("magpie", 37.8, 78.4, 0.26)
@@ -160,8 +161,8 @@ txt(52.5, 79.6, "Magpie descriptors;", size=7.3)
 txt(52.5, 77.3, "classifier inputs", size=7.3)
 
 # EXTRACTION
-box(4, 47, 58, 25, TEAL, ec="#6FA48D", r=1.0)
-txt(33, 71.4, "EXTRACTION", size=10.5, weight="bold")
+box(4, 47, 58, 25.6, TEAL, ec="#6FA48D", r=1.0)
+txt(33, 71.2, "EXTRACTION", size=10.5, weight="bold")
 box(5.5, 59.5, 55, 9.5, SALMON, ec=SALMON_E)
 txt(33, 67.4, "Vision-pass extraction", size=8.6, weight="bold")
 logo("openai", 33, 64.6, 0.26)
@@ -269,7 +270,7 @@ txt(96, 21.8, "with a 95% bootstrap interval and an explicit refusal flag",
 txt(96, 19.4, "%d candidate compounds evaluated, %d receive an emitted target"
     % (C["candidate_compounds"], C["dispatched_compounds"]), size=7.0,
     style="italic", color="#6A5A3A")
-box(73.5, 7.5, 45, 8, AMBER, ec="#DEBB5C")
+box(73.5, 7.2, 45, 8.4, AMBER, ec="#DEBB5C")
 txt(96, 13.8, "Family-level screening curves", size=9.0, weight="bold")
 txt(96, 11.6, "one family curve per grid point; the within-family spread",
     size=7.0)
@@ -294,10 +295,10 @@ txt(65.4, 60.3, "resolved T$_c$ and H$_{c2,0}$ per curve,\n"
     size=6.5, color="#4A4A4A", ha="center", style="italic", rot=72.9)
 arrow(96, 85.2, 96, 84.2, "β$_T$, β$_H$ and log J$_c$,partial per curve",
       lx=97.2, ly=84.7, ha="left", dashed=False, color="#5A5A5A", size=6.3)
-arrow(96, 72.5, 96, 71.4, "family median parameters and the regime label",
+arrow(96, 72.5, 96, 71.4, "family medians and the regime label",
       lx=97.2, ly=71.9, ha="left", dashed=False, color="#5A5A5A", size=6.3)
-arrow(96, 61.3, 96, 57.7, "the validated scope, per family and per axis",
-      lx=97.2, ly=59.4, ha="left", dashed=False, color="#5A5A5A")
+arrow(96, 61.3, 96, 57.7, "the validated scope, per family and axis",
+      lx=97.2, ly=59.4, ha="left", dashed=False, color="#5A5A5A", size=6.3)
 arrow(96, 33, 96, 30.2, "envelopes that survive every gate", lx=97.2,
       ly=31.5, ha="left", dashed=False, color="#5A5A5A")
 # the refusal branch, leaving dispatch explicitly
@@ -312,9 +313,10 @@ txt(127.5, 65.4, "the target is withheld", size=7.0, color="#A83A2E",
 box(125, 84, 25, 11, CREAM, ec="#D8D0A8", r=0.8)
 txt(137.5, 92.6, "Conditioning is a", size=8.0, weight="bold")
 txt(137.5, 90.6, "temperature-axis result", size=8.0, weight="bold")
-txt(137.5, 88.2, "family label accounts for 0.52", size=7.0)
-txt(137.5, 86.4, "of between-paper variance,", size=7.0)
-txt(137.5, 84.8, "permutation p = 0.007", size=7.0)
+txt(137.5, 88.4, "all three assessable families", size=7.0)
+txt(137.5, 86.6, "fall below the screening-grade", size=7.0)
+txt(137.5, 84.8, "threshold on the repaired", size=7.0)
+txt(137.5, 83.0, "257-fit cohort (Sec. III.C)", size=7.0)
 
 box(125, 37, 25, 13, CREAM, ec="#D8D0A8", r=0.8)
 txt(137.5, 47.6, "Field axis not validated", size=8.0, weight="bold")
@@ -339,6 +341,9 @@ for x0, y0, x1, y1 in ((120, 89.5, 125, 89.5), (120, 44, 125, 44),
                                  linewidth=0.9, color="#8A8A6A", zorder=3))
 
 os.makedirs("figures", exist_ok=True)
+n_txt, n_box = L.check()
+print("   %d text runs checked against %d boxes, none overflowing"
+      % (n_txt, n_box))
 fig.savefig("figures/manuscript_figure_2.png", dpi=300,
             facecolor=CANVAS)
 fig.savefig("figures/manuscript_figure_2.pdf", facecolor=CANVAS)
