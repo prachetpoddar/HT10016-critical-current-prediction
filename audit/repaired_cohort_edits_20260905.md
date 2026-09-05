@@ -42,7 +42,16 @@ in that class and the script locates each on every run:
 | supplement | "1.158 over 94 fits from the same 16 papers" | a pooled median and bootstrap interval, both move |
 | supplement | "the 23 compounds whose per-compound aggregate Form 3 fit converges" | re-derived, see below |
 
-**The 23 needs re-deriving, not renumbering.** The supplement defines it as the
+**All seven are recomputed as of 2026-09-05.** The values, and the reasons four
+of them cannot be renumbered but have to be rewritten, are in
+`audit/blocker_statistics_20260905.md`. In short: the temperature errors fall
+by up to a factor of six but the threshold they are compared against is
+absolute and the repairs compress the exponent scale; the field exposure rises
+rather than staying flat; the two Stage 2 arms are different material classes,
+89 percent MgB2 against 73 percent iron-based; and the Form 3 count is 20 of 24
+rather than 23 of 27.
+
+**The 23 needed re-deriving, not renumbering.** The supplement defines it as the
 compounds whose per-compound aggregate Form 3 fit converges. That fit is
 computed by `run_closed_form_fits.py` on `agent2_dataset_v3_2_1.csv`, which
 still contains all eleven withdrawn papers, so the count is drawn from data the
@@ -50,10 +59,15 @@ audit removed. The Table I row carrying it is left untouched until it is
 recomputed, which is why Table I has one row still on the old cohort.
 
 That is a known inconsistency and it is recorded here rather than hidden. Row 5
-of Table I does not yet belong with rows 2, 3, 4, 6 and 7.
+of Table I does not yet belong with rows 2, 3, 4, 6 and 7. The rerun that fixes
+it is `analysis/rerun_closed_form_without_withdrawn.py`, which reproduces the
+deposited Form 3 table first and then removes the eleven withdrawn papers; the
+answer is 20 of 24.
 
 ## What the three documents are, and are not
 
-They carry the corrected census and the disclosure. They are not finished. Seven
-statistics have to be recomputed and written in before anything is sent, and one
-Table I row is still on the pre-withdrawal cohort.
+They carry the corrected census and the disclosure. They are not finished. The
+seven statistics are computed now and none of them is written in yet, and one
+Table I row is still on the pre-withdrawal cohort. Four of the seven passages
+need rewriting rather than renumbering, for the reasons in
+`audit/blocker_statistics_20260905.md`.
