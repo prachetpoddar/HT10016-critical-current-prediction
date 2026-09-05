@@ -228,6 +228,34 @@ def main():
           "a form label must name a form, not the absence of one")
 
     prov = pd.read_csv(os.path.join(DATA, "provenance_table_fitcohort_full.csv"))
+
+    # The manuscript's fitted-curve counts are computed from this table, and
+    # the table still holds the eleven papers withdrawn on 2026-09-03, because
+    # withdrawing a paper never removed its provenance row. The counts below
+    # are therefore pre-withdrawal, and the manuscript needs editing. This is
+    # reported on every run rather than left for someone to notice.
+    if "status" in prov.columns:
+        con = prov[prov.status == "contributing"]
+        dupn = int(con.get("second_identifier_for_the_same_paper",
+                           pd.Series(dtype=bool)).sum())
+        pts = int(pd.to_numeric(con.n_Jc_points, errors="coerce").sum())
+        print()
+        print("   OUTSTANDING MANUSCRIPT EDITS, from the withdrawals")
+        print("   %-28s %10s %10s" % ("quantity", "printed", "correct"))
+        print("   %-28s %10d %10d" % ("fitted curve papers",
+                                      prov.identifier.nunique(),
+                                      len(con) - dupn))
+        print("   %-28s %10d %10d" % ("fitted curve compounds",
+                                      prov.compound.nunique(),
+                                      con.compound.nunique()))
+        print("   %-28s %10d %10d" % ("extracted points",
+                                      int(pd.to_numeric(prov.n_Jc_points,
+                                                        errors="coerce").sum()),
+                                      pts))
+        print("   the checks below still compare the deposit as published "
+              "against the manuscript as written, so they pass; the table "
+              "above is what has to change in both.")
+        print()
     bt = pd.read_csv(os.path.join(DATA, "phase_3_p44_post_UCLA_beta_T_fits.csv"))
     fh = pd.read_csv(os.path.join(DATA, "phase_3_form3_fits_partial_cohortB_v2.csv"))
     fh_ok = fh[fh.physicality == "ok"]

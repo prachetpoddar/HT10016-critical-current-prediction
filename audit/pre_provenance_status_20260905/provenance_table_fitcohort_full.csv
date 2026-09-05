@@ -1,0 +1,63 @@
+identifier,compound,substructure_family,sample_form,Tc_anchor_K,Tc_provenance,Hc2_anchor_T,Hc2_provenance,n_Jc_points,contribution_flag
+10.1016/j.physc.2013.04.060,MgB(2-x)Cx_x_0_0386,conventional_AlB2,wire,39.0,paper-reported (Cohort B extraction),10.5,Tier_1_direct_match_at_4.2K_term_H_irr_Birr,64,Cohort B only (β_H partial)
+10.1016/j.jallcom.2023.170146,MgB2,conventional_AlB2,bulk,39.0,paper-reported (Cohort B extraction),5.0,Tier_1_direct_match_at_10.0K_term_H_irr_Birr,177,fully fittable
+10.1016/j.matchemphys.2023.128348,MgB2,conventional_AlB2,bulk,39.0,paper-reported (Cohort B extraction),3.0,Tier_1_direct_match_at_20.0K_term_H_irr_Birr,20,fully fittable
+10.1016/j.matpr.2019.05.078,MgB2,conventional_AlB2,wire,39.0,paper-reported (Cohort B extraction),2.5,Tier_1_direct_match_at_5.0K_term_Hc2,6,fully fittable
+10.1016/j.jpcs.2026.113652,Bi1.6Pb0.4Sr2Ca2Cu3O10,cuprate_BSCCO,bulk,110.0,paper-reported (Cohort B extraction),100.0,Tier_3_literature_default,36,Cohort B only (β_H partial)
+10.1016/j.jallcom.2013.04.183,Bi2Sr2-xNixCa2Cu3O,cuprate_BSCCO,bulk,110.0,paper-reported (Cohort B extraction),100.0,Tier_3_literature_default,56,Cohort B only (β_H partial)
+10.1038/s41598-025-95932-9,Bi2Sr2CaCu2O8,cuprate_BSCCO,thin_film,85.0,paper-reported (Cohort B extraction),100.0,Tier_3_literature_default,60,Cohort B only (β_H partial)
+10.1016/j.ceramint.2024.10.058,La2SrCuO4,cuprate_LSCO,bulk,38.0,paper-reported (Cohort B extraction),50.0,Tier_3_literature_default,48,Cohort B only (β_H partial)
+10.1016/0921-4534(96)00225-0,YBaCuO,cuprate_RBCO,bulk,92.0,paper-reported (Cohort B extraction),130.0,Tier_3_literature_default,21,Cohort B only (β_H partial)
+10.1016/j.jallcom.2022.165358,FeSe0.5Te0.5_K_doped,iron_chalcogenide_11,not recorded,14.0,paper-reported (v3.2.1 / Cohort A vision pass),,literature catalog (substructure reference; no per-paper extraction),3,Cohort A only (β_T partial)
+10.1016/j.mtcomm.2022.103433,FeSeTe,iron_chalcogenide_11,not recorded,14.5,paper-reported (v3.2.1 / Cohort A vision pass),,literature catalog (substructure reference; no per-paper extraction),3,Cohort A only (β_T partial)
+10.1038/s41598-022-24044-5,FeSe0.5Te0.5,iron_chalcogenide_11,thin_film,14.0,paper-reported (Cohort B extraction),18.0,Tier_1_extrapolated_to_low_T_anchor_14.0K,161,Cohort B only (β_H partial)
+10.1088/0953-2048_29_3_035013,FeSe0.5Te0.5,iron_chalcogenide_11,thin_film,14.0,paper-reported (Cohort B extraction),47.0,Tier_3_literature_default,94,Cohort B only (β_H partial)
+10.1016/j.physc.2016.05.023,FeSe1-xSx,iron_chalcogenide_11,single_crystal,9.0,paper-reported (Cohort B extraction),30.0,Tier_3_literature_default,60,Cohort B only (β_H partial)
+10.1016/j.cjph.2024.09.042,FeSeTe,iron_chalcogenide_11,single_crystal,14.0,paper-reported (Cohort B extraction),47.0,Tier_3_literature_default,47,Cohort B only (β_H partial)
+MAGLAB_11_4_2K,FeSe_Te_doped,iron_chalcogenide_11,thin_film,14.0,paper-reported (Cohort B extraction),29.94,Tier_2_per_substructure_Hirr_ratio_0.7,10,Cohort B only (β_H partial)
+MAGLAB_11_6K,FeSe_Te_doped,iron_chalcogenide_11,thin_film,14.0,paper-reported (Cohort B extraction),26.86,Tier_2_per_substructure_Hirr_ratio_0.7,36,Cohort B only (β_H partial)
+10.1007/s10854-026-16566-9,FeTe0.5Se0.5,iron_chalcogenide_11,single_crystal,14.0,paper-reported (Cohort B extraction),9.2,Tier_1_extrapolated_to_low_T_anchor_11.0K,72,Cohort B only (β_H partial)
+10.1016/j.physc.2010.05.048,FeTeSe,iron_chalcogenide_11,single_crystal,14.0,paper-reported (Cohort B extraction),3.5,Tier_1_direct_match_at_2.0K_term_ambiguous_label,28,Cohort B only (β_H partial)
+1108.0407v1,Fe9Se8,iron_chalcogenide_11,not recorded,8.0,paper-reported (v3.2.1 / Cohort A vision pass),8.0,literature catalog (substructure reference; no per-paper extraction),66,fully fittable
+2511.19058v1,FeSe,iron_chalcogenide_11,not recorded,8.0,paper-reported (v3.2.1 / Cohort A vision pass),17.5,literature catalog (substructure reference; no per-paper extraction),76,fully fittable
+0907.0147v2,Fe2TeSe,iron_chalcogenide_11,not recorded,14.5,paper-reported (v3.2.1 / Cohort A vision pass),50.0,literature catalog (substructure reference; no per-paper extraction),70,fully fittable
+1002.0248v1,Fe2TeSe,iron_chalcogenide_11,not recorded,14.5,paper-reported (v3.2.1 / Cohort A vision pass),50.0,literature catalog (substructure reference; no per-paper extraction),91,fully fittable
+1104.0477v2,Fe2TeSe,iron_chalcogenide_11,not recorded,14.5,paper-reported (v3.2.1 / Cohort A vision pass),50.0,literature catalog (substructure reference; no per-paper extraction),76,fully fittable
+1111.3923v1,Fe2TeSe,iron_chalcogenide_11,not recorded,14.5,paper-reported (v3.2.1 / Cohort A vision pass),50.0,literature catalog (substructure reference; no per-paper extraction),27,fully fittable
+1611.08455v1,Fe2TeSe,iron_chalcogenide_11,not recorded,14.5,paper-reported (v3.2.1 / Cohort A vision pass),50.0,literature catalog (substructure reference; no per-paper extraction),60,fully fittable
+2110.15577v1,KBa(FeAs)4,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),50.0,literature catalog (substructure reference; no per-paper extraction),51,fully fittable
+1009.4896v1,LiFeAs,iron_pnictide_111,not recorded,18.0,paper-reported (v3.2.1 / Cohort A vision pass),17.0,literature catalog (substructure reference; no per-paper extraction),55,fully fittable
+1108.5583v3,LiFeAs,iron_pnictide_111,not recorded,18.0,paper-reported (v3.2.1 / Cohort A vision pass),17.0,literature catalog (substructure reference; no per-paper extraction),30,fully fittable
+10.1016/j.jallcom.2023.170384,LaFeAsO,iron_pnictide_1111,single_crystal,26.0,paper-reported (Cohort B extraction),9.2,Tier_1_direct_match_at_2.0K_term_both_Hc2_and_H_irr,24,Cohort B only (β_H partial)
+MAGLAB_La1111_4_2K,LaFeAsO_F_doped,iron_pnictide_1111,thin_film,26.0,paper-reported (Cohort B extraction),50.25,Tier_2_per_substructure_Hirr_ratio_0.6,14,Cohort B only (β_H partial)
+MAGLAB_Nd1111_10K,NdFeAsO_F_doped,iron_pnictide_1111,thin_film,50.0,paper-reported (Cohort B extraction),115.2,Tier_2_per_substructure_Hirr_ratio_0.6,72,Cohort B only (β_H partial)
+MAGLAB_Nd1111_4_2K,NdFeAsO_F_doped,iron_pnictide_1111,thin_film,50.0,paper-reported (Cohort B extraction),119.15,Tier_2_per_substructure_Hirr_ratio_0.6,10,Cohort B only (β_H partial)
+10.1016/j.physc.2011.02.004,PrFeAsO0.6F0.12,iron_pnictide_1111,polycrystal,51.0,paper-reported (Cohort B extraction),24.4013,Tier_1_paper_Hirr_at_7.0K_arXiv_1002.0208_Eq5,356,Cohort B only (β_H partial)
+10.1016/j.physc.2009.05.098,SmFeAsO0.8F0.2,iron_pnictide_1111,polycrystal,55.0,paper-reported (Cohort B extraction),86.0,Tier_3_literature_default,234,Cohort B only (β_H partial)
+MAGLAB_Sm1111_4_2K,SmFeAsO_F_doped,iron_pnictide_1111,thin_film,55.0,paper-reported (Cohort B extraction),51.3,Tier_2_per_substructure_Hirr_ratio_0.6,44,Cohort B only (β_H partial)
+2305.10034v1,La2FeAs2O,iron_pnictide_1111,not recorded,28.0,paper-reported (v3.2.1 / Cohort A vision pass),10.0,literature catalog (substructure reference; no per-paper extraction),39,fully fittable
+1003.0946v2,Nd2FeAs2O,iron_pnictide_1111,not recorded,51.0,paper-reported (v3.2.1 / Cohort A vision pass),70.0,literature catalog (substructure reference; no per-paper extraction),130,fully fittable
+1002.0208v2,Pr2FeAs2O,iron_pnictide_1111,not recorded,51.0,paper-reported (v3.2.1 / Cohort A vision pass),70.0,literature catalog (substructure reference; no per-paper extraction),119,fully fittable
+2510.10264v1,Pr2FeAs2O,iron_pnictide_1111,not recorded,51.0,paper-reported (v3.2.1 / Cohort A vision pass),70.0,literature catalog (substructure reference; no per-paper extraction),52,fully fittable
+0806.2839v1,Sm2FeAs2O,iron_pnictide_1111,not recorded,55.0,paper-reported (v3.2.1 / Cohort A vision pass),70.0,literature catalog (substructure reference; no per-paper extraction),44,fully fittable
+0904.2442v1,Sm2FeAs2O,iron_pnictide_1111,not recorded,55.0,paper-reported (v3.2.1 / Cohort A vision pass),70.0,literature catalog (substructure reference; no per-paper extraction),11,fully fittable
+10.1016/j.mtphys.2022.100783,"Ba(Fe,Co)2As2",iron_pnictide_122,polycrystal,22.0,paper-reported (Cohort B extraction),4.5,Tier_1_extrapolated_to_low_T_anchor_18.0K,82,Cohort B only (β_H partial)
+MAGLAB_Co122_4_2K,"Ba(Fe,Co)2As2",iron_pnictide_122,thin_film,22.0,paper-reported (Cohort B extraction),39.89,Tier_2_per_substructure_Hirr_ratio_0.6,18,Cohort B only (β_H partial)
+10.1016/j.phpro.2012.03.421,"Ba(Fe,Ru)2As2",iron_pnictide_122,single_crystal,20.0,paper-reported (Cohort B extraction),15.3,Tier_1_extrapolated_to_low_T_anchor_15.0K,6,Cohort B only (β_H partial)
+10.1016/j.physc.2009.11.051,Ba(Fe0.93Co0.07)2As2,iron_pnictide_122,single_crystal,22.0,paper-reported (Cohort B extraction),2.5,Tier_1_direct_match_at_2.0K_term_Hc2,26,Cohort B only (β_H partial)
+10.1016/j.phpro.2015.06.160,BaFe2As2,iron_pnictide_122,single_crystal,20.0,paper-reported (Cohort B extraction),9.0,Tier_1_direct_match_at_17.7K_term_Hc2,24,Cohort B only (β_H partial)
+MAGLAB_Ni122_4_2K,BaFe2_NiAs2,iron_pnictide_122,thin_film,20.0,paper-reported (Cohort B extraction),24.09,Tier_2_per_substructure_Hirr_ratio_0.6,24,Cohort B only (β_H partial)
+MAGLAB_P122_4_2K,BaFe2_PAs2,iron_pnictide_122,thin_film,30.0,paper-reported (Cohort B extraction),20.59,Tier_2_per_substructure_Hirr_ratio_0.6,30,Cohort B only (β_H partial)
+0903.0004v2,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),45,fully fittable
+0906.0444v1,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),88,fully fittable
+1109.5479v1,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),57,fully fittable
+1502.05345v1,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),92,fully fittable
+1612.02839v1,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),57,fully fittable
+1801.05074v1,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),156,fully fittable
+1802.09868v1,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),59,fully fittable
+2012.13723v3,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),48,fully fittable
+2207.06629v1,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),102,fully fittable
+2308.10492v1,Ba(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),60.0,literature catalog (substructure reference; no per-paper extraction),80,fully fittable
+1204.0339v2,BaFeAs2Ru,iron_pnictide_122,not recorded,20.0,paper-reported (v3.2.1 / Cohort A vision pass),30.0,literature catalog (substructure reference; no per-paper extraction),136,fully fittable
+1903.00866v2,K(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),10.0,literature catalog (substructure reference; no per-paper extraction),198,fully fittable
+2403.19981v1,K(FeAs)2,iron_pnictide_122,not recorded,38.0,paper-reported (v3.2.1 / Cohort A vision pass),10.0,literature catalog (substructure reference; no per-paper extraction),65,fully fittable
