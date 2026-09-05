@@ -1,0 +1,22 @@
+{
+  "paper_id": "elsevier_10.1016_j.physc.2013.04.060",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.physc.2013.04.060.pdf",
+  "page": 3,
+  "clip": [0.50, 0.055, 0.99, 0.335],
+  "dpi_scale": 4.0,
+  "open_frame": true,
+  "note": "Fig. 2, 10 K Jc vs B for MgB2 wires with various additives. Both axes as printed: B in tesla, Jc in A/cm2. The 10^6 and 10^2 decades sit outside the walkable rows, so the calibration rests on the three interior decades; the implied frame span is the check.",
+  "x": {"log": false, "label": "mu0H_T", "calibration": "geometry",
+        "geometry": {"first_major": 2.0, "last_major": 14.0, "tick_side": "bottom", "tick_min_len": 5}},
+  "y": {"log": true, "label": "Jc_A_per_cm2", "calibration": "geometry",
+        "geometry": {"first_major": 100000.0, "last_major": 1000.0, "tick_side": "left",
+                     "tick_min_len": 5, "tick_min_count": 3}},
+  "exclude_boxes": [[0.60, 0.00, 0.99, 0.22], [0.00, 0.80, 0.22, 0.99]],
+  "series": [
+    {"name": "Undoped_MgB2_10K",   "temperature_K": 10.0, "rgb": [0, 0, 0],       "tol": 50, "n_bins": 30, "inset": 8},
+    {"name": "SiC_Doped_MgB2_10K", "temperature_K": 10.0, "rgb": [240, 79, 34],   "tol": 70, "n_bins": 30, "inset": 6},
+    {"name": "ZrB2_Doped_MgB2_10K","temperature_K": 10.0, "rgb": [11, 177, 75],   "tol": 70, "n_bins": 30, "inset": 6},
+    {"name": "Ag_Doped_MgB2_10K",  "temperature_K": 10.0, "rgb": [254, 241, 11],  "tol": 80, "n_bins": 30, "inset": 6},
+    {"name": "TiC_Doped_MgB2_10K", "temperature_K": 10.0, "rgb": [45, 54, 149],   "tol": 70, "n_bins": 30, "inset": 6}
+  ]
+}

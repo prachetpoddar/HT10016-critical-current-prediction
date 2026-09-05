@@ -1,0 +1,126 @@
+{
+  "frame_px": {
+    "x_left": 245,
+    "x_right": 1167,
+    "y_top": 0,
+    "y_bottom": 770
+  },
+  "dpi_scale": 4.0,
+  "image_px": [
+    1168,
+    890
+  ],
+  "x_ticks_read": [
+    [
+      2.0,
+      379.388
+    ],
+    [
+      4.0,
+      399.888
+    ],
+    [
+      6.0,
+      420.263
+    ],
+    [
+      8.0,
+      440.763
+    ],
+    [
+      10.0,
+      461.263
+    ],
+    [
+      12.0,
+      481.763
+    ],
+    [
+      14.0,
+      502.263
+    ]
+  ],
+  "y_ticks_read": [
+    [
+      1000.0,
+      195.279
+    ],
+    [
+      10000.0,
+      154.279
+    ],
+    [
+      100000.0,
+      113.404
+    ]
+  ],
+  "geometry_calibration": {
+    "x": {
+      "length_threshold": 8.0,
+      "n_major": 7,
+      "positions": [
+        327.0,
+        409.0,
+        490.5,
+        572.5,
+        654.5,
+        736.5,
+        818.5
+      ],
+      "spacing_px": 81.91666666666667,
+      "uniformity": 0.0017,
+      "tick_direction": "inward",
+      "tick_side": "bottom",
+      "implied_step_per_major": 2.0,
+      "axis_increases_with_pixel": true,
+      "step_is_round": true
+    },
+    "y": {
+      "length_threshold": 8.0,
+      "n_major": 3,
+      "positions": [
+        279.0,
+        442.5,
+        606.5
+      ],
+      "spacing_px": 163.75,
+      "uniformity": 0.00153,
+      "tick_direction": "inward",
+      "tick_side": "left",
+      "implied_step_per_major": -1.0,
+      "axis_increases_with_pixel": false,
+      "step_is_round": true
+    }
+  },
+  "x_fit": {
+    "slope": 0.0976672510610922,
+    "intercept": -35.051598743238586,
+    "log": false,
+    "max_tick_residual_frac": 0.000472
+  },
+  "y_fit": {
+    "slope": -0.02442746193697965,
+    "intercept": 7.7696513257805115,
+    "log": true,
+    "max_tick_residual_frac": 0.000509
+  },
+  "axis_span_from_ticks": {
+    "x": [
+      0.0,
+      22.5123
+    ],
+    "y": [
+      100.235,
+      5050167.5581
+    ]
+  },
+  "n_points": 102,
+  "per_series": {
+    "Undoped_MgB2_10K": 15,
+    "SiC_Doped_MgB2_10K": 22,
+    "ZrB2_Doped_MgB2_10K": 21,
+    "Ag_Doped_MgB2_10K": 23,
+    "TiC_Doped_MgB2_10K": 21
+  },
+  "reprojection_residual_px": 0.005008
+}

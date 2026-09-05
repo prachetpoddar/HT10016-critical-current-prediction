@@ -1,0 +1,90 @@
+{
+  "paper_id": "elsevier_10.1016_j.physc.2013.04.060",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.physc.2013.04.060.pdf",
+  "page": 3,
+  "clip": [
+    0.5,
+    0.35,
+    0.97,
+    0.63
+  ],
+  "dpi_scale": 4.0,
+  "note": "Fig. 3, 4.2 K Jc vs B for C-doped MgB2 wires. Both axes are as printed: B in tesla on a linear axis from 1 to 8, Jc in A/cm2. MgB2-00, -01 and -04 carry 0, 1.29 and 4.01 mol per cent C, which Table 2 gives as x = 0, 0.0386 and 0.1202. The 10^6 and 10^3 decade ticks coincide with the frame edges and cannot be walked, so the calibration rests on the two interior decades, 10^5 and 10^4. The implied frame span is the check: it should come out at 10^3 to 10^6.",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 2.0,
+      "last_major": 7.0,
+      "tick_side": "bottom",
+      "tick_min_len": 5
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 100000.0,
+      "last_major": 10000.0,
+      "tick_side": "left",
+      "tick_min_len": 6,
+      "tick_min_count": 2,
+      "max_uniformity": 0.05,
+      "tick_darkness": 110
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.02,
+      0.72,
+      0.3,
+      0.97
+    ],
+    [
+      0.72,
+      0.02,
+      0.99,
+      0.16
+    ]
+  ],
+  "series": [
+    {
+      "name": "MgB2-00",
+      "temperature_K": 4.2,
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 50,
+      "n_bins": 30,
+      "inset": 10
+    },
+    {
+      "name": "MgB2-01",
+      "temperature_K": 4.2,
+      "rgb": [
+        240,
+        79,
+        34
+      ],
+      "tol": 70,
+      "n_bins": 30,
+      "inset": 6
+    },
+    {
+      "name": "MgB2-04",
+      "temperature_K": 4.2,
+      "rgb": [
+        45,
+        54,
+        149
+      ],
+      "tol": 70,
+      "n_bins": 30,
+      "inset": 6
+    }
+  ]
+}
