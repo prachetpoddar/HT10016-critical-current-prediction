@@ -1,0 +1,54 @@
+table,paper,sample,quantity,old,new,action,reason,source,fits_touched
+cohortB,elsevier_10.1016_j.cjph.2024.09.042,FeSe,Tc_K_anchor [FeSe],14.0,10.0,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,3
+cohortB,elsevier_10.1016_j.cjph.2024.09.042,H_x-FeSe 1#,Tc_K_anchor [H_x-FeSe 1#],14.0,41.0,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,3
+cohortB,elsevier_10.1016_j.cjph.2024.09.042,H_x-FeSe 2#,Tc_K_anchor [H_x-FeSe 2#],14.0,41.0,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,1
+cohortB,elsevier_10.1016_j.jallcom.2013.04.183,N1,Tc_K_anchor [N1],110.0,74.38,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,2
+cohortB,elsevier_10.1016_j.jallcom.2013.04.183,N2,Tc_K_anchor [N2],110.0,64.11,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,2
+cohortB,elsevier_10.1016_j.jallcom.2013.04.183,N3,Tc_K_anchor [N3],110.0,66.0,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,2
+cohortB,elsevier_10.1016_j.jallcom.2013.04.183,N4,Tc_K_anchor [N4],110.0,74.18,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,2
+cohortB,elsevier_10.1016_j.jallcom.2023.170384,LaFeAsO_2K,Tc_K_anchor [LaFeAsO_2K],26.0,13.3,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,1
+cohortB,elsevier_10.1016_j.jallcom.2023.170384,LaFeAsO_5K,Tc_K_anchor [LaFeAsO_5K],26.0,13.3,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,1
+cohortB,elsevier_10.1016_j.jallcom.2023.170384,LaFeAsO_8K,Tc_K_anchor [LaFeAsO_8K],26.0,13.3,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,1
+cohortB,elsevier_10.1016_j.matchemphys.2023.128348,X01,Tc_K_anchor [X01],39.0,37.7,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,1
+cohortB,elsevier_10.1016_j.matchemphys.2023.128348,X02,Tc_K_anchor [X02],39.0,37.7,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,1
+cohortB,elsevier_10.1016_j.matchemphys.2023.128348,X03,Tc_K_anchor [X03],39.0,37.7,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,1
+cohortB,elsevier_10.1016_j.matchemphys.2023.128348,X04,Tc_K_anchor [X04],39.0,37.7,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,1
+cohortB,elsevier_10.1016_j.matpr.2019.05.078,,Hc2 term,Hc2,H_irr,downgraded,"the source note names Fig. 2(a), a Jc-versus-field figure, which gives an irreversibility field",analysis/hc2_anchor_provenance_repair.py,2
+cohortB,elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,Tc_K_anchor [Polycrystal],22.0,25.7,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,8
+cohortB,elsevier_10.1016_j.mtphys.2022.100783,Single crystal,Tc_K_anchor [Single crystal],22.0,24.4,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,12
+cohortB,elsevier_10.1016_j.phpro.2015.06.160,Ba0.64K0.36Fe2As2,Hc2_T_used,9.0,31.0,corrected,"the same, and the paper gives 31 T for THIS sample. The first version of this repair applied 26 T to both, which is the other sample's number.",the paper's own table or body text,2
+cohortB,elsevier_10.1016_j.phpro.2015.06.160,Ba0.64K0.36Fe2As2,Tc_K_anchor [Ba0.64K0.36Fe2As2],20.0,25.5,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,2
+cohortB,elsevier_10.1016_j.phpro.2015.06.160,BaFe1.91Ni0.09As2,Hc2_T_used,9.0,26.0,corrected,"the recorded 9.0 T is the maximum applied field its own Fig. 1 states, not a critical field. The paper gives Hc2(0) = 26 T for this sample.",the paper's own table or body text,4
+cohortB,elsevier_10.1016_j.phpro.2015.06.160,BaFe1.91Ni0.09As2,Tc_K_anchor [BaFe1.91Ni0.09As2],20.0,18.9,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,4
+cohortB,elsevier_10.1016_j.physc.2009.05.098,,fit,in cohort,withdrawn,withdrawn,"the field axis is kilo-oersted recorded as tesla, confirmed at source, and the anchor is an 86 T literature default that does NOT scale with the axis, so correcting the unit takes the measured span from 0.53 to 0.053 of it and the field clause fails. This is the one paper of the three for which the unit argument does any work.",analysis/hc2_anchor_provenance_repair.py,9
+cohortB,elsevier_10.1016_j.physc.2009.11.051,irradiated,Tc_K_anchor [irradiated],22.0,24.0,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,4
+cohortB,elsevier_10.1016_j.physc.2009.11.051,unirradiated,Tc_K_anchor [unirradiated],22.0,24.0,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,4
+cohortB,elsevier_10.1016_j.physc.2009.11.051,,fit,in cohort,withdrawn,withdrawn,"the paper contains no occurrence of 'upper critical' or 'irrevers' anywhere in its text, and has no critical-field figure; the anchor's own source note names a figure that measures neither; and the recorded values rise monotonically with temperature within one sample, which no critical field does",analysis/hc2_anchor_provenance_repair.py,8
+cohortB,elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,Tc_K_anchor [FeTe0.59Se0.41],14.0,12.0,corrected,the value the paper prints for this sample,analysis/cohortB_tc_anchor_check.py,8
+cohortB,elsevier_10.1016_j.physc.2010.05.048,,fit,in cohort,withdrawn,withdrawn,"the same: no occurrence of 'upper critical' or 'irrevers' anywhere in the text, no critical-field figure, a source note naming the magnetisation loops, and a ladder rising by a factor of seven with temperature within one sample",analysis/hc2_anchor_provenance_repair.py,8
+cohortB,elsevier_10.1016_j.physc.2013.04.060,Ag_Doped_MgB2_10K,Hc2_T_used,11.9,14.5,corrected,"Table 1, +Ag",the paper's own table or body text,1
+cohortB,elsevier_10.1016_j.physc.2013.04.060,MgB(2-x)Cx_x_0_0386_4_2K,Hc2_T_used,10.5,15.3,corrected,"Table 2, MgB2-01",the paper's own table or body text,1
+cohortB,elsevier_10.1016_j.physc.2013.04.060,MgB(2-x)Cx_x_0_1202_4_2K,Hc2_T_used,10.5,23.6,corrected,"Table 2, MgB2-04",the paper's own table or body text,1
+cohortB,elsevier_10.1016_j.physc.2013.04.060,MgB2_4_2K,Hc2_T_used,10.5,11.2,corrected,"Table 2, MgB2-00",the paper's own table or body text,1
+cohortB,elsevier_10.1016_j.physc.2013.04.060,SiC_Doped_MgB2_10K,Hc2_T_used,11.9,16.9,corrected,"Table 1, +SiC",the paper's own table or body text,1
+cohortB,elsevier_10.1016_j.physc.2013.04.060,TiC_Doped_MgB2_10K,Hc2_T_used,11.9,11.9,corrected,"Table 1, +TiC",the paper's own table or body text,1
+cohortB,elsevier_10.1016_j.physc.2013.04.060,Undoped_MgB2_10K,Hc2_T_used,11.9,11.0,corrected,"Table 1, MgB2",the paper's own table or body text,1
+cohortB,elsevier_10.1016_j.physc.2013.04.060,ZrB2_Doped_MgB2_10K,Hc2_T_used,11.9,13.1,corrected,"Table 1, +ZrB2",the paper's own table or body text,1
+phase_3_p44,0806.2839v1.pdf,,Tc_K,55.0,54.6,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,0903.0004v2.pdf,,Tc_K,38.0,22.6,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,0906.0444v1.pdf,,Tc_K,38.0,24.0,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,0907.0147v2.pdf,,Tc_K,14.5,15.3,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,1002.0208v2.pdf,,Tc_K,51.0,48.0,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,1009.4896v1.pdf,,Tc_K,18.0,,provenance corrected,the paper states no Tc for this sample; its only temperatures are measurement temperatures,analysis/tc_anchor_audit.py,1
+phase_3_p44,1104.0477v2.pdf,,Tc_K,14.5,15.2,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,1108.0407v1.pdf,,Tc_K,8.0,9.8,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,1111.3923v1.pdf,,Tc_K,14.5,17.7,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,1502.05345v1.pdf,,Tc_K,38.0,30.7,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,1611.08455v1.pdf,,Tc_K,14.5,13.7,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,1903.00866v2.pdf,,Tc_K,38.0,36.0,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,2012.13723v3.pdf,,Tc_K,38.0,36.4,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,2207.06629v1.pdf,,Tc_K,38.0,39.8,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,2305.10034v1.pdf,,Tc_K,28.0,13.3,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,2308.10492v1.pdf,,Tc_K,38.0,19.3,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,2510.10264v1.pdf,,Tc_K,51.0,25.1,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
+phase_3_p44,2511.19058v1.pdf,,Tc_K,8.0,9.0,corrected,the value the paper prints for this sample,analysis/tc_anchor_audit.py TC_READ,1
