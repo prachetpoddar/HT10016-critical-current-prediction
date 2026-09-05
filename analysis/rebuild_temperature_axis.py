@@ -61,7 +61,15 @@ T_MAX_REDUCED = 0.7     # Eq. (1)'s temperature clause, as the manuscript states
 N_FIELDS = 10           # fields per paper, geometric across the common span
 MIN_T_PTS = 3           # temperatures needed for a slope
 MIN_T_SPAN = 0.15       # dex of log10(1 - T/Tc) needed before a slope means anything
-WELL_DETERMINED = 0.25  # SE/|beta| below this counts as well determined
+# Three conditions decide whether a paper's exponent is a measurement or an
+# extrapolation. None of them is the fit's standard error, which on a
+# three-isotherm fit is computed from a single residual and is smallest exactly
+# where the lever is shortest: 0806.2839v1 has the tightest SE/|beta| in the
+# whole table, 0.066, and its exponent ranges from 4.57 to 8.30 across its own
+# ten fields.
+MIN_ISOTHERMS = 4       # below this a two-parameter fit leaves one residual
+MIN_LEVER_DEX = 0.30    # span of log10(1 - T/Tc) the fit rests on
+MIN_FIELD_SPAN_DEX = 0.5  # a narrower field grid means the ten fits are one field
 
 
 def sample_of(series_name):
@@ -79,20 +87,42 @@ def sample_of(series_name):
     return head if head and not head[0].isdigit() else None
 
 
-def pick_sample(t):
-    """The sample contributing the most distinct temperatures, or None."""
+# Where a figure plots more than one sample, the choice is made on a stated
+# reason and recorded here, not on which sample the tracer captured more of.
+SAMPLE_CHOICE = {
+    "1611.08455v1.pdf": ("B",
+        "Fig. 5(b) plots crystals A and B at 7, 8, 9, 10 and 11 K. The paper "
+        "reports that the normalised pinning force of sample B scales with "
+        "temperature and sample A's does not. The trace confirms it: over the "
+        "field range all five isotherms cover, sample B's jc follows a single "
+        "power in (1 - T/Tc) with mean R2 = 0.9994, sample A's with 0.9871. "
+        "beta_T is defined for B and only approximately for A."),
+}
+
+
+def pick_sample(t, paper):
+    """
+    The sample a paper's fit should use.
+
+    Deciding this by trace completeness is not a decision: an earlier version
+    picked sample B of 1611.08455v1 because the digitiser had caught more of its
+    isotherms, and had it caught A's five instead the paper's exponent would
+    have come from the other crystal. SAMPLE_CHOICE records the reason.
+    """
     if "series" not in t.columns:
-        return None
-    labs = {sample_of(s) for s in t.series.unique()}
+        return None, ""
+    labs = {sample_of(v) for v in t.series.unique()}
     labs.discard(None)
     if len(labs) < 2:
-        return None
-    best, n = None, -1
-    for lab in sorted(labs):
-        k = t[t.series.map(lambda s: sample_of(s) == lab)].temperature_K.nunique()
-        if k > n:
-            best, n = lab, k
-    return best
+        return None, ""
+    if paper in SAMPLE_CHOICE:
+        lab, why = SAMPLE_CHOICE[paper]
+        if lab in labs:
+            return lab, why
+    raise ValueError(
+        "%s plots samples %s and no choice is recorded for it. Add one to "
+        "SAMPLE_CHOICE with the reason rather than letting the trace decide."
+        % (paper, sorted(labs)))
 
 
 def isotherm_exact(t, T, sample=None):
@@ -201,7 +231,7 @@ def main():
             continue
         Tc = float(e["read"])
         t = trace(name)
-        sample = pick_sample(t)
+        sample, sample_why = pick_sample(t, p)
         temps = [T for T in sorted(t.temperature_K.unique())
                  if isotherm_exact(t, T, sample)[0] is not None]
         # Eq. (1)'s temperature clause, applied to the points before the fit
@@ -237,6 +267,7 @@ def main():
                 Tc_source="paper-reported: %s" % e["quote"][:90],
                 sample=e["compound"] + ("" if sample is None
                                         else " (figure sample %s)" % sample),
+                sample_choice_reason=sample_why,
                 n_T_pts=f["n_T_pts"],
                 T_min=f["T_min"], T_max=f["T_max"],
                 t_reduced_max=round(f["t_reduced_max"], 4),
@@ -245,15 +276,28 @@ def main():
                 x_span_dex=round(f["x_span"], 4),
                 beta_lo=f["beta_T"] - 1.96 * f["SE_beta_T"],
                 beta_hi=f["beta_T"] + 1.96 * f["SE_beta_T"],
-                well_determined=bool(np.isfinite(f["SE_beta_T"])
-                                     and abs(f["beta_T"]) > 0
-                                     and f["SE_beta_T"] / abs(f["beta_T"])
-                                     < WELL_DETERMINED),
-                ok=bool(f["t_reduced_max"] < T_MAX_REDUCED
-                        and f["n_T_pts"] >= MIN_T_PTS),
                 source="rebuilt from figure trace %s" % name))
 
     out = pd.DataFrame(rows)
+    if len(out):
+        g = out.groupby("paper_id")
+        hspan = (np.log10(g.field_T.max()) - np.log10(g.field_T.min()))
+        out["field_span_dex"] = out.paper_id.map(hspan).round(4)
+        fails = (
+            (out.n_T_pts < MIN_ISOTHERMS).astype(int)
+            + (out.x_span_dex < MIN_LEVER_DEX).astype(int)
+            + (out.field_span_dex < MIN_FIELD_SPAN_DEX).astype(int))
+        out["grade"] = np.where(fails == 0, "measured",
+                        np.where(fails == 1, "thin", "extrapolated"))
+        out["grade_reason"] = [
+            "; ".join(
+                ([] if r.n_T_pts >= MIN_ISOTHERMS
+                 else ["%d isotherms" % r.n_T_pts])
+                + ([] if r.x_span_dex >= MIN_LEVER_DEX
+                   else ["lever %.3f dex" % r.x_span_dex])
+                + ([] if r.field_span_dex >= MIN_FIELD_SPAN_DEX
+                   else ["field grid spans %.3f dex" % r.field_span_dex]))
+            for r in out.itertuples()]
 
     print("=" * 88)
     print("REBUILT TEMPERATURE AXIS")
@@ -263,6 +307,12 @@ def main():
     print("                         the fit: the 10 fits per paper are the same")
     print("                         curve family re-evaluated at 10 fields)")
     print("  fits                : %d" % len(out))
+    for gname in ("measured", "thin", "extrapolated"):
+        sel = out[out.grade == gname]
+        if len(sel):
+            print("      %-13s %2d papers  %s"
+                  % (gname, sel.paper_id.nunique(),
+                     ", ".join(sorted(x[:12] for x in sel.paper_id.unique()))))
     print("  papers not rebuilt  : %d" % len(skipped))
     for p, why in skipped:
         print("      %-18s %s" % (p[:18], why))
@@ -292,9 +342,9 @@ def main():
     print("The second is the honest uncertainty. Where it exceeds the first, the")
     print("single-exponent model is not supported inside that paper.")
     print()
-    print("%-18s %3s %6s %6s %6s %6s %7s %7s %7s %6s"
+    print("%-18s %3s %6s %6s %6s %6s %7s %7s %7s %6s %-13s"
           % ("paper", "nT", "Tc(K)", "T/Tc", "lever", "Hspan", "beta_T",
-             "bySE", "byH", "ratio"))
+             "bySE", "byH", "ratio", "grade"))
     rowsum = []
     for p, g in out.groupby("paper_id"):
         hs = np.log10(g.field_T.max()) - np.log10(g.field_T.min())
@@ -304,10 +354,11 @@ def main():
                            bySE=bySE, lever=float(g.x_span_dex.median()),
                            hspan=hs, nT=int(g.n_T_pts.median()),
                            sub=g.substructure.iloc[0]))
-        print("%-18s %3d %6.1f %6.3f %6.3f %6.3f %7.3f %7.3f %7.3f %6.1f"
+        print("%-18s %3d %6.1f %6.3f %6.3f %6.3f %7.3f %7.3f %7.3f %6.1f %-13s"
               % (p[:18], int(g.n_T_pts.median()), g.Tc_K.iloc[0],
                  g.t_reduced_max.max(), g.x_span_dex.median(), hs,
-                 g.beta_T.median(), bySE, byH, byH / bySE if bySE else np.nan))
+                 g.beta_T.median(), bySE, byH, byH / bySE if bySE else np.nan,
+                 g.grade.iloc[0]))
 
     print()
     print("=" * 88)
@@ -386,6 +437,16 @@ def main():
     print("      spread     %.1f, 95%% interval [%.1f, %.1f]"
           % (pm_new.max() / pm_new.min(), np.percentile(bs_spr, 2.5),
              np.percentile(bs_spr, 97.5)))
+
+    keep = sorted(out[out.grade == "measured"].paper_id.unique())
+    if len(keep) >= 4:
+        pk = pm_new[keep]
+        sk, _ = sep(pk, subof)
+        print("\n  Restricted to the %d papers graded measured:" % len(keep))
+        print("      separation %.2f, spread %.1f" % (sk, pk.max() / pk.min()))
+        dk = pm_old[keep]
+        print("      the same papers in the deposit: separation %.2f, spread %.1f"
+              % (sep(dk, subof)[0], dk.max() / dk.min()))
 
     print("\n  Leave one paper out, effect on the separation:")
     for q in pl:
