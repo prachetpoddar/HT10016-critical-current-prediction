@@ -105,3 +105,54 @@ the dispatch emits at two points rather than one; that at 20 K the transition
 temperature enters as described; that at 4.2 K it cannot, because that is the
 reference temperature, so the prediction there is a single family constant; and
 that the residual 0.0098 dex is sampling noise on eighteen fits.
+
+## Regenerated, 2026-09-05
+
+The prediction file could not be regenerated in this checkout because three
+inputs were absent. They are staged now: `3DSC_MP.csv`,
+`literature_hc2_in_scope.csv` and `phase_3_makidegennes_per_paper_fits.csv`,
+plus 32 extraction files the uploads copy of `data_agent2/v3_2_2B_extension`
+was missing, which is why a first run produced 220 candidates against the
+paper's 233. The generator runs. Script
+`analysis/compare_regenerated_dispatch.py`, output in
+`audit/p57_regen_20260905/`.
+
+**The file as a whole does not reproduce, and the emitted set does.** Running
+the generator on the pre-withdrawal snapshot and applying the two post-hoc
+gate scripts gives 2151 rows against the deposit's 2097. Every one of the 54
+extra rows is refused; the emitted set is 163 rows on identical
+(compound, temperature, field) keys, at the same two grid points, with the same
+15.5 T anchor on all 86 records at 4.2 K and the same 83 parent to 3 exact
+split. So the comparison below is like-for-like on the quantity compared, and
+is not a reproduction of the file. The residual difference is in how many
+targets fall below the validated reduced field, 1120 against 1054.
+
+**The spread at 4.2 K is twenty-three times larger on the corrected tables.**
+
+| | deposit | regenerated |
+|---|---:|---:|
+| records at 4.2 K, 5 T | 86 | 86 |
+| span of the prediction | 0.0098 dex | 0.2242 dex |
+| on the substructure-aggregate predictor | 86 | 84 |
+| on a sample-form-conditional predictor | 0 | 2 |
+
+The whole of the widening is two records. Eighty-four still route to the
+substructure-aggregate predictor and span 0.0085 dex among themselves, which is
+slightly tighter than before. Two MgB2 records acquire a `wire` sample-form
+commitment they did not have on the deposited tables, route to the Stage 2
+conditional pool, and land at 5.199 and 5.198 against the aggregate's 4.980.
+
+**This is a better answer to Referee A than the letter gives.** The narrow
+spread is a property of the aggregate predictor evaluated at its own reference
+point. The moment two records route to a conditioned cell instead, they sit
+0.22 dex away. That demonstrates the conditioning claim rather than
+embarrassing it.
+
+The 0.0098 dex figure in the letter is therefore superseded and should be
+0.2242 dex, with the split reported: the aggregate cell is still flat and the
+flatness is structural.
+
+**Still not settled.** The 54-row difference is unexplained. It is confined to
+refused targets and does not touch any emitted prediction, but the reason it
+exists has not been traced, and this comparison should not be described as a
+reproduction. It has also not been through the adversarial review gate.

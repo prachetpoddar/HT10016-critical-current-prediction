@@ -1,0 +1,4 @@
+compound,label,n_total_pts,n_papers,n_T_total,n_H_total,Tc_K,Hc2_0_T,n_filtered_pts,n_T_filtered,n_H_filtered,fit_status,log_Jc_0,log_Jc_0_lo5,log_Jc_0_hi95,beta_T,beta_T_lo5,beta_T_hi95,beta_H,beta_H_lo5,beta_H_hi95,rms,physicality_flag,viable_for_LOCO
+Bi2Sr2CaCu2O8,Bi-2212,44,16,4,13,87.0,35.0,44,4,13,fit_attempted,6.8878,6.1801,15.0421,52.9244,31.6043,418.7643,-0.2072,-4.3306,5.0737,0.9552,beta_T_extreme,False
+Bi2Sr2Ca2Cu3O10,Bi-2223,6,3,3,4,109.8,40.0,6,3,4,fit_attempted,8.5373,4.8057,16.3482,3.0529,-6.85,425.5246,605.6788,-48839.305,1431.0104,2.0318,beta_T_extreme,False
+V3Si,V3Si,3,1,3,3,16.3,21.0,3,3,3,INSUFFICIENT_n (n=3 < 6),,,,,,,,,,,convergence_failed,
