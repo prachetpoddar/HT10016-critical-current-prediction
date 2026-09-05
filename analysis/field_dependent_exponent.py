@@ -176,20 +176,38 @@ def main():
     print("against the separation between substructures it is meant to resolve.")
     print()
     med = r.groupby("sub").med.median()
-    sep = med.max() / med.min()
     print("%-24s %8s %10s %12s" % ("substructure", "papers", "median beta", "median half-range"))
     for s_, g in r.groupby("sub"):
         print("%-24s %8d %10.3f %12.3f" % (s_, len(g), g.med.median(), g.half.median()))
-    print("\n  separation across substructures            : %.2f" % sep)
-    print("  median within-paper half-range             : %.2f" % r.half.median())
+    print()
+    print("  CORRECTED 2026-09-05. The first version of this section printed a")
+    print("  RATIO of substructure medians, %.2f, beside a HALF-RANGE in" % (med.max() / med.min()))
+    print("  exponent units, %.2f, and called them comparable. They are not on" % r.half.median())
+    print("  the same footing: multiplying every exponent by ten leaves the")
+    print("  ratio alone and multiplies the half-range by ten. The like-for-")
+    print("  like pair is the DIFFERENCE between substructure medians against")
+    print("  the half-range, which is what the sentence below always used.")
+    print()
+    print("  difference between substructure medians   : %.2f" % (med.max() - med.min()))
+    print("  median within-paper half-range            : %.2f" % r.half.median())
     print("  the between-family signal is %.1f times the"
           % ((med.max() - med.min()) / r.half.median()))
     print("  within-paper variation the single exponent hides")
     print()
+    print("  Neither number should be quoted as a point estimate. The")
+    print("  substructure separation carries a bootstrap interval of")
+    print("  1.34 to 4.31 on the ratio scale (temperature_axis_rebuilt), and")
+    print("  the between-family difference is smaller than the scatter of the")
+    print("  same quantity BETWEEN papers inside one substructure:")
+    for s_, g in r.groupby("sub"):
+        if len(g) > 2:
+            print("      %-24s %d papers, median beta sd %.2f"
+                  % (s_, len(g), g.med.std()))
+    print()
     print("  Restricted to the %d papers graded measured:" % len(m))
     medm = m.groupby("sub").med.median()
-    print("      separation %.2f, median half-range %.2f, ratio %.1f"
-          % (medm.max() / medm.min(), m.half.median(),
+    print("      difference %.2f, median half-range %.2f, ratio %.1f"
+          % (medm.max() - medm.min(), m.half.median(),
              (medm.max() - medm.min()) / m.half.median()))
 
 

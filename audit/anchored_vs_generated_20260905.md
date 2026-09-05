@@ -92,7 +92,7 @@ Tc is fixed.
 
 The earlier statement that eighteen of eighteen are fabricated is **withdrawn as
 to mechanism and as to scope**. What survives is that all eighteen are heavily
-quantised (nine to forty-six distinct mantissas for up to 231 values) and that
+quantised (eight to forty-six distinct mantissas for up to 231 values) and that
 their isotherms are near-parallel translations of one another (mean scatter of
 the inter-isotherm log ratio 0.011 to 0.178 dex). Both are consistent with a
 coarse reading as well as with generation. They mean the series carry little
