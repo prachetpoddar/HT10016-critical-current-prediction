@@ -381,6 +381,63 @@ def main():
         v = verdicts.get(p, "not scored")
         print("  %-18s %s" % (p[:18], "; ".join(flags + [v])))
     print()
+    print("=" * 100)
+    print("5. SENSITIVITY  -  how much of the disagreement is the top of each window?")
+    print("=" * 100)
+    print("The deposited fit uses the whole window, so the comparison does too. But")
+    print("the highest temperature in a window is where a real isotherm collapses")
+    print("toward its irreversibility field, and it is also where a pixel trace is")
+    print("least reliable, so the verdict is recomputed with the top one and two")
+    print("temperatures dropped. Dropping them shortens some windows below three")
+    print("points, which is why the paper count falls.")
+    print()
+    print("%-14s %8s %8s %16s %11s"
+          % ("", "papers", "median", "in 0.8 to 1.25", "below 0.8"))
+    for drop in (0, 1, 2):
+        vals = []
+        for q, nm in TRACE.items():
+            if not nm:
+                continue
+            tq = traces[q]
+            dq = dep[dep.paper_id == q]
+            if dq.empty:
+                continue
+            Tcq = float(dq.Tc_K.iloc[0])
+            rr = []
+            for _, r in dq.iterrows():
+                T, E, F = [], [], []
+                for x in sorted(tq.temperature_K.unique()):
+                    if not (r.T_min - T_TOL <= x <= r.T_max + T_TOL):
+                        continue
+                    ee = wide[(wide.pdf_name == q) & (wide.field_T == r.field_T)
+                              & (wide.temperature_K == x) & (wide.Jc > 0)]
+                    fv = figure_value(tq, x, r.field_T)
+                    if ee.empty or not np.isfinite(fv):
+                        continue
+                    T.append(x)
+                    E.append(float(ee.Jc.iloc[0]))
+                    F.append(10.0 ** fv)
+                k = len(T) - drop
+                if k < 3:
+                    continue
+                be = beta_T(T[:k], E[:k], Tcq)
+                bf = beta_T(T[:k], F[:k], Tcq)
+                if np.isfinite(be) and np.isfinite(bf) and bf != 0:
+                    rr.append(be / bf)
+            if len(rr) >= 3:
+                vals.append(float(np.median(rr)))
+        v = np.array(vals)
+        print("%-14s %8d %8.2f %16d %11d"
+              % ("drop top %d" % drop, len(v), np.median(v),
+                 int(((v >= 0.8) & (v <= 1.25)).sum()), int((v < 0.8).sum())))
+    print()
+    print("  The disagreement is real at every truncation, but it is not uniform in")
+    print("  size: the median ratio moves as the collapsing end of each window is")
+    print("  removed, and some papers enter the agreement band. \"None reproduces its")
+    print("  figure\" holds strictly on the window the deposited fit itself used, and")
+    print("  should be stated that way rather than as a claim about every subwindow.")
+
+    print()
     print("  0907.0147v2 has no trace: its recorded fields are 1e-5 to 1.2e-3,")
     print("  which no axis on its figure page carries, so there is nothing to")
     print("  compare against until the intended unit is established.")

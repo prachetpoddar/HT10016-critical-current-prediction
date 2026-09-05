@@ -73,6 +73,27 @@ So the failure is not scatter. The deposited temperature exponents are
 systematically about **two and a half times too small**, in the same direction,
 in every paper that can be scored.
 
+### How much of this is the top of each window
+
+The deposited fit uses the whole temperature window, so the comparison does too.
+But the highest temperature in a window is where a real isotherm collapses
+toward its irreversibility field, and it is also where a pixel trace is least
+reliable. Recomputing with the top temperatures dropped:
+
+| | papers | median ratio | in 0.8 to 1.25 | below 0.8 |
+|---|---:|---:|---:|---:|
+| whole window, as fitted | 12 | 0.50 | 2 | 10 |
+| top temperature dropped | 8 | 0.73 | 3 | 5 |
+| top two dropped | 6 | 0.77 | 0 | 5 |
+
+Dropping temperatures also shortens some windows below three points, which is
+why the paper count falls, and it changes the question being asked. The
+disagreement is real at every truncation and no truncation brings the median
+into the agreement band. But it is not uniform in size, and three papers do
+enter that band once the collapsing end is removed. **"None reproduces its
+figure" holds on the window the deposited fit itself used, and should be stated
+that way** rather than as a claim about every subwindow of it.
+
 ## What this settles, and what it does not
 
 It settles the question the earlier notes left open. The extractions are in
