@@ -1,0 +1,205 @@
+{
+  "paper_id": "2510.10264v1.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/2510.10264v1.pdf",
+  "page": 5,
+  "clip": [
+    0.15,
+    0.33,
+    0.53,
+    0.55
+  ],
+  "dpi_scale": 4.0,
+  "note": "FIG 4(a), PrFeAs(O,F) single crystal, Jc(B) for B||c. The whole figure is an embedded raster with no text layer, so both axes are calibrated from tick geometry. x: top ticks, decades 0.001..1 T. y: right ticks, decades 1e4..1e1 A/cm2. The ten isotherms are 2.5, 4, 6, 8, 10, 12, 14, 16, 18 and 20 K (read from the matching legend/labels of FIG 3(a) and 3(c), same colour ladder, light green at the top to dark blue at the bottom); the panel itself labels only the 2.5 K and 20 K curves. The light-green open pentagons marking the SV/strong-pinning crossover are the same colour as the 2.5 K curve, so they are excluded for that series only. Calibration caveat, measured: the panel's annotation boxes (SMP, 2.5K) overlap the right frame line and the alpha-inset overlaps the left one, so the only darkness threshold at which the right-hand decade ticks come out equally spaced (30) also merges each decade tick with the minor ticks just below it, placing the four detected majors about 4 px (0.046 decade) below their true positions. The decade ladder measured from the tick labels themselves is 252.3, 339.7, 427.1, 514.5 px against the 255.7, 343.0, 431.5, 519.7 px used here. Recovered Jc is therefore 5 to 17 per cent high (about 11 per cent in the middle of the range); the fitted log-slope is affected by less than 1 per cent (88.0 vs 87.35 px per decade). The field axis is unaffected.",
+  "x": {
+    "log": true,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.001,
+      "last_major": 1.0,
+      "tick_side": "top",
+      "tick_min_len": 10,
+      "tick_darkness": 60,
+      "tick_direction": "inward"
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 10000.0,
+      "last_major": 10.0,
+      "tick_side": "right",
+      "tick_min_len": 5,
+      "tick_max_len": 40,
+      "tick_darkness": 30,
+      "tick_direction": "inward",
+      "tick_min_count": 4
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.15,
+      0.45,
+      0.61,
+      1.0
+    ],
+    [
+      0.15,
+      0.27,
+      0.335,
+      0.4
+    ],
+    [
+      0.2,
+      0.1,
+      0.425,
+      0.152
+    ],
+    [
+      0.47,
+      0.1,
+      0.712,
+      0.16
+    ],
+    [
+      0.705,
+      0.08,
+      0.95,
+      0.168
+    ],
+    [
+      0.835,
+      0.175,
+      0.95,
+      0.275
+    ],
+    [
+      0.585,
+      0.68,
+      0.715,
+      0.79
+    ]
+  ],
+  "series": [
+    {
+      "name": "2.5K",
+      "temperature_K": 2.5,
+      "rgb": [
+        189,
+        239,
+        107
+      ],
+      "tol": 22,
+      "min_col_px": 3,
+      "exclude_boxes": [
+        [
+          0.3,
+          0.196,
+          0.61,
+          0.46
+        ]
+      ]
+    },
+    {
+      "name": "4K",
+      "temperature_K": 4.0,
+      "rgb": [
+        255,
+        206,
+        33
+      ],
+      "tol": 22,
+      "min_col_px": 3
+    },
+    {
+      "name": "6K",
+      "temperature_K": 6.0,
+      "rgb": [
+        255,
+        156,
+        57
+      ],
+      "tol": 20,
+      "min_col_px": 3
+    },
+    {
+      "name": "8K",
+      "temperature_K": 8.0,
+      "rgb": [
+        239,
+        123,
+        82
+      ],
+      "tol": 20,
+      "min_col_px": 3
+    },
+    {
+      "name": "10K",
+      "temperature_K": 10.0,
+      "rgb": [
+        214,
+        82,
+        107
+      ],
+      "tol": 22,
+      "min_col_px": 3
+    },
+    {
+      "name": "12K",
+      "temperature_K": 12.0,
+      "rgb": [
+        189,
+        49,
+        132
+      ],
+      "tol": 22,
+      "min_col_px": 3
+    },
+    {
+      "name": "14K",
+      "temperature_K": 14.0,
+      "rgb": [
+        156,
+        16,
+        156
+      ],
+      "tol": 22,
+      "min_col_px": 3
+    },
+    {
+      "name": "16K",
+      "temperature_K": 16.0,
+      "rgb": [
+        115,
+        0,
+        173
+      ],
+      "tol": 22,
+      "min_col_px": 3
+    },
+    {
+      "name": "18K",
+      "temperature_K": 18.0,
+      "rgb": [
+        66,
+        0,
+        156
+      ],
+      "tol": 22,
+      "min_col_px": 3
+    },
+    {
+      "name": "20K",
+      "temperature_K": 20.0,
+      "rgb": [
+        8,
+        0,
+        132
+      ],
+      "tol": 22,
+      "min_col_px": 3
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "frame_px": {
+    "x_left": 34,
+    "x_right": 898,
+    "y_top": 28,
+    "y_bottom": 659
+  },
+  "dpi_scale": 4.0,
+  "image_px": [
+    918,
+    681
+  ],
+  "x_ticks_read": [
+    [
+      1.0,
+      226.994
+    ],
+    [
+      2.0,
+      257.744
+    ],
+    [
+      3.0,
+      288.619
+    ],
+    [
+      4.0,
+      319.369
+    ],
+    [
+      5.0,
+      350.244
+    ],
+    [
+      6.0,
+      380.994
+    ]
+  ],
+  "y_ticks_read": [
+    [
+      1.0,
+      471.705
+    ],
+    [
+      10.0,
+      432.33
+    ],
+    [
+      100.0,
+      393.08
+    ],
+    [
+      1000.0,
+      353.955
+    ],
+    [
+      10000.0,
+      314.705
+    ]
+  ],
+  "geometry_calibration": {
+    "x": {
+      "length_threshold": 14.0,
+      "n_major": 6,
+      "positions": [
+        158.0,
+        281.0,
+        404.5,
+        527.5,
+        651.0,
+        774.0
+      ],
+      "spacing_px": 123.2,
+      "uniformity": 0.00195,
+      "tick_direction": "inward",
+      "tick_side": "top",
+      "implied_step_per_major": 1.0,
+      "axis_increases_with_pixel": true,
+      "step_is_round": true
+    },
+    "y": {
+      "length_threshold": 13.0,
+      "n_major": 5,
+      "positions": [
+        29.5,
+        186.5,
+        343.0,
+        500.0,
+        657.5
+      ],
+      "spacing_px": 157.0,
+      "uniformity": 0.00159,
+      "tick_direction": "outward",
+      "tick_side": "left",
+      "implied_step_per_major": -1.0,
+      "axis_increases_with_pixel": false,
+      "step_is_round": true
+    }
+  },
+  "x_fit": {
+    "slope": 0.032459994167285997,
+    "intercept": -6.367652905330624,
+    "log": false,
+    "max_tick_residual_frac": 0.000255
+  },
+  "y_fit": {
+    "slope": -0.025485795058970914,
+    "intercept": 12.019867756409708,
+    "log": true,
+    "max_tick_residual_frac": 0.000478
+  },
+  "axis_span_from_ticks": {
+    "x": [
+      -0.0057,
+      7.0057
+    ],
+    "y": [
+      0.9739,
+      10207.4626
+    ]
+  },
+  "n_points": 270,
+  "per_series": {
+    "A_7K": 40,
+    "A_8K": 40,
+    "B_7K": 40,
+    "B_8K": 40,
+    "B_9K": 38,
+    "B_10K": 38,
+    "B_11K": 34
+  },
+  "reprojection_residual_px": 0.022256
+}

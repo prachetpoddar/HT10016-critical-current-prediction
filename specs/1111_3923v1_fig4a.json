@@ -1,0 +1,348 @@
+{
+  "paper_id": "1111.3923v1.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/1111.3923v1.pdf",
+  "page": 3,
+  "clip": [
+    0.566,
+    0.07,
+    0.7405,
+    0.198
+  ],
+  "dpi_scale": 4.0,
+  "note": "FIG. 4(a), FeSe(1-x)Te(x) thin film, H || c. Jc in A/cm2 against mu0H in tesla. Panel (b) of the same figure carries the same six temperatures for H perp c and shares its left frame line with panel (a), so the crop stops at that shared line. The y axis is calibrated from the PDF's own 10^n tick labels; the x axis from tick geometry (five majors, 0 to 8 T). The 4.2 K series is black and so shares its colour with the frame, the left-axis tick marks, the top-axis tick marks and the dash-dot Jc,15 = 15 A/cm2 criterion line; those are removed from that series only. Panel (a) rather than (b) because the extraction's stated Jc ceiling of 1e6 is reached only in (a) (the 4.2 K point nearest zero field sits on the 10^6 decade; panel (b) tops out near 4e5), and because (a) is the H||c Jc-H characteristic the text discusses. Note that the extraction's stated field grid, 9 values from 0 to 8 T for all six isotherms, cannot exist in this panel: the 14 K curve stops at 4.3 T and the 16 K curve at 1.9 T.",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.0,
+      "last_major": 8.0,
+      "tick_side": "bottom",
+      "tick_min_len": 5,
+      "tick_darkness": 110,
+      "tick_direction": "inward"
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2"
+  },
+  "exclude_boxes": [],
+  "series": [
+    {
+      "name": "4.2K",
+      "temperature_K": 4.2,
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 60,
+      "min_col_px": 6,
+      "exclude_boxes": [
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.076
+        ],
+        [
+          0.0,
+          0.0,
+          0.1,
+          1.0
+        ],
+        [
+          0.0,
+          0.1336,
+          0.104,
+          1.0
+        ],
+        [
+          0.104,
+          0.1431,
+          0.125,
+          1.0
+        ],
+        [
+          0.125,
+          0.1656,
+          0.146,
+          1.0
+        ],
+        [
+          0.146,
+          0.1869,
+          0.1671,
+          1.0
+        ],
+        [
+          0.1671,
+          0.2031,
+          0.1857,
+          1.0
+        ],
+        [
+          0.1857,
+          0.213,
+          0.2068,
+          1.0
+        ],
+        [
+          0.2068,
+          0.2369,
+          0.2272,
+          1.0
+        ],
+        [
+          0.2272,
+          0.2381,
+          0.2479,
+          1.0
+        ],
+        [
+          0.2479,
+          0.258,
+          0.2701,
+          1.0
+        ],
+        [
+          0.2701,
+          0.2607,
+          0.2923,
+          1.0
+        ],
+        [
+          0.2923,
+          0.2779,
+          0.3134,
+          1.0
+        ],
+        [
+          0.3134,
+          0.2801,
+          0.3312,
+          1.0
+        ],
+        [
+          0.3312,
+          0.2881,
+          0.3516,
+          1.0
+        ],
+        [
+          0.3516,
+          0.2961,
+          0.3723,
+          1.0
+        ],
+        [
+          0.3723,
+          0.301,
+          0.3933,
+          1.0
+        ],
+        [
+          0.3933,
+          0.3108,
+          0.4112,
+          1.0
+        ],
+        [
+          0.4112,
+          0.3108,
+          0.4322,
+          1.0
+        ],
+        [
+          0.4322,
+          0.3231,
+          0.4544,
+          1.0
+        ],
+        [
+          0.4544,
+          0.3245,
+          0.4751,
+          1.0
+        ],
+        [
+          0.4751,
+          0.3357,
+          0.4956,
+          1.0
+        ],
+        [
+          0.4956,
+          0.3366,
+          0.5169,
+          1.0
+        ],
+        [
+          0.5169,
+          0.3479,
+          0.5386,
+          1.0
+        ],
+        [
+          0.5386,
+          0.3489,
+          0.5582,
+          1.0
+        ],
+        [
+          0.5582,
+          0.3595,
+          0.5792,
+          1.0
+        ],
+        [
+          0.5792,
+          0.3623,
+          0.602,
+          1.0
+        ],
+        [
+          0.602,
+          0.3706,
+          0.623,
+          1.0
+        ],
+        [
+          0.623,
+          0.3722,
+          0.641,
+          1.0
+        ],
+        [
+          0.641,
+          0.378,
+          0.6614,
+          1.0
+        ],
+        [
+          0.6614,
+          0.3845,
+          0.6803,
+          1.0
+        ],
+        [
+          0.6803,
+          0.3862,
+          0.7013,
+          1.0
+        ],
+        [
+          0.7013,
+          0.3943,
+          0.7223,
+          1.0
+        ],
+        [
+          0.7223,
+          0.3958,
+          0.7439,
+          1.0
+        ],
+        [
+          0.7439,
+          0.4066,
+          0.765,
+          1.0
+        ],
+        [
+          0.765,
+          0.4074,
+          0.786,
+          1.0
+        ],
+        [
+          0.786,
+          0.4189,
+          0.8061,
+          1.0
+        ],
+        [
+          0.8061,
+          0.4189,
+          0.8257,
+          1.0
+        ],
+        [
+          0.8257,
+          0.4263,
+          0.8473,
+          1.0
+        ],
+        [
+          0.8473,
+          0.4275,
+          0.8692,
+          1.0
+        ],
+        [
+          0.8692,
+          0.4392,
+          0.8908,
+          1.0
+        ],
+        [
+          0.8908,
+          0.441,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "8K",
+      "temperature_K": 8.0,
+      "rgb": [
+        255,
+        0,
+        0
+      ],
+      "tol": 70
+    },
+    {
+      "name": "10K",
+      "temperature_K": 10.0,
+      "rgb": [
+        152,
+        152,
+        0
+      ],
+      "tol": 70
+    },
+    {
+      "name": "12K",
+      "temperature_K": 12.0,
+      "rgb": [
+        0,
+        255,
+        0
+      ],
+      "tol": 70
+    },
+    {
+      "name": "14K",
+      "temperature_K": 14.0,
+      "rgb": [
+        0,
+        62,
+        255
+      ],
+      "tol": 70
+    },
+    {
+      "name": "16K",
+      "temperature_K": 16.0,
+      "rgb": [
+        255,
+        0,
+        204
+      ],
+      "tol": 70
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "paper_id": "1108.0407v1.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/1108.0407v1.pdf",
+  "page": 4,
+  "clip": [
+    0.314,
+    0.211,
+    0.5,
+    0.35
+  ],
+  "dpi_scale": 4.0,
+  "note": "FIG. 5(d), beta-FeSe single crystal, interplane Jc^{H-perp-(101)} vs H. The panel's field axis is H in kOe running 0 to 50; first_major and last_major are given in TESLA (10 kOe = 1 T) so the output is in tesla directly. Panel (d) is the one whose eight isotherms are 1.8, 2, 2.5, 3, 4, 5, 6 and 7 K; panel (c) on the same page has only seven (no 7 K). The x majors sit every 10 kOe with minors every 5 kOe, and the 0 and 50 kOe majors are contaminated by the frame corner and by curves running into the axis, so all ten evenly spaced ticks from 5 to 50 kOe are used instead (implied step 0.5 T). The y ticks are contaminated above 10^2 by the curves crowding the left axis, so the tick mask is thresholded at darkness 30, where only the pure-black ticks survive and the two clean decade majors 10^2 and 10^1 remain. The legend sits inside the frame at the top with a coloured key line and marker for every series and is excluded globally.",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.5,
+      "last_major": 5.0,
+      "tick_side": "bottom",
+      "tick_min_len": 3,
+      "tick_darkness": 110,
+      "tick_direction": "inward"
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 100.0,
+      "last_major": 10.0,
+      "tick_side": "left",
+      "tick_min_len": 6,
+      "tick_darkness": 30,
+      "tick_direction": "inward",
+      "tick_min_count": 2
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.34,
+      0.06,
+      0.845,
+      0.368
+    ]
+  ],
+  "series": [
+    {
+      "name": "1.8K",
+      "temperature_K": 1.8,
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 60,
+      "exclude_boxes": [
+        [
+          0.0,
+          0.253,
+          0.1,
+          0.3
+        ],
+        [
+          0.0,
+          0.55,
+          0.1,
+          0.58
+        ],
+        [
+          0.0,
+          0.845,
+          0.1,
+          0.875
+        ],
+        [
+          0.0,
+          0.925,
+          1.0,
+          1.0
+        ],
+        [
+          0.6,
+          0.78,
+          0.92,
+          1.0
+        ]
+      ],
+      "inset": 4
+    },
+    {
+      "name": "2K",
+      "temperature_K": 2.0,
+      "rgb": [
+        255,
+        0,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "2.5K",
+      "temperature_K": 2.5,
+      "rgb": [
+        0,
+        0,
+        255
+      ],
+      "tol": 60
+    },
+    {
+      "name": "3K",
+      "temperature_K": 3.0,
+      "rgb": [
+        255,
+        0,
+        255
+      ],
+      "tol": 60
+    },
+    {
+      "name": "4K",
+      "temperature_K": 4.0,
+      "rgb": [
+        127,
+        127,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "5K",
+      "temperature_K": 5.0,
+      "rgb": [
+        127,
+        0,
+        127
+      ],
+      "tol": 60,
+      "exclude_boxes": [
+        [
+          0.53,
+          0.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "6K",
+      "temperature_K": 6.0,
+      "rgb": [
+        0,
+        127,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "7K",
+      "temperature_K": 7.0,
+      "rgb": [
+        255,
+        127,
+        0
+      ],
+      "tol": 60
+    }
+  ],
+  "inset": 3
+}

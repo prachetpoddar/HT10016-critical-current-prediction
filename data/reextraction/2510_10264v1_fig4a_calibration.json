@@ -1,0 +1,121 @@
+{
+  "frame_px": {
+    "x_left": 143,
+    "x_right": 854,
+    "y_top": 58,
+    "y_bottom": 603
+  },
+  "dpi_scale": 4.0,
+  "image_px": [
+    931,
+    698
+  ],
+  "x_ticks_read": [
+    [
+      0.001,
+      142.925
+    ],
+    [
+      0.01,
+      180.55
+    ],
+    [
+      0.1,
+      218.3
+    ],
+    [
+      1.0,
+      255.925
+    ]
+  ],
+  "y_ticks_read": [
+    [
+      10.0,
+      391.277
+    ],
+    [
+      100.0,
+      369.235
+    ],
+    [
+      1000.0,
+      347.11
+    ],
+    [
+      10000.0,
+      325.277
+    ]
+  ],
+  "geometry_calibration": {
+    "x": {
+      "length_threshold": 19.0,
+      "n_major": 4,
+      "positions": [
+        204.5,
+        355.0,
+        506.0,
+        656.5
+      ],
+      "spacing_px": 150.66666666666666,
+      "uniformity": 0.00147,
+      "tick_direction": "inward",
+      "tick_side": "top",
+      "implied_step_per_major": 1.0,
+      "axis_increases_with_pixel": true,
+      "step_is_round": true
+    },
+    "y": {
+      "length_threshold": 14.0,
+      "n_major": 4,
+      "positions": [
+        255.66666666666666,
+        343.0,
+        431.5,
+        519.6666666666666
+      ],
+      "spacing_px": 88.0,
+      "uniformity": 0.00505,
+      "tick_direction": "inward",
+      "tick_side": "right",
+      "implied_step_per_major": -1.0,
+      "axis_increases_with_pixel": false,
+      "step_is_round": true
+    }
+  },
+  "x_fit": {
+    "slope": 0.026542788577970548,
+    "intercept": -6.7932956121617725,
+    "log": true,
+    "max_tick_residual_frac": 0.000332
+  },
+  "y_fit": {
+    "slope": -0.045428398374148436,
+    "intercept": 18.77356907908,
+    "log": true,
+    "max_tick_residual_frac": 0.001639
+  },
+  "axis_span_from_ticks": {
+    "x": [
+      0.0004,
+      20.4276
+    ],
+    "y": [
+      1.1274,
+      1744580.8605
+    ]
+  },
+  "n_points": 272,
+  "per_series": {
+    "2.5K": 23,
+    "4K": 22,
+    "6K": 20,
+    "8K": 24,
+    "10K": 27,
+    "12K": 21,
+    "14K": 31,
+    "16K": 34,
+    "18K": 39,
+    "20K": 31
+  },
+  "reprojection_residual_px": 0.046367
+}

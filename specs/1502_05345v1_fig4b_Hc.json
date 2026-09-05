@@ -1,0 +1,92 @@
+{
+  "paper_id": "1502.05345v1.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/1502.05345v1.pdf",
+  "page": 4,
+  "clip": [
+    0.55,
+    0.068,
+    0.908,
+    0.263
+  ],
+  "dpi_scale": 4.0,
+  "note": "FIG. 4(b), upper panel, P-doped Ba-122 thin film, H || c. Page 3 of this paper carries only Hc2(T), so page 4 is the only Jc-H figure; Fig. 4(b) is two stacked panels sharing one x axis, the upper H||c and the lower H||ab, and this spec is the upper one. Both axes are calibrated from tick geometry rather than the text layer: the y tick labels of the lower panel share the x coordinate of this panel's and fall inside the search rectangle, and this panel has no x tick labels of its own (they belong to the lower panel). The x majors are taken from the top axis because the bottom axis is the line shared with the lower panel and its ticks point downward, into that panel. The Fp inset in the lower right is drawn entirely in black and so cannot contaminate any of the five coloured series; excluding it would have cut the 32.5 T point of the 4.2 K curve, whose marker overlaps the inset's top frame line. The digitised 4.2 K point at 35 T comes out at 9.2e3 A/cm2, against the paper's own statement that Jc for H||c at 35 T is as high as 1e4 A/cm2, which is an independent check on the calibration. The extraction's stated grid of 36 values from 0 to 34 T cannot exist for four of the five isotherms: only 4.2 K is measured beyond 16 T; 10 K and 15 K stop near 16 T, 20 K near 13.6 T and 25 K near 5.7 T.",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.0,
+      "last_major": 35.0,
+      "tick_side": "top",
+      "tick_min_len": 5,
+      "tick_darkness": 110,
+      "tick_direction": "inward"
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 10000000.0,
+      "last_major": 100.0,
+      "tick_side": "left",
+      "tick_min_len": 5,
+      "tick_darkness": 110,
+      "tick_direction": "outward"
+    }
+  },
+  "exclude_boxes": [],
+  "series": [
+    {
+      "name": "4.2K",
+      "temperature_K": 4.2,
+      "rgb": [
+        255,
+        0,
+        0
+      ],
+      "tol": 55
+    },
+    {
+      "name": "10K",
+      "temperature_K": 10.0,
+      "rgb": [
+        127,
+        0,
+        0
+      ],
+      "tol": 55
+    },
+    {
+      "name": "15K",
+      "temperature_K": 15.0,
+      "rgb": [
+        255,
+        0,
+        255
+      ],
+      "tol": 60
+    },
+    {
+      "name": "20K",
+      "temperature_K": 20.0,
+      "rgb": [
+        0,
+        0,
+        255
+      ],
+      "tol": 60
+    },
+    {
+      "name": "25K",
+      "temperature_K": 25.0,
+      "rgb": [
+        0,
+        255,
+        0
+      ],
+      "tol": 60
+    }
+  ]
+}

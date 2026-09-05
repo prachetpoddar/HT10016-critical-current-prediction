@@ -1,0 +1,29 @@
+{
+  "paper_id": "1104.0477v2.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/1104.0477v2.pdf",
+  "page": 9,
+  "clip": [0.30, 0.485, 0.70, 0.615],
+  "dpi_scale": 4.0,
+  "n_bins": 20,
+  "note": "Fig. 3(c), FeSe0.5Te0.5 film C1, Jc vs mu0H (T), H||c. Each isotherm carries only two or three PLOTTED MARKERS (2.0 K: 1 marker at 14 T; 4.5 K and 7.5 K: 2 markers at 10 and 14 T; 10.0 K: 3 at 1, 10 and 14 T; 12.0 K: 3 at ~0.2, 1 and 10 T); everything between them is a straight connecting segment, so traced points other than the markers are interpolation, not measurement. The panel also carries three DOTTED literature comparison curves (MgB2 film in the same blue, BaFe1.8Co0.2As2 film and FeSe0.5Te0.5 crystal in the same red) which are NOT this sample's data: they render as 1-pixel-per-column runs while the solid segments are 3-4 px, so min_col_px 3 removes them from the red and blue series. y majors run 10^6 (on the top frame line) to 10^2 (on the bottom frame line); the three interior majors 10^5, 10^4, 10^3 are used.",
+  "x": {"log": false, "label": "mu0H_T", "calibration": "geometry",
+        "geometry": {"first_major": 0.0, "last_major": 15.0, "tick_side": "bottom",
+                     "tick_min_len": 5, "tick_darkness": 110, "tick_direction": "inward"}},
+  "y": {"log": true, "label": "Jc_A_per_cm2", "calibration": "geometry",
+        "geometry": {"first_major": 100000.0, "last_major": 1000.0, "tick_side": "left",
+                     "tick_min_len": 10, "tick_darkness": 110, "tick_direction": "inward",
+                     "tick_min_count": 3}},
+  "exclude_boxes": [
+    [0.000, 0.000, 0.102, 1.000],
+    [0.763, 0.000, 1.000, 1.000],
+    [0.000, 0.000, 1.000, 0.310],
+    [0.000, 0.848, 1.000, 1.000]
+  ],
+  "series": [
+    {"name": "2K",    "temperature_K": 2.0,  "rgb": [255, 29, 255], "tol": 90, "min_col_px": 2, "n_bins": 1},
+    {"name": "4.5K",  "temperature_K": 4.5,  "rgb": [0, 0, 255],    "tol": 70, "min_col_px": 3},
+    {"name": "7.5K",  "temperature_K": 7.5,  "rgb": [0, 255, 0],    "tol": 90, "min_col_px": 2},
+    {"name": "10K",   "temperature_K": 10.0, "rgb": [255, 0, 0],    "tol": 70, "min_col_px": 3},
+    {"name": "12K",   "temperature_K": 12.0, "rgb": [0, 0, 0],      "tol": 60, "min_col_px": 2}
+  ]
+}

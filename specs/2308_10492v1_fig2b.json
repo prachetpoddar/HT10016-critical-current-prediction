@@ -1,0 +1,110 @@
+{
+  "paper_id": "2308.10492v1.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/2308.10492v1.pdf",
+  "page": 3,
+  "clip": [
+    0.38,
+    0.05,
+    0.68,
+    0.24
+  ],
+  "dpi_scale": 4.0,
+  "note": "FIG. 2(b), BaFe1.908Ni0.092As2, Jc(H) from the MHLs of Fig. 2(a). Field axis is already in tesla, 0 to ~33 T; detected bottom majors are 5..30 T because the 0 tick coincides with the frame edge. Left decades detected are 1e6, 1e5, 1e4; 1e3 sits on the frame bottom line. The seven isotherms are drawn as continuous lines, not discrete markers. The legend's coloured line samples sit inside the frame at the lower left and are excluded; the legend text and the (b) panel label are covered by the PDF text mask. The 15 K isotherm is omitted: its plotted colour (255,127,255) is exactly the white-antialiasing halo of the 12.5 K magenta curve, so the two cannot be separated by colour; 15 K is not in the recorded extraction's temperature set.",
+  "tick_darkness": 110,
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 5.0,
+      "last_major": 30.0,
+      "tick_side": "bottom",
+      "tick_min_len": 5,
+      "tick_darkness": 110
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 1000000.0,
+      "last_major": 10000.0,
+      "tick_side": "left",
+      "tick_min_len": 5,
+      "tick_min_count": 3,
+      "tick_darkness": 110
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.118,
+      0.528,
+      0.192,
+      0.825
+    ]
+  ],
+  "series": [
+    {
+      "name": "1.8K",
+      "temperature_K": 1.8,
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 60,
+      "inset": 12
+    },
+    {
+      "name": "5K",
+      "temperature_K": 5.0,
+      "rgb": [
+        255,
+        0,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "7.5K",
+      "temperature_K": 7.5,
+      "rgb": [
+        0,
+        255,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "8.7K",
+      "temperature_K": 8.7,
+      "rgb": [
+        0,
+        0,
+        255
+      ],
+      "tol": 60
+    },
+    {
+      "name": "10K",
+      "temperature_K": 10.0,
+      "rgb": [
+        0,
+        255,
+        255
+      ],
+      "tol": 60
+    },
+    {
+      "name": "12.5K",
+      "temperature_K": 12.5,
+      "rgb": [
+        255,
+        0,
+        255
+      ],
+      "tol": 55
+    }
+  ]
+}

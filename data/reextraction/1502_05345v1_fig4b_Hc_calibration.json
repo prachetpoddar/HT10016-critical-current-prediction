@@ -1,0 +1,146 @@
+{
+  "frame_px": {
+    "x_left": 18,
+    "x_right": 861,
+    "y_top": 15,
+    "y_bottom": 608
+  },
+  "dpi_scale": 4.0,
+  "image_px": [
+    877,
+    619
+  ],
+  "x_ticks_read": [
+    [
+      0.0,
+      347.1
+    ],
+    [
+      5.0,
+      375.6
+    ],
+    [
+      10.0,
+      403.85
+    ],
+    [
+      15.0,
+      432.35
+    ],
+    [
+      20.0,
+      460.85
+    ],
+    [
+      25.0,
+      489.1
+    ],
+    [
+      30.0,
+      517.6
+    ],
+    [
+      35.0,
+      545.85
+    ]
+  ],
+  "y_ticks_read": [
+    [
+      100.0,
+      205.356
+    ],
+    [
+      1000.0,
+      175.856
+    ],
+    [
+      10000.0,
+      146.356
+    ],
+    [
+      100000.0,
+      116.856
+    ],
+    [
+      1000000.0,
+      87.356
+    ],
+    [
+      10000000.0,
+      57.981
+    ]
+  ],
+  "geometry_calibration": {
+    "x": {
+      "length_threshold": 12.0,
+      "n_major": 8,
+      "positions": [
+        42.0,
+        156.0,
+        269.0,
+        383.0,
+        497.0,
+        610.0,
+        724.0,
+        837.0
+      ],
+      "spacing_px": 113.57142857142857,
+      "uniformity": 0.00431,
+      "tick_direction": "inward",
+      "tick_side": "top",
+      "implied_step_per_major": 5.0,
+      "axis_increases_with_pixel": true,
+      "step_is_round": true
+    },
+    "y": {
+      "length_threshold": 10.0,
+      "n_major": 6,
+      "positions": [
+        16.5,
+        134.0,
+        252.0,
+        370.0,
+        488.0,
+        606.0
+      ],
+      "spacing_px": 117.9,
+      "uniformity": 0.00136,
+      "tick_direction": "outward",
+      "tick_side": "left",
+      "implied_step_per_major": -1.0,
+      "axis_increases_with_pixel": false,
+      "step_is_round": true
+    }
+  },
+  "x_fit": {
+    "slope": 0.17606351719257846,
+    "intercept": -61.11896280838102,
+    "log": false,
+    "max_tick_residual_frac": 0.000569
+  },
+  "y_fit": {
+    "slope": -0.03391882047695558,
+    "intercept": 8.964626929783485,
+    "log": true,
+    "max_tick_residual_frac": 0.000404
+  },
+  "axis_span_from_ticks": {
+    "x": [
+      -1.0637,
+      36.0417
+    ],
+    "y": [
+      95.9918,
+      10249421.5907
+    ]
+  },
+  "n_points": 185,
+  "per_series": {
+    "4.2K": 25,
+    "10K": 40,
+    "15K": 40,
+    "20K": 40,
+    "25K": 40
+  },
+  "reprojection_residual_px": 0.005001
+}

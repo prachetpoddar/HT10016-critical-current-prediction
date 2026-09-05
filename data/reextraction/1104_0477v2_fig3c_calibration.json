@@ -1,0 +1,111 @@
+{
+  "frame_px": {
+    "x_left": 83,
+    "x_right": 911,
+    "y_top": 51,
+    "y_bottom": 383
+  },
+  "dpi_scale": 4.0,
+  "image_px": [
+    980,
+    413
+  ],
+  "x_ticks_read": [
+    [
+      0.0,
+      215.225
+    ],
+    [
+      5.0,
+      269.725
+    ],
+    [
+      10.0,
+      324.225
+    ],
+    [
+      15.0,
+      378.475
+    ]
+  ],
+  "y_ticks_read": [
+    [
+      1000.0,
+      458.995
+    ],
+    [
+      10000.0,
+      438.37
+    ],
+    [
+      100000.0,
+      417.495
+    ]
+  ],
+  "geometry_calibration": {
+    "x": {
+      "length_threshold": 11.0,
+      "n_major": 4,
+      "positions": [
+        126.5,
+        344.5,
+        562.5,
+        779.5
+      ],
+      "spacing_px": 217.66666666666666,
+      "uniformity": 0.00204,
+      "tick_direction": "inward",
+      "tick_side": "bottom",
+      "implied_step_per_major": 5.0,
+      "axis_increases_with_pixel": true,
+      "step_is_round": true
+    },
+    "y": {
+      "length_threshold": 10.0,
+      "n_major": 3,
+      "positions": [
+        133.5,
+        217.0,
+        299.5
+      ],
+      "spacing_px": 83.0,
+      "uniformity": 0.00602,
+      "tick_direction": "inward",
+      "tick_side": "left",
+      "implied_step_per_major": -1.0,
+      "axis_increases_with_pixel": false,
+      "step_is_round": true
+    }
+  },
+  "x_fit": {
+    "slope": 0.09186942893887008,
+    "intercept": -19.77718181981226,
+    "log": false,
+    "max_tick_residual_frac": 0.000612
+  },
+  "y_fit": {
+    "slope": -0.04819218812372238,
+    "intercept": 25.121993492119202,
+    "log": true,
+    "max_tick_residual_frac": 0.002008
+  },
+  "axis_span_from_ticks": {
+    "x": [
+      -1.0037,
+      18.0133
+    ],
+    "y": [
+      99.0851,
+      990740.2144
+    ]
+  },
+  "n_points": 81,
+  "per_series": {
+    "2K": 1,
+    "4.5K": 20,
+    "7.5K": 20,
+    "10K": 20,
+    "12K": 20
+  },
+  "reprojection_residual_px": 0.005018
+}
