@@ -1,106 +1,104 @@
 # What happened to the rest of the papers
 
-Recorded 2026-09-05. Script `analysis/coverage_map.py`, table
-`audit/coverage_map.csv`.
+Recorded 2026-09-05, and **corrected the same day after the pipeline author
+pointed out that the papers exist upstream.** The first version of this note
+said twelve papers produce no fit and no record of why. There is a record, in
+this repository, in ledgers this audit wrote itself, and the script did not look
+at them. The retraction is below and the correct accounting with it.
 
-The census covers four papers, which invites the question of what happened to
-everything else. The answer has two halves. The census's four are fully
-accounted for and the accounting was already on file. The larger set is not, and
-checking it turned up a gap the audit had not looked at.
+Script `analysis/coverage_map.py`, table `audit/coverage_map.csv`.
 
-## The census's four, reconciled
+## Retraction
 
-`audit/field_axis_census_preregistration_20260905.md` and its amendment
-partition the sixteen papers that carry a passing field-axis fit:
+I reported that twelve rows of the provenance table produce no fit in either
+table and that "the deposit carries no record of the selection". Every one of
+the twelve is accounted for:
 
-| | papers | passing fits |
+| disposition | rows |
+|---|---:|
+| withdrawn, with a citation, the figure checked and a reason, in `audit/withdrawn_beta_T_papers.csv` | 11 |
+| duplicate identifier of a paper that does contribute, in `audit/duplicate_papers.csv` | 1 |
+
+The eleven were withdrawn on 2026-09-03 for defects each recorded in full: axes
+in A/m2 read as A/cm2, field axes that are log-tick ladders, isotherms that are
+exact arithmetic ramps, a record interleaving two series three orders of
+magnitude apart, and a compound filed under the wrong substructure. The twelfth,
+`10.1016/j.physc.2011.02.004`, is Physica C 471 (2011) 215, which is arXiv
+`1002.0208`, and it contributes under the arXiv key.
+
+The standing rule for this project is that a claim of missing or defective data
+is rechecked against the whole repository before it is reported. I did not
+follow it. `coverage_map.py` now joins the withdrawal and duplicate ledgers and
+refuses to call a row unaccounted for without checking them.
+
+## The funnel, reconstructed from the pipeline's own code
+
+The generator is
+`phase_3_p44_cohort_A_post_UCLA_consolidation.py`. Its selection rules are:
+
+1. iron-bearing compounds only, `stoich_Fe > 0`
+2. `Jc > 0` and `T/Tc` in `[0, 0.7)`
+3. group by paper, compound and field; keep groups with at least three distinct
+   temperatures
+4. `physicality = ok` when `-5 < beta_T < 15`
+
+Applying those rules to `agent2_dataset_v3_2_1.csv`:
+
+| stage | rows | papers |
 |---|---:|---:|
-| traced for the census | 4 | 28 |
-| reported from an existing source reading | 1 | 8 |
-| unassessable, no source document in the corpus | 5 | 10 |
-| already traced before the census | 6 | 48 |
-| **total** | **16** | **94** |
+| candidate PDFs in `_jc_screen/mine_pdf_list.txt` | | 2596 |
+| extracted Jc points | 6574 | 80 |
+| iron-bearing | 3400 | 43 |
+| valid for beta_T, T/Tc below 0.7 | 2853 | 43 |
+| groups with at least three isotherms at one field | 412 fits | 29 |
 
-The repository agrees. Of the sixteen, nine carry a pixel trace, two have a PDF
-and no trace, and five have neither. The two with a PDF and no trace are exactly
-the two the amendment excluded with a stated reason: `physc.2009.05.098`, whose
-PDF is page one of a six-page paper in all three places it appears, and
-`jallcom.2023.170146`, whose file under that DOI is a different paper. So the
-census is four because ten of the sixteen were already traced or already read,
-and the remaining two cannot be traced from what is here.
+The pipeline's own output file adds the Cohort A extension and two Elsevier
+records and holds **419 fits over 33 papers**. Every deposited paper's fit count
+reproduces exactly under these rules, so the reconstruction is right.
 
-That accounting stands. Nothing was dropped after its answer was known.
+## Where the 419 becomes 260
 
-## The gap the accounting does not cover
+| | fits | papers |
+|---|---:|---:|
+| the pipeline's `phase_3_p44_post_UCLA_beta_T_fits.csv` | 419 | 33 |
+| withdrawn in `audit/withdrawn_beta_T_papers.csv` (2026-09-03) | -154 | -11 |
+| withdrawn in `audit/withdrawn_records.csv` (2026-09-01) | -5 | -2 |
+| **the copy in this repository** | **260** | **20** |
 
-The provenance table holds 62 rows, one per paper the deposit says contributes.
-Sorting them by what they actually produce:
+The arithmetic closes exactly. The repository's copy is the post-withdrawal
+cohort, and the withdrawals are this audit's own, not the pipeline's.
 
-| flag on the row | nothing | both axes | field only | temperature only |
-|---|---:|---:|---:|---:|
-| fully fittable | **11** | **1** | 3 | 17 |
-| Cohort B only | 1 | 0 | 27 | 0 |
-| Cohort A only | 0 | 0 | 0 | 2 |
+## What is still true, and it is smaller
 
-Two things fall out.
+**The provenance table was not updated when the withdrawals were made.** It
+still lists all eleven withdrawn papers as contributing, and flags them "fully
+fittable". Anyone reading `data/provenance_table_fitcohort_full.csv` as the
+cohort definition gets 62 papers where 50 contribute and 11 were removed for
+cause.
 
-**Thirty-two rows are flagged "fully fittable" and one paper contributes to both
-axes.** `1002.0208v2` is the only paper that appears in both fits tables. The
-label describes what could in principle be fitted, not what was, and read as a
-statement about the cohort it is wrong by a factor of thirty.
+**"Fully fittable" does not mean what it says.** Thirty-two rows carry that flag
+and exactly one paper, `1002.0208v2`, contributes to both axes. The label
+describes what could in principle be fitted, not what was.
 
-**Twelve rows produce no fit at all, and every one of them has both a source
-document and an extraction.**
+**The Tc anchor is a hardcoded dictionary, confirmed at source.** The generator
+carries `TC_LOOKUP`, a per-compound constant table with per-substructure
+defaults for anything not in it: `Ba(FeAs)2` 38.0, `Fe2TeSe` 14.5, `Sm2FeAs2O`
+55.0, `Pr2FeAs2O` 51.0, falling back to 38.0 for any unlisted 122 and 50.0 for
+any unlisted 1111. This is the mechanism behind
+`audit/tc_anchor_not_paper_reported_20260905.md`, now visible in the code rather
+than inferred from the values.
 
-| identifier | temperature rows | isotherms | fields | field rows |
-|---|---:|---:|---:|---:|
-| `1204.0339v2` | 170 | 5 | 17 | 0 |
-| `1003.0946v2` | 158 | 5 | 26 | 0 |
-| `1801.05074v1` | 156 | 12 | 13 | 0 |
-| `1002.0248v1` | 104 | 7 | 13 | 0 |
-| `1802.09868v1` | 99 | 6 | 21 | 0 |
-| `2403.19981v1` | 78 | 6 | 13 | 0 |
-| `2110.15577v1` | 68 | 4 | 17 | 0 |
-| `1109.5479v1` | 57 | 3 | 19 | 0 |
-| `1612.02839v1` | 57 | 3 | 19 | 0 |
-| `1108.5583v3` | 30 | 3 | 10 | 0 |
-| `0904.2442v1` | 20 | 4 | 9 | 0 |
-| `10.1016/j.physc.2011.02.004` | 0 | 0 | 0 | 356 |
+**No failure is recorded at the point of selection.** A group with fewer than
+three isotherms is skipped with a bare `continue`, so it leaves no row.
+`physicality` records `beta_extreme`, and no fit in the file carries it, so the
+only silent drop is the isotherm-count rule. That is a small point next to what
+I claimed, but it is the true version of it.
 
-**1353 extracted rows, from papers the deposit's own provenance table lists as
-contributing, that produce no fit and no record of why.** Eleven of the twelve
-are flagged fully fittable. Several carry more isotherms and more fields than
-papers that do contribute: `1801.05074v1` has twelve isotherms, more than any
-paper in the temperature-axis cohort.
+## Coverage of what does contribute
 
-Neither fits file records a failure. The temperature file is 260 rows, all
-`ok = True` and all `physicality = ok`, so a paper that did not make it is simply
-absent rather than recorded as excluded. There is no way, from the deposited
-tables alone, to tell a paper that was tried and failed from one that was never
-tried.
-
-## Coverage of everything that does contribute
-
-Fifty papers contribute at least one fit.
-
-- 37 have a PDF in this corpus, 13 do not.
-- 24 have a pixel trace, 26 do not.
-- 13 have neither, and among them are the four MAGLAB records and
-  `10.1007/s10854-026-16566-9`, whose twelve passing field-axis fits are the
-  third largest block in that cohort.
-
-So a little under half the contributing papers have never been compared against
-a figure, and a quarter cannot be, because nothing to compare against is in the
-corpus.
-
-## What this changes
-
-Nothing already reported. The census result stands as scored, and the four-paper
-set was correctly derived. What it adds is a second, larger question that the
-audit had not asked: the cohort as deposited is a subset of the cohort as
-declared, the difference is twelve papers and 1353 extracted rows, and the
-deposit carries no record of the selection.
-
-Whether those twelve failed a gate, failed to fit, or were never attempted is
-not answerable from what is here. It needs the code that built the fits tables,
-which is not in this repository.
+Fifty papers contribute at least one fit. Thirty-seven have a PDF in this
+corpus, twenty-four have a pixel trace, and thirteen have neither, among them
+`10.1007/s10854-026-16566-9`, whose twelve passing field-axis fits are the third
+largest block in that cohort. So a little under half the contributing papers
+have never been compared against a figure, and a quarter cannot be from what is
+here. That part of the first version stands.
