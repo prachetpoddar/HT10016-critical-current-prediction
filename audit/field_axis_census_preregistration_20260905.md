@@ -73,3 +73,50 @@ distinguishable, on a set chosen for suspicion. The census asks the same
 question on a set chosen by nothing.
 
 Committed before tracing.
+
+---
+
+# Amendment, recorded before any tracing began
+
+Two of the six papers listed above cannot be traced, and both failures were
+already on file in this repository when the list was written. I did not check
+the list against those records before committing it. The amendment is recorded
+here rather than by editing the table, so the original error stays visible.
+
+**`elsevier_10.1016_j.physc.2009.05.098`, 8 fits.** The corpus holds only page
+one of a six-page paper, in all three places it appears.
+`audit/corpus_pdf_sweep_20260904.md` recorded this on 2026-09-04. The full text
+was supplied by hand earlier in this session and read then, but it is no longer
+on disk. It will therefore be reported from that source reading
+(`audit/physc_2009_05_098_confirmed_20260904.md`), which found the extraction to
+be a faithful reading of Fig. 2 with one defect: the field axis is kilo-oersted
+written into a tesla column. Not re-traced, and the reason is stated rather than
+the paper dropped.
+
+**`elsevier_10.1016_j.jallcom.2023.170146`, 6 fits.** The file stored under that
+DOI is a different paper. Its text is identical to
+`10.1016_j.physc.2009.11.051.pdf`: Physica C 470 (2010) S360-S362, "Effects of
+heavy-ion irradiation on the vortex state in Ba(Fe1-xCox)2As2". It contains no
+mention of MgB2, of 2023, or of the Journal of Alloys and Compounds.
+`audit/corpus_pdf_sweep_20260904.md`, `audit/field_axis_units_20260904.md`,
+`audit/four_unread_axes_20260904.md` and `analysis/audit_archive_integrity.py`
+all record this already. No source document for that DOI exists in the corpus,
+so its six fits are **unassessable**, on the same footing as the four MAGLAB
+records.
+
+## The census as it now stands
+
+| | papers | passing fits |
+|---|---:|---:|
+| to be traced now | **4** | **28** |
+| reported from an existing source reading | 1 | 8 |
+| unassessable, no source document | 5 | 10 |
+| already traced before this census | 6 | 48 |
+
+The four to be traced are `physc.2009.11.051`, `physc.2010.05.048`,
+`physc.2013.04.060` and `matchemphys.2023.128348`. All four will be reported
+whatever they show.
+
+Ten of the 94 passing fits, over five papers, can never be checked against a
+figure because no figure exists in the corpus to check them against. That is
+itself a result about the deposit and will be reported as one.
