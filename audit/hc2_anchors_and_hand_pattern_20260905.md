@@ -118,3 +118,24 @@ For a new extraction, before anyone reopens the figure:
 Points 4 and 5 are the two failures that hand digitisation has actually produced
 here. Neither is a reading error and neither would be caught by any of the tests
 above.
+
+---
+
+## Superseded, same day
+
+Section A above says the two rising ladders could not be explained. They can.
+The deposit's own `*_HcT_supplementary.csv` files name the figure each anchor
+was read from, and neither of these two names a critical-field figure. Neither
+paper prints a critical field at all, and six of the recorded values are above
+the highest field either paper applies to its sample. See
+`audit/anchor_provenance_repaired_20260905.md`.
+
+Two statements above are corrected there:
+
+- the claim that the `physc.2009.11.051` grid matches the relaxation-rate
+  figure. The grid 2, 10, 15, 20 K matches that paper's Fig. 3, the
+  Jc-versus-field figure. The over-claim stands; "supports nothing" does not.
+- the screen "the anchor required to be labelled `term_Hc2`", which treated
+  `ambiguous_label` as the weaker claim. The fits file consumes those values in
+  the Hc2 slot, so the effective claim is an Hc2 and the screen was letting the
+  least certain class through.
