@@ -1,0 +1,95 @@
+paper,sample,temperature_K,deposited_beta_H,disposition,reason
+MAGLAB_11_6K,unspecified,6.0,2.2194769301197104,kept,clears the field clause and the temperature window
+MAGLAB_Ni122_4_2K,unspecified,4.2,2.173233649253015,kept,clears the field clause and the temperature window
+MAGLAB_P122_4_2K,unspecified,4.2,3.008053302362028,kept,clears the field clause and the temperature window
+MAGLAB_Sm1111_4_2K,unspecified,4.2,0.6839222465432688,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.jallcom.2023.170146,MgB2_10K,10.0,1.7913601054743344,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.jallcom.2023.170146,MgB2_15K,15.0,1.7765614999947452,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.jallcom.2023.170146,MgB2_20K,20.0,1.4734698228805705,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.jallcom.2023.170146,MgB2_25K,25.0,1.9289744645699531,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.jallcom.2023.170146,MgB2_30K,30.0,3.185977073396232,dropped,T/Tc above 0.7 under the repaired Tc
+elsevier_10.1016_j.jallcom.2023.170146,MgB2_35K,35.0,1.2332200169685257,dropped,T/Tc above 0.7 under the repaired Tc
+elsevier_10.1016_j.jallcom.2023.170384,LaFeAsO_2K,2.0,3.1626650680656425,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.jallcom.2023.170384,LaFeAsO_5K,5.0,10.692565346999295,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.matchemphys.2023.128348,X01,20.0,2.776516435926349,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.matchemphys.2023.128348,X02,20.0,2.609771096116281,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.matchemphys.2023.128348,X03,20.0,2.518592769878972,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.matchemphys.2023.128348,X04,20.0,2.336583465626456,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.matpr.2019.05.078,mono-5K,5.0,1.5876771649881465,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.matpr.2019.05.078,multi-5K,5.0,1.6643944033887998,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,4.2,0.3065084603671735,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,6.0,0.3381881764791785,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,8.0,0.3775417228705511,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,10.0,0.427930273986556,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,12.0,0.4951735149192295,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,14.0,0.5905290818691102,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,16.0,0.7400032498568847,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Polycrystal,21.0,2.0318848862207117,dropped,T/Tc above 0.7 under the repaired Tc
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,4.2,0.2584991142801328,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,6.0,0.3065084603671735,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,8.0,0.3775417228705511,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,10.0,0.427930273986556,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,12.0,0.4951735149192295,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,14.0,0.5905290818691102,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,16.0,0.7400032498568847,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,17.0,0.7889815008385456,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,18.0,0.8608719111058379,dropped,T/Tc above 0.7 under the repaired Tc
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,19.0,1.3774048505485763,dropped,T/Tc above 0.7 under the repaired Tc
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,20.0,2.5994078829980607,dropped,T/Tc above 0.7 under the repaired Tc
+elsevier_10.1016_j.mtphys.2022.100783,Single crystal,21.0,2.0318848862207117,dropped,T/Tc above 0.7 under the repaired Tc
+elsevier_10.1016_j.phpro.2015.06.160,Ba0.64K0.36Fe2As2,18.0,2.3263800510964,dropped,fails the field clause under the repaired anchor
+elsevier_10.1016_j.phpro.2015.06.160,Ba0.64K0.36Fe2As2,16.0,2.356997636576607,dropped,fails the field clause under the repaired anchor
+elsevier_10.1016_j.phpro.2015.06.160,BaFe1.91Ni0.09As2,15.0,2.143757436440256,dropped,fails the field clause under the repaired anchor
+elsevier_10.1016_j.phpro.2015.06.160,BaFe1.91Ni0.09As2,13.0,2.2161404136399403,dropped,fails the field clause under the repaired anchor
+elsevier_10.1016_j.phpro.2015.06.160,BaFe1.91Ni0.09As2,10.0,2.0685651407190835,dropped,fails the field clause under the repaired anchor
+elsevier_10.1016_j.phpro.2015.06.160,BaFe1.91Ni0.09As2,7.0,2.035454786765152,dropped,fails the field clause under the repaired anchor
+elsevier_10.1016_j.physc.2009.05.098,SmFeAsO0.8F0.2_10K,10.0,0.8191005304313276,dropped,paper withdrawn: physc.2009.05.098
+elsevier_10.1016_j.physc.2009.05.098,SmFeAsO0.8F0.2_15K,15.0,0.999460911643853,dropped,paper withdrawn: physc.2009.05.098
+elsevier_10.1016_j.physc.2009.05.098,SmFeAsO0.8F0.2_20K,20.0,1.7462413910278185,dropped,paper withdrawn: physc.2009.05.098
+elsevier_10.1016_j.physc.2009.05.098,SmFeAsO0.8F0.2_25K,25.0,3.142558589513029,dropped,paper withdrawn: physc.2009.05.098
+elsevier_10.1016_j.physc.2009.05.098,SmFeAsO0.8F0.2_2K,2.0,1.252188951600094,dropped,paper withdrawn: physc.2009.05.098
+elsevier_10.1016_j.physc.2009.05.098,SmFeAsO0.8F0.2_30K,30.0,5.696707967132056,dropped,paper withdrawn: physc.2009.05.098
+elsevier_10.1016_j.physc.2009.05.098,SmFeAsO0.8F0.2_35K,35.0,12.14492937777908,dropped,paper withdrawn: physc.2009.05.098
+elsevier_10.1016_j.physc.2009.05.098,SmFeAsO0.8F0.2_5K,5.0,1.2260348664879732,dropped,paper withdrawn: physc.2009.05.098
+elsevier_10.1016_j.physc.2009.11.051,irradiated,2.0,0.0651094962464942,dropped,paper withdrawn: physc.2009.11.051
+elsevier_10.1016_j.physc.2009.11.051,irradiated,10.0,0.0928818220764652,dropped,paper withdrawn: physc.2009.11.051
+elsevier_10.1016_j.physc.2009.11.051,irradiated,15.0,0.1445598873344608,dropped,paper withdrawn: physc.2009.11.051
+elsevier_10.1016_j.physc.2009.11.051,irradiated,20.0,0.043698835977242,dropped,paper withdrawn: physc.2009.11.051
+elsevier_10.1016_j.physc.2009.11.051,unirradiated,2.0,0.1129847552597909,dropped,paper withdrawn: physc.2009.11.051
+elsevier_10.1016_j.physc.2009.11.051,unirradiated,10.0,0.1249765064977561,dropped,paper withdrawn: physc.2009.11.051
+elsevier_10.1016_j.physc.2009.11.051,unirradiated,15.0,0.2209102241089527,dropped,paper withdrawn: physc.2009.11.051
+elsevier_10.1016_j.physc.2009.11.051,unirradiated,20.0,0.0768548993622197,dropped,paper withdrawn: physc.2009.11.051
+elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,2.0,0.1065600423449129,dropped,paper withdrawn: physc.2010.05.048
+elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,3.0,0.221619319584488,dropped,paper withdrawn: physc.2010.05.048
+elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,4.0,0.2783270081945176,dropped,paper withdrawn: physc.2010.05.048
+elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,5.0,0.4165441794889079,dropped,paper withdrawn: physc.2010.05.048
+elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,6.0,0.5817353273354465,dropped,paper withdrawn: physc.2010.05.048
+elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,7.0,0.4501930907545112,dropped,paper withdrawn: physc.2010.05.048
+elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,8.0,0.9074067681632634,dropped,paper withdrawn: physc.2010.05.048
+elsevier_10.1016_j.physc.2010.05.048,FeTe0.59Se0.41,9.0,1.4014396357806882,dropped,paper withdrawn: physc.2010.05.048
+1002.0208v2.pdf,PrFeAsO0.6F0.12_10K,10.0,0.3727,kept,clears the field clause and the temperature window
+1002.0208v2.pdf,PrFeAsO0.6F0.12_15K,15.0,0.2499,kept,clears the field clause and the temperature window
+1002.0208v2.pdf,PrFeAsO0.6F0.12_20K,20.0,0.1607,kept,clears the field clause and the temperature window
+1002.0208v2.pdf,PrFeAsO0.6F0.12_25K,25.0,0.099,kept,clears the field clause and the temperature window
+1002.0208v2.pdf,PrFeAsO0.6F0.12_30K,30.0,0.3412,kept,clears the field clause and the temperature window
+1002.0208v2.pdf,PrFeAsO0.6F0.12_7K,7.0,1.0151,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.physc.2013.04.060,MgB(2-x)Cx_x_0_0386_4_2K,4.2,2.353999706812804,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.physc.2013.04.060,MgB(2-x)Cx_x_0_1202_4_2K,4.2,1.4750829895482016,dropped,fails the field clause under the repaired anchor
+elsevier_10.1016_j.physc.2013.04.060,MgB2_4_2K,4.2,3.7999293071337386,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.physc.2013.04.060,Undoped_MgB2_10K,10.0,4.779311736113043,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.physc.2013.04.060,Ag_Doped_MgB2_10K,10.0,2.0905650082158456,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.physc.2013.04.060,SiC_Doped_MgB2_10K,10.0,1.5623445821380608,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.physc.2013.04.060,TiC_Doped_MgB2_10K,10.0,3.938175873961849,kept,clears the field clause and the temperature window
+elsevier_10.1016_j.physc.2013.04.060,ZrB2_Doped_MgB2_10K,10.0,2.558076334123752,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=0%",5.0,1.3956391988452888,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=0%",7.0,1.7131576903110215,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=0%",10.0,2.1483043416192205,dropped,T/Tc above 0.7 under the repaired Tc
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=1%",5.0,1.194117794824607,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=1%",7.0,1.3458894354729332,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=1%",10.0,1.5458359149464524,dropped,T/Tc above 0.7 under the repaired Tc
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=2%",5.0,1.443937725865531,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=2%",7.0,1.605175620502339,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=2%",10.0,1.4819079853330066,dropped,T/Tc above 0.7 under the repaired Tc
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=3%",5.0,1.7890891969235347,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=3%",7.0,1.6005673710692063,kept,clears the field clause and the temperature window
+springer_10.1007_s10854-026-16566-9,"Fe(1-x)(MWCNT)xTe0.5Se0.5, x=3%",10.0,1.85731319641739,dropped,T/Tc above 0.7 under the repaired Tc

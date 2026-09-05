@@ -1,0 +1,9 @@
+quantity,published,repaired,frm,moves
+fitted curve papers,62,50,"provenance table, status == contributing, one paper counted once where two identifiers name it",True
+fitted curve compounds,38,35,the same rows,True
+extracted points,4146,3303,the same rows; both extractions of the duplicated paper count,True
+temperature-axis partial fits,260,257,"apply_anchor_repairs.py; three of the 260 are not refitted, two whose paper has no rows in the extraction and one whose deposited rule was never reproduced",True
+field-axis partial fits passing,94,52,"fit_protocol.py --report, on the cohort apply_anchor_repairs.py leaves",True
+field-axis source papers,16,12,the same,True
+per-paper anchors behind Fig. 3,96,96,unchanged: no withdrawn paper appears in the anchor table,False
+candidate compounds evaluated,183,183,unchanged: the prediction side is untouched by the anchor repair,False

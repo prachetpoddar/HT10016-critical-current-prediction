@@ -296,7 +296,8 @@ def report():
         raw = H < hc2
         b_raw, n_raw, _ = fit(H[raw], J[raw], hc2)
         a.update(beta_nofloor=b0, beta_old_rule=b_raw, n_old_rule=n_raw,
-                 paper=r.paper_key, T=r.fixed_axis_value,
+                 paper=r.paper_key, sample=r.sample_identifier,
+                 T=r.fixed_axis_value,
                  was_passing=bool(r.ok) and r.physicality == "ok")
         rows.append(a)
     d = pd.DataFrame(rows)
