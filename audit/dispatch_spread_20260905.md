@@ -106,53 +106,91 @@ temperature enters as described; that at 4.2 K it cannot, because that is the
 reference temperature, so the prediction there is a single family constant; and
 that the residual 0.0098 dex is sampling noise on eighteen fits.
 
-## Regenerated, 2026-09-05
+## Regenerated, 2026-09-05, and a claim retracted
 
 The prediction file could not be regenerated in this checkout because three
 inputs were absent. They are staged now: `3DSC_MP.csv`,
 `literature_hc2_in_scope.csv` and `phase_3_makidegennes_per_paper_fits.csv`,
 plus 32 extraction files the uploads copy of `data_agent2/v3_2_2B_extension`
-was missing, which is why a first run produced 220 candidates against the
-paper's 233. The generator runs. Script
-`analysis/compare_regenerated_dispatch.py`, output in
+was missing. The generator runs. Script
+`analysis/compare_regenerated_dispatch.py`, outputs and a manifest in
 `audit/p57_regen_20260905/`.
 
-**The file as a whole does not reproduce, and the emitted set does.** Running
-the generator on the pre-withdrawal snapshot and applying the two post-hoc
-gate scripts gives 2151 rows against the deposit's 2097. Every one of the 54
-extra rows is refused; the emitted set is 163 rows on identical
-(compound, temperature, field) keys, at the same two grid points, with the same
-15.5 T anchor on all 86 records at 4.2 K and the same 83 parent to 3 exact
-split. So the comparison below is like-for-like on the quantity compared, and
-is not a reproduction of the file. The residual difference is in how many
-targets fall below the validated reduced field, 1120 against 1054.
+### The claim I was about to publish, and why it is wrong
 
-**The spread at 4.2 K is twenty-three times larger on the corrected tables.**
+I was going to tell Referee A that the 0.0098 dex spread becomes 0.2242 dex on
+the corrected tables. An adversarial review refuted the attribution and I have
+since confirmed it by running the generator on the tables as originally
+released, before any withdrawal and before the anchor repair.
 
-| | deposit | regenerated |
-|---|---:|---:|
-| records at 4.2 K, 5 T | 86 | 86 |
-| span of the prediction | 0.0098 dex | 0.2242 dex |
-| on the substructure-aggregate predictor | 86 | 84 |
-| on a sample-form-conditional predictor | 0 | 2 |
+| arm | rows | span at 4.2 K, 5 T | on a conditional predictor |
+|---|---:|---:|---:|
+| deposited file | 2097 | 0.0098 dex | 0 |
+| generator, release tables (git 8ad8d43) | 2151 | 0.2255 dex | 2 |
+| generator, current tables | 2151 | 0.2242 dex | 2 |
 
-The whole of the widening is two records. Eighty-four still route to the
-substructure-aggregate predictor and span 0.0085 dex among themselves, which is
-slightly tighter than before. Two MgB2 records acquire a `wire` sample-form
-commitment they did not have on the deposited tables, route to the Stage 2
-conditional pool, and land at 5.199 and 5.198 against the aggregate's 4.980.
+**The withdrawals and the anchor repair move the spread by 0.0013 dex, which is
+0.6 percent of it.** Everything else was there on the tables as released. There
+is no corrections result here.
 
-**This is a better answer to Referee A than the letter gives.** The narrow
-spread is a property of the aggregate predictor evaluated at its own reference
-point. The moment two records route to a conditioned cell instead, they sit
-0.22 dex away. That demonstrates the conditioning claim rather than
-embarrassing it.
+### What the run does show, and it is more serious
 
-The 0.0098 dex figure in the letter is therefore superseded and should be
-0.2242 dex, with the split reported: the aggregate cell is still flat and the
-flatness is structural.
+**The deposited prediction file does not reproduce from the deposited generator
+run on the deposited tables.** On the release tables the generator routes two
+MgB2 records from `matpr.2019.05.078` to the (conventional_AlB2, wire)
+conditional cell, because that paper's fits carry sample form "wire" and wire
+is in the generator's `ENGINEERED_FORMS`. Those two fits have been in
+`phase_3_form3_fits_partial_cohortB_v2.csv`, unchanged, at every revision from
+the release to now, and the lookup that reads them has been in the generator
+since the release. The deposited file shows both records on the
+substructure-aggregate predictor. Something between the generator and the
+deposit removed the commitment and nothing in the repository records it.
 
-**Still not settled.** The 54-row difference is unexplained. It is confined to
-refused targets and does not touch any emitted prediction, but the reason it
-exists has not been traced, and this comparison should not be described as a
-reproduction. It has also not been through the adversarial review gate.
+The regenerated file also re-admits candidates that were withdrawn by hand.
+Regenerating gives 239 candidates against the deposit's 233; the six extra are
+one record from `physb.2025.417755` and five from `physc.2010.03.003`, the
+paper this repository itself files as a withdrawn field-axis extraction. The
+withdrawal was applied by editing the CSV, and the generator's candidate list
+is built from the extraction directory, which no withdrawal touched. So the
+generator cannot enforce the withdrawals, and any regeneration silently brings
+them back. All six are refused, so no emitted prediction changes, but the
+mechanism is the finding.
+
+### A first regeneration was invalid, and the reason is worth recording
+
+The generator sets `REPO` to the grandparent of the repository directory and
+reads its extraction index from `REPO/data_agent2/v3_2_2B_extension`, while the
+module it imports for candidate generation hardcodes a different `REPO`. In a
+checkout where only the second resolves, `build_a2_tc_index` returns an empty
+dict without raising, and every extraction-derived transition temperature falls
+silently to a substructure default. My first run produced 612 rows on defaults
+where the deposit has 558 on extraction values, moving 26 candidates' anchors
+and flipping 30 refusal codes. The 4.2 K figure survived it, because the
+temperature term is zero there, but nothing else in that file did. The run in
+`audit/p57_regen_20260905/` is the corrected one and carries a manifest naming
+the resolved path and hashing every input.
+
+### The wire cell should not be shown to a referee
+
+It holds 8 fits from 2 papers, 6 of them from one. The two records it predicts
+come from `matpr.2019.05.078`, whose own 2 fits are in the pool, so a quarter
+of the pool is the thing being predicted. That is exactly the case the A4
+answer concedes: sample form being very nearly a relabelling of source paper.
+Offering a 0.22 dex conditional shift as a demonstration of conditioning would
+contradict the concession made four sections earlier in the same letter.
+
+### What stands for A6
+
+Not the widening. The letter's 0.0098 dex still describes the deposited file,
+and what that figure measures is bootstrap Monte Carlo on an 18-fit pool: at
+4.2 K the temperature term is zero for every candidate and all 86 share a
+15.5 T anchor, so the 84 aggregate records have identical model inputs and
+differ only in their draw. 0.0098 against 0.0085 is inside that noise. The
+two-grid-point correction in the earlier section of this note also stands.
+
+### Damage repaired
+
+Running the two gate scripts rewrites `audit/field_window_gate.csv` and
+`audit/temperature_window_gate.csv` in place. A first pass committed them in a
+state describing the regenerated table while the shipped prediction table was
+the deposited one. Both are restored.
