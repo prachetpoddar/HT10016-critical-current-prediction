@@ -230,3 +230,52 @@ renumbered, only rewritten:
   classes, or 1.257 to 1.572 reads as degradation;
 - the Form 3 row needs "converges" replaced by the data-sufficiency rule it
   actually applies.
+
+## An eighth statistic, found while writing these in
+
+The blocker list named seven passages. Writing them in surfaced two more places
+where a changed cohort sits under a number.
+
+**The field-axis leave-one-compound-out in Table III.** It is the same
+statistic as the temperature row beside it, computed on the field cohort that
+went from 94 fits to 52, and it was never on the blocker list. The repaired
+values reverse which families clear the threshold:
+
+| family | as published | repaired |
+|---|---:|---:|
+| conventional_AlB2 | 0.753, clears | 1.230 |
+| iron_pnictide_122 | 0.973, clears | 1.957 |
+| iron_chalcogenide_11 | 1.093 | 0.707, clears |
+| iron_pnictide_1111 | 2.571 | 3.327 |
+
+The two families the paper dispatches with confidence on the field axis stop
+clearing, and the one it excludes starts. That propagates into the family-level
+dispatch scope, so it is not renumbered. The Table III cell now states both
+columns and says the field-axis verdicts in it remain those of the published
+cohort until the dispatch scope is carried through. **This is the next thing to
+resolve and it is larger than any of the seven.**
+
+**The 23 fully fittable compounds appear in six more places.** Fig. 4's
+leave-one-out ranking, the 81-cell universal-scaling test, the 400-draw
+critical-field perturbation, the manual verification claim, the Table II
+universal-scaling row and the supplement's correlation argument are all
+computed on that set. Renumbering them to 20 would put a corrected count beside
+statistics computed on the old one, so each now names it as the pre-withdrawal
+cohort, and Table I's row says the same. Fig. 1's caption, which is a census
+statement rather than a statistic, carries 20 with the 23 noted.
+
+One number was corrected on the way past. The supplement said 14 of the fully
+fittable compounds are represented by papers whose per-paper fits also pass
+physicality. That reproduces on no cohort: the published 23 intersect the
+provenance table in 13 compounds and the still-contributing rows in 10. It is
+now 10.
+
+## The documents
+
+`out_blockers/HT10016_revised_final2.docx`,
+`out_blockers/SUPPLEMENTAL_MATERIAL_revised_final2.docx` and
+`out_blockers/RESPONSE_TO_REFEREES_final2.docx`, built by
+`analysis/apply_blocker_edits.py` from the `_repaired` versions. Twenty-one
+edits, every one located, and the script refuses to write if any target is
+missing or if a superseded number is left in a sentence that does not say it is
+superseded.
