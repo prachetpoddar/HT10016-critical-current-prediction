@@ -111,9 +111,12 @@ TC_READ = {
         read=30.7, alts=[], compound="P-doped BaFe2As2 film",
         quote="phase purity with a high Tc of 30.7 K"),
     "1611.08455v1.pdf": dict(
-        read=16.0, alts=[13.7], compound="FeTe0.65Se0.35",
-        quote="shows very similar T_onset_c ~ 16 K; with the stated 2.3 K "
-              "transition width the zero-resistance Tc is about 13.7 K"),
+        read=13.7, alts=[16.0], compound="FeTe0.65Se0.35",
+        quote="both samples A and B exhibit almost the same onset of Tc "
+              "(T_onset_c ~ 13.7 K +/- 0.2 K), as determined from the real part "
+              "of the AC susceptibility. The paper also reports a resistive "
+              "onset near 16 K; 13.7 K is the one that matches Fig. 5(b), whose "
+              "jc is taken from the width of the magnetisation loop"),
     "1903.00866v2.pdf": dict(
         read=36.0, alts=[], compound="CaKFe4As4",
         quote="Tc defined by the onset of diamagnetism is 36.0 K"),
