@@ -100,8 +100,11 @@ rows = [
      "Elsevier and Springer, Cohort A + Cohort B", BLUE, BLUE_E, False),
     (C["fitted_curve_papers"], "papers contributing fitted curves",
      "the cohort every fitted quantity rests on", AMBER, AMBER_E, True),
-    (C["fitted_curve_compounds"], "distinct compounds",
-     "counted once per compound, not per curve", BLUE, BLUE_E, False),
+    # A label count, not a material count: see Sec. II.D and
+    # analysis/compound_label_reduction.py, which reduces the 35 to 27.
+    (C["fitted_curve_compounds"], "distinct compound labels",
+     "27 composition keys under the reduction of Sec. II.D", BLUE, BLUE_E,
+     False),
     (C["extracted_points"], "extracted critical-current points",
      "digitised J$_c$(T) and J$_c$(H) readings", BLUE, BLUE_E, False),
     (UPSTREAM["fittable_compounds_v321"], "compounds fittable on both axes",

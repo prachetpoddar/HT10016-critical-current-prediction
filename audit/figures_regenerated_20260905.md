@@ -90,3 +90,21 @@ positive claim rests on it.
 
 This is a wording problem in a census row rather than a defect in a statistic,
 and it is left for the author to decide.
+
+## Resolved 2026-09-05: the label count is now stated
+
+The author's decision was to reword and give the reduced count.
+`analysis/compound_label_reduction.py` performs the reduction under a stated
+rule and reports where the rule is wrong in each direction;
+`analysis/apply_compound_label_edits.py` writes the result into the three
+documents as `*_final15.docx`.
+
+Table I row 3 is now "Distinct compound labels with fitted curves" and its
+supporting cell says it is a label count. The abstract, the Fig. 1 caption,
+Figure 1 panel (a), Figure 2, and three passages of the response all follow.
+Section II.D gains a paragraph giving the two naming systems, the reduction of
+35 labels to 27 composition keys, the two directions in which the rule errs,
+the fact that no aggregation groups by label, and the state of the two
+compound leave-one-out cohorts: nine labels denoting nine compositions on the
+temperature axis, and on the field axis ten labels of which FeSe_Te_doped and
+FeTe0.5Se0.5 name one material in two papers.

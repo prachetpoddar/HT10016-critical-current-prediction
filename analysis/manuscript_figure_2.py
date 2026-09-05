@@ -177,7 +177,7 @@ logo("springer", 44, 56.4, 0.26)
 txt(33, 53.0, "Multi-API mainframe", size=8.6, weight="bold")
 txt(33, 51.0, "DOI-based retrieval orchestration + UCLA library "
               "cross-reference", size=7.2)
-txt(33, 49.3, "%d papers over %d compounds, %d extracted points"
+txt(33, 49.3, "%d papers over %d compound labels, %d extracted points"
     % (C["fitted_curve_papers"], C["fitted_curve_compounds"],
        C["extracted_points"]), size=7.0)
 
