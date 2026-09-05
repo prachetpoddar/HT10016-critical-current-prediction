@@ -43,7 +43,10 @@ UPSTREAM = dict(
 # reason for them ever to differ, so they are pinned here and asserted.
 TABLE_I = dict(articles_screened=934, fitted_curve_papers=50,
                fitted_curve_compounds=35, extracted_points=3303,
-               fittable_compounds=20, anchor_rows=96)
+               fittable_compounds=20, anchor_rows=96, anchor_papers=32,
+               temperature_axis_fits=257, field_axis_fits_ok=52,
+               field_axis_ok_papers=12, candidate_compounds=183,
+               dispatched_compounds=84)
 
 # The family label each substructure key carries in the figures. MgB2 is set
 # in mathtext so the 2 subscripts; the others are plain.
@@ -54,6 +57,20 @@ FAMILY_LABEL = {
     # 1111 is carried because it appears in the fit cohort even though no
     # candidate in the current dispatch table belongs to it.
     "iron_pnictide_1111": "Iron pnictide 1111-type",
+}
+
+# The refusal codes the dispatch table writes, in the wording Figure 2 uses for
+# the same five conditions. A code with no entry here is a code the figure
+# cannot describe, and from_deposit refuses rather than printing the raw key.
+REFUSAL_LABEL = {
+    "H_below_validated_reduced_field": "reduced field below the validated "
+                                       "window",
+    "T_above_validated_reduced_temperature": "reduced temperature at or above "
+                                             "the window",
+    "T_above_Tc": "target above T$_c$",
+    "Hc2_unavailable": "critical field unavailable",
+    "family_fails_field_axis_validation": "family without a validated field "
+                                          "axis",
 }
 
 
@@ -105,14 +122,39 @@ def from_deposit():
     adm = prot[prot.admitted]
     p57 = pd.read_csv(_p("phase_3_p57_de_novo_predictions.csv"), low_memory=False)
 
-    emitted = p57[p57.refusal_flag.fillna("") == ""]
+    p57["_flag"] = p57.refusal_flag.fillna("")
+    emitted = p57[p57._flag == ""]
     fams = []
     for key, grp in p57.groupby("substructure"):
         total = grp.compound_formula.nunique()
-        disp = emitted[emitted.substructure == key].compound_formula.nunique()
+        got = set(emitted[emitted.substructure == key].compound_formula)
+        disp = len(got)
+        # The gates that refused them, at the unit the bar is drawn in: for
+        # each code, the number of refused COMPOUNDS carrying it on at least
+        # one target.
+        #
+        # An earlier version of this reported one reason per family, taken as
+        # the modal code per compound and then the modal compound. An
+        # independent review broke it. Refusal is per target, not per
+        # compound, and a compound routinely hits several gates: every one of
+        # the 29 refused iron chalcogenides hits both the reduced-field window
+        # and the above-Tc gate, and 17 of them also hit the family-level
+        # field-axis gate, so a single "the reason" was a 44 percent plurality
+        # presented as a cause, and one grid point either way flipped it for
+        # 16 of the 29. The counts below overlap by construction and the
+        # figure says so.
+        ref = grp[~grp.compound_formula.isin(got)]
+        gates = []
+        if len(ref):
+            for code, sub in ref.groupby("_flag"):
+                if code not in REFUSAL_LABEL:
+                    raise SystemExit("no figure wording for refusal code %r"
+                                     % code)
+                gates.append((code, int(sub.compound_formula.nunique())))
+            gates.sort(key=lambda g: (-g[1], g[0]))
         fams.append(dict(key=key, label=FAMILY_LABEL.get(key, key),
                          total=int(total), dispatched=int(disp),
-                         refused=int(total - disp)))
+                         refused=int(total - disp), gates=gates))
     # Largest family last, which is the order the deposited figure drew them.
     # Ties are broken by key so the order is stable rather than arbitrary.
     fams.sort(key=lambda f: (f["total"], f["key"]))
@@ -154,11 +196,24 @@ def from_deposit():
     # Figure 1 and Table I print the same six numbers. If they disagree the
     # figure must not be drawn, because a figure that contradicts the table
     # facing it is worse than no figure.
-    checks = [("fitted_curve_papers", out["fitted_curve_papers"]),
-              ("fitted_curve_compounds", out["fitted_curve_compounds"]),
-              ("extracted_points", out["extracted_points"]),
-              ("anchor_rows", out["anchor_rows"]),
-              ("fittable_compounds", UPSTREAM["fittable_compounds_v321"])]
+    # Every number either figure prints that also appears in Table I. The
+    # earlier version checked five, and an independent review found that one
+    # of the five compared two constants in this module with each other and
+    # could not fail, while six real Table I rows printed inside Figure 2 were
+    # not checked at all. Every deposit-derived quantity below is recomputed
+    # above; articles_screened and fittable_compounds are upstream constants
+    # and their check is a typo guard, which is stated rather than implied.
+    checks = [(k, out[k]) for k in
+              ("fitted_curve_papers", "fitted_curve_compounds",
+               "extracted_points", "anchor_rows", "anchor_papers",
+               "temperature_axis_fits", "field_axis_fits_ok",
+               "field_axis_ok_papers", "candidate_compounds",
+               "dispatched_compounds")]
+    checks += [("fittable_compounds", UPSTREAM["fittable_compounds_v321"]),
+               ("articles_screened", UPSTREAM["articles_screened"])]
+    if set(k for k, _ in checks) != set(TABLE_I):
+        raise SystemExit("TABLE_I and the checks have drifted apart: %s"
+                         % sorted(set(TABLE_I) ^ set(k for k, _ in checks)))
     bad = ["%s: %s computed, %s in Table I" % (k, v, TABLE_I[k])
            for k, v in checks if v != TABLE_I[k]]
     if bad:

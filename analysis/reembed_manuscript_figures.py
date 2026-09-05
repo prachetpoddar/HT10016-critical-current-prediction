@@ -49,9 +49,14 @@ from PIL import Image
 # repository during this revision and never put back into the document.
 REPLACE = {
     1: os.path.join("figures", "manuscript_figure_1.png"),
-    3: os.path.join("figures", "manuscript_figure_3.png"),
-    5: os.path.join("figures", "manuscript_figure_5.png"),
+    2: os.path.join("figures", "manuscript_figure_2.png"),
 }
+# Figures 3, 4 and 5 in the document are byte-identical to figures/ as of
+# 2026-09-05 and are left alone; only their extents are recomputed. Figures 1
+# and 2 were redrawn in the v22 visual language on the repaired cohort, so both
+# the bytes and the aspect ratio change. Figure 1's embedded image asserted 62
+# papers, 38 compounds and 4146 points against a Table I saying 50, 35 and
+# 3303, which is the drift analysis/figure_counts.py now asserts against.
 EXPECTED_DRAWINGS = 5
 
 
