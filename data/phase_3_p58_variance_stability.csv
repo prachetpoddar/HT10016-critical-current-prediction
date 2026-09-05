@@ -1,0 +1,4 @@
+substructure,n_samples,n_papers,n_sample_forms,eta2_point,boot_lo95,boot_hi95,boot_median,boot_degenerate_draws,lopo_min,lopo_max,lopo_worst_paper,perm_p,perm_median
+iron_chalcogenide_11,13,8,3,0.4029,0.0029,0.9312,0.5416,31,0.0836,0.7342,elsevier_10.1016_j.physc.2011.05.018,0.0791,0.1265
+iron_pnictide_122,11,8,3,0.5599,0.0942,0.9481,0.559,26,0.4692,0.8818,MAGLAB_P122_4_2K,0.0296,0.1679
+conventional_AlB2,15,4,2,0.1159,0.001,0.9732,0.1159,608,0.0006,0.881,elsevier_10.1016_j.matchemphys.2023.128348,0.2153,0.0384
