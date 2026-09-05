@@ -89,8 +89,20 @@ def find_ticks(dark, frame, side, min_len=6, max_len=60, direction="inward"):
     return out
 
 
-def find_ticks_dir(dark, frame, side, min_len=6, max_len=60, min_ticks=3):
-    """find_ticks with direction="auto", returning (ticks, direction_used)."""
+def find_ticks_dir(dark, frame, side, min_len=6, max_len=60, min_ticks=3,
+                   direction="auto"):
+    """find_ticks over both directions, returning (ticks, direction_used).
+
+    direction="auto" walks inward first and only falls back to outward when
+    inward finds fewer than min_ticks. That rule fails on an axis whose data
+    curves reach the frame: on Fig. 3 of 0806.2839v1 the inward walk finds
+    exactly three long runs, all of them curve, which is enough to stop the
+    fallback, while the outward walk finds the six decade ticks with a spacing
+    uniformity of 0.003. Naming the direction in the spec settles it, so pass
+    "inward" or "outward" when auto picks the wrong one.
+    """
+    if direction in ("inward", "outward"):
+        return _walk(dark, frame, side, min_len, max_len, direction), direction
     inw = _walk(dark, frame, side, min_len, max_len, "inward")
     if len(inw) >= min_ticks:
         return inw, "inward"

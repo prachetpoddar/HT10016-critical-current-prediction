@@ -213,7 +213,7 @@ def read_ticks(page, rect, frame_pt, axis, log):
 
 def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
                    max_uniformity=0.02, min_len=6, max_len=60, side=None,
-                   min_ticks=4):
+                   min_ticks=4, direction="auto"):
     """Calibrate an axis from tick geometry plus the two end major-tick values.
 
     Why this exists. `read_ticks` reads the tick labels out of the PDF text
@@ -255,7 +255,7 @@ def geometry_ticks(dark, frame, axis, log, first_major, last_major, px2pt,
     if (axis == "x") != (side in ("bottom", "top")):
         raise ValueError("tick_side %r is not a side of the %s axis" % (side, axis))
     ticks_px, used = find_ticks_dir(dark, frame, side, min_len=min_len,
-                                    max_len=max_len)
+                                    max_len=max_len, direction=direction)
     # A three-decade log axis has three major ticks and no more. Requiring four
     # refuses it outright, which is what happened to Fig. 2(a) of
     # matpr.2019.05.078, an axis running 10 to 1000. Three collinear points
@@ -575,7 +575,8 @@ def digitize(spec):
                               int(g.get("tick_max_len",
                                         spec.get("tick_max_len", 60))),
                               g.get("tick_side"),
-                              int(g.get("tick_min_count", 4)))
+                              int(g.get("tick_min_count", 4)),
+                              g.get("tick_direction", "auto"))
         geom_diag[name] = d
         check_step(name, d, bool(g.get("allow_odd_step", False)))
         return t

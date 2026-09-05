@@ -1,0 +1,27 @@
+{
+  "paper_id": "0906.0444v1.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/0906.0444v1.pdf",
+  "page": 3,
+  "clip": [0.12, 0.05, 0.55, 0.26],
+  "dpi_scale": 4.0,
+  "note": "Fig. 3(a), unirradiated Ba(Fe0.93Co0.07)2As2. Axis is H in kOe; first_major and last_major are given in tesla so the output is in tesla directly (10 kOe = 1 T).",
+  "x": {"log": false, "label": "mu0H_T", "calibration": "geometry",
+        "geometry": {"first_major": 1.0, "last_major": 4.0, "tick_side": "bottom", "tick_min_len": 5}},
+  "y": {"log": true, "label": "Jc_A_per_cm2", "calibration": "geometry",
+        "geometry": {"first_major": 10000000.0, "last_major": 1000.0, "tick_side": "right", "tick_min_len": 5}},
+  "exclude_boxes": [
+    [0.395, 0.115, 0.760, 0.437],
+    [0.095, 0.130, 0.375, 0.260],
+    [0.455, 0.760, 0.760, 0.915]
+  ],
+  "series": [
+    {"name": "2K",    "temperature_K": 2.0,  "rgb": [0, 0, 0],       "tol": 60},
+    {"name": "5K",    "temperature_K": 5.0,  "rgb": [255, 0, 0],     "tol": 70},
+    {"name": "7.5K",  "temperature_K": 7.5,  "rgb": [152, 101, 0],   "tol": 70},
+    {"name": "10K",   "temperature_K": 10.0, "rgb": [0, 0, 255],     "tol": 70},
+    {"name": "12.5K", "temperature_K": 12.5, "rgb": [255, 0, 204],   "tol": 70},
+    {"name": "15K",   "temperature_K": 15.0, "rgb": [0, 152, 0],     "tol": 70},
+    {"name": "17.5K", "temperature_K": 17.5, "rgb": [0, 204, 204],   "tol": 70},
+    {"name": "20K",   "temperature_K": 20.0, "rgb": [127, 0, 255],   "tol": 70}
+  ]
+}

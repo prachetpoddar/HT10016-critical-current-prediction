@@ -1,0 +1,120 @@
+{
+  "paper_id": "0806.2839v1.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/0806.2839v1.pdf",
+  "page": 11,
+  "clip": [
+    0.22,
+    0.14,
+    0.82,
+    0.46
+  ],
+  "dpi_scale": 4.0,
+  "tick_darkness": 60,
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.0,
+      "last_major": 5.0,
+      "tick_side": "bottom",
+      "tick_min_len": 5,
+      "tick_darkness": 110
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 1000000.0,
+      "last_major": 10.0,
+      "tick_side": "left",
+      "tick_min_len": 10,
+      "tick_darkness": 60,
+      "tick_direction": "outward"
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.16,
+      0.47,
+      0.47,
+      0.8
+    ],
+    [
+      0.38,
+      0.11,
+      0.46,
+      0.45
+    ],
+    [
+      0.46,
+      0.25,
+      0.58,
+      0.32
+    ],
+    [
+      0.69,
+      0.13,
+      0.77,
+      0.2
+    ],
+    [
+      0.69,
+      0.25,
+      0.77,
+      0.32
+    ],
+    [
+      0.68,
+      0.34,
+      0.78,
+      0.4
+    ],
+    [
+      0.49,
+      0.48,
+      0.62,
+      0.61
+    ],
+    [
+      0.69,
+      0.52,
+      0.77,
+      0.59
+    ]
+  ],
+  "series": [
+    {
+      "name": "2K",
+      "temperature_K": 2.0,
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "5K",
+      "temperature_K": 5.0,
+      "rgb": [
+        255,
+        0,
+        0
+      ],
+      "tol": 80
+    },
+    {
+      "name": "20K",
+      "temperature_K": 20.0,
+      "rgb": [
+        0,
+        0,
+        255
+      ],
+      "tol": 80
+    }
+  ]
+}

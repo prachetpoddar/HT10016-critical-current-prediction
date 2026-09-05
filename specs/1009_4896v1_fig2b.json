@@ -1,0 +1,111 @@
+{
+  "paper_id": "1009.4896v1.pdf",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/pdfs_for_page_review/1009.4896v1.pdf",
+  "page": 2,
+  "clip": [
+    0.6,
+    0.205,
+    0.87,
+    0.35
+  ],
+  "dpi_scale": 4.0,
+  "note": "Fig. 2(b), LiFeAs. Axis is H in kOe; majors given in tesla (10 kOe = 1 T).",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.0,
+      "last_major": 4.0,
+      "tick_side": "bottom",
+      "tick_min_len": 5
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 100000.0,
+      "last_major": 10.0,
+      "tick_side": "left",
+      "tick_min_len": 5
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.775,
+      0.105,
+      0.85,
+      0.185
+    ],
+    [
+      0.63,
+      0.41,
+      0.87,
+      0.87
+    ]
+  ],
+  "series": [
+    {
+      "name": "2K",
+      "temperature_K": 2.0,
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 60
+    },
+    {
+      "name": "5K",
+      "temperature_K": 5.0,
+      "rgb": [
+        255,
+        0,
+        0
+      ],
+      "tol": 70
+    },
+    {
+      "name": "7.5K",
+      "temperature_K": 7.5,
+      "rgb": [
+        0,
+        0,
+        255
+      ],
+      "tol": 70
+    },
+    {
+      "name": "10K",
+      "temperature_K": 10.0,
+      "rgb": [
+        255,
+        0,
+        255
+      ],
+      "tol": 70
+    },
+    {
+      "name": "12.5K",
+      "temperature_K": 12.5,
+      "rgb": [
+        0,
+        127,
+        0
+      ],
+      "tol": 70
+    },
+    {
+      "name": "15K",
+      "temperature_K": 15.0,
+      "rgb": [
+        127,
+        0,
+        0
+      ],
+      "tol": 60
+    }
+  ]
+}
