@@ -1,0 +1,108 @@
+{
+  "paper_id": "elsevier_10.1016_j.physc.2009.11.051",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.physc.2009.11.051.pdf",
+  "page": 2,
+  "clip": [
+    0.5,
+    0.075,
+    0.95,
+    0.31
+  ],
+  "dpi_scale": 4.0,
+  "note": "Fig. 3, Ba(Fe0.93Co0.07)2As2. The x axis is H in kOe, 0 to 50; majors given in tesla (10 kOe = 1 T). Eight isotherms in four colours, each colour carrying the irradiated crystal as a filled marker and the unirradiated as an open one. The paper states the irradiated Jc is enhanced by a factor of six or more, so the upper branch of each colour is the irradiated sample.",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.0,
+      "last_major": 4.0,
+      "tick_side": "bottom",
+      "tick_min_len": 5
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 10000000.0,
+      "last_major": 10000.0,
+      "tick_side": "left",
+      "tick_min_len": 5,
+      "tick_min_count": 4,
+      "max_uniformity": 0.045
+    }
+  },
+  "exclude_boxes": [],
+  "series": [
+    {
+      "name": "probe",
+      "temperature_K": 10.0,
+      "rgb": [
+        238,
+        80,
+        47
+      ],
+      "tol": 60
+    }
+  ],
+  "paired_series": [
+    {
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 55,
+      "inset": 14,
+      "n_bins": 30,
+      "upper": "irradiated_2K",
+      "upper_T": 2.0,
+      "lower": "unirradiated_2K",
+      "lower_T": 2.0
+    },
+    {
+      "rgb": [
+        238,
+        80,
+        47
+      ],
+      "tol": 62,
+      "inset": 10,
+      "n_bins": 30,
+      "upper": "irradiated_10K",
+      "upper_T": 10.0,
+      "lower": "unirradiated_10K",
+      "lower_T": 10.0
+    },
+    {
+      "rgb": [
+        0,
+        164,
+        78
+      ],
+      "tol": 62,
+      "inset": 10,
+      "n_bins": 30,
+      "upper": "irradiated_15K",
+      "upper_T": 15.0,
+      "lower": "unirradiated_15K",
+      "lower_T": 15.0
+    },
+    {
+      "rgb": [
+        26,
+        78,
+        161
+      ],
+      "tol": 62,
+      "inset": 10,
+      "n_bins": 30,
+      "upper": "irradiated_20K",
+      "upper_T": 20.0,
+      "lower": "unirradiated_20K",
+      "lower_T": 20.0
+    }
+  ]
+}

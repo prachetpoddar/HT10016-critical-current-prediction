@@ -1,0 +1,107 @@
+{
+  "paper_id": "elsevier_10.1016_j.physc.2010.05.048",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.physc.2010.05.048.pdf",
+  "page": 2,
+  "clip": [
+    0.5,
+    0.055,
+    0.9,
+    0.26
+  ],
+  "dpi_scale": 4.0,
+  "note": "Fig. 3, FeTe0.59Se0.41. The x axis is H in kOe, 0 to 50; majors are given in tesla (10 kOe = 1 T) so the output is tesla. Ten isotherms in five colours, each colour a filled marker for the even temperature and an open one for the odd, separated by order rather than by colour: see analysis/trace_paired_markers.py.",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 1.0,
+      "last_major": 4.0,
+      "tick_side": "top",
+      "tick_min_len": 5
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 1000000.0,
+      "last_major": 100.0,
+      "tick_side": "right",
+      "tick_min_len": 5,
+      "tick_min_count": 3
+    }
+  },
+  "exclude_boxes": [],
+  "series": [
+    {
+      "name": "probe",
+      "temperature_K": 2.0,
+      "rgb": [
+        168,
+        38,
+        31
+      ],
+      "tol": 60
+    }
+  ],
+  "paired_series": [
+    {
+      "rgb": [
+        168,
+        38,
+        31
+      ],
+      "tol": 62,
+      "upper": "2K",
+      "upper_T": 2.0,
+      "lower": "3K",
+      "lower_T": 3.0,
+      "inset": 10,
+      "n_bins": 34
+    },
+    {
+      "rgb": [
+        195,
+        96,
+        27
+      ],
+      "tol": 62,
+      "upper": "4K",
+      "upper_T": 4.0,
+      "lower": "5K",
+      "lower_T": 5.0,
+      "inset": 10,
+      "n_bins": 34
+    },
+    {
+      "rgb": [
+        44,
+        21,
+        127
+      ],
+      "tol": 70,
+      "upper": "6K",
+      "upper_T": 6.0,
+      "lower": "7K",
+      "lower_T": 7.0,
+      "inset": 10,
+      "n_bins": 34
+    },
+    {
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 55,
+      "upper": "8K",
+      "upper_T": 8.0,
+      "lower": "9K",
+      "lower_T": 9.0,
+      "inset": 14,
+      "n_bins": 34
+    }
+  ]
+}
