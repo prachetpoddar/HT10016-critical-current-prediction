@@ -27,9 +27,9 @@ import numpy as np
 import pandas as pd
 
 OUT = "out_send"
-DOCS = {"manuscript": "HT10016_revised_final12.docx",
-        "supplement": "SUPPLEMENTAL_MATERIAL_revised_final12.docx",
-        "response": "RESPONSE_TO_REFEREES_final12.docx"}
+DOCS = {"manuscript": "HT10016_revised_final13.docx",
+        "supplement": "SUPPLEMENTAL_MATERIAL_revised_final13.docx",
+        "response": "RESPONSE_TO_REFEREES_final13.docx"}
 
 # Paragraphs in the response that quote a referee rather than answer one. A
 # retired figure appearing inside the objection itself is the objection, not a
