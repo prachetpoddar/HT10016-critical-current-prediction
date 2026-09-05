@@ -1,0 +1,362 @@
+{
+ "S1": [
+  {
+   "family": "MgB2-class",
+   "papers": 4,
+   "fully_fittable": 3,
+   "cohort_a_only": 0,
+   "cohort_b_only": 1,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 2,
+   "tier1_hc2": 4,
+   "points": 267
+  },
+  {
+   "family": "cuprate BSCCO",
+   "papers": 3,
+   "fully_fittable": 0,
+   "cohort_a_only": 0,
+   "cohort_b_only": 3,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 3,
+   "tier1_hc2": 0,
+   "points": 152
+  },
+  {
+   "family": "cuprate LSCO",
+   "papers": 1,
+   "fully_fittable": 0,
+   "cohort_a_only": 0,
+   "cohort_b_only": 1,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 1,
+   "tier1_hc2": 0,
+   "points": 48
+  },
+  {
+   "family": "cuprate RBCO",
+   "papers": 1,
+   "fully_fittable": 0,
+   "cohort_a_only": 0,
+   "cohort_b_only": 1,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 1,
+   "tier1_hc2": 0,
+   "points": 21
+  },
+  {
+   "family": "iron chalcogenide 11",
+   "papers": 16,
+   "fully_fittable": 6,
+   "cohort_a_only": 2,
+   "cohort_b_only": 8,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 10,
+   "tier1_hc2": 3,
+   "points": 889
+  },
+  {
+   "family": "iron pnictide 111",
+   "papers": 1,
+   "fully_fittable": 1,
+   "cohort_a_only": 0,
+   "cohort_b_only": 0,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 1,
+   "tier1_hc2": 0,
+   "points": 55
+  },
+  {
+   "family": "iron pnictide 1111",
+   "papers": 10,
+   "fully_fittable": 4,
+   "cohort_a_only": 0,
+   "cohort_b_only": 7,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 9,
+   "tier1_hc2": 2,
+   "points": 1008
+  },
+  {
+   "family": "iron pnictide 122",
+   "papers": 14,
+   "fully_fittable": 7,
+   "cohort_a_only": 0,
+   "cohort_b_only": 7,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 8,
+   "tier1_hc2": 4,
+   "points": 863
+  },
+  {
+   "family": "TOTAL",
+   "papers": 50,
+   "fully_fittable": 21,
+   "cohort_a_only": 2,
+   "cohort_b_only": 28,
+   "cohort_ab_nonfittable": 0,
+   "compounds": 35,
+   "tier1_hc2": 13,
+   "points": 3303
+  }
+ ],
+ "S4": [
+  {
+   "source": "j.jallcom.2023.170146",
+   "compound": "MgB2",
+   "form": "Bulk",
+   "sample": "MgB2_10K",
+   "tc": "39.0",
+   "anchor": "10.0 K, 0.03 T",
+   "log_jc": "5.705",
+   "n": 60
+  },
+  {
+   "source": "j.jallcom.2013.04.183",
+   "compound": "Bi2Sr2-xNixCa2Cu3O",
+   "form": "Bulk",
+   "sample": "N1",
+   "tc": "110.0",
+   "anchor": "10.0 K, 0 T",
+   "log_jc": "4.903",
+   "n": 14
+  },
+  {
+   "source": "j.jallcom.2013.04.183",
+   "compound": "Bi2Sr2-xNixCa2Cu3O",
+   "form": "Bulk",
+   "sample": "N2",
+   "tc": "110.0",
+   "anchor": "10.0 K, 0 T",
+   "log_jc": "4.857",
+   "n": 14
+  },
+  {
+   "source": "j.jallcom.2013.04.183",
+   "compound": "Bi2Sr2-xNixCa2Cu3O",
+   "form": "Bulk",
+   "sample": "N3",
+   "tc": "110.0",
+   "anchor": "10.0 K, 0 T",
+   "log_jc": "4.806",
+   "n": 14
+  },
+  {
+   "source": "j.jallcom.2013.04.183",
+   "compound": "Bi2Sr2-xNixCa2Cu3O",
+   "form": "Bulk",
+   "sample": "N4",
+   "tc": "110.0",
+   "anchor": "10.0 K, 0 T",
+   "log_jc": "4.954",
+   "n": 14
+  },
+  {
+   "source": "j.jallcom.2023.170384",
+   "compound": "LaFeAsO",
+   "form": "Single crystal",
+   "sample": "LaFeAsO_10K",
+   "tc": "26.0",
+   "anchor": "10.0 K, 0 T",
+   "log_jc": "5.674",
+   "n": 2
+  },
+  {
+   "source": "j.jallcom.2023.170384",
+   "compound": "LaFeAsO",
+   "form": "Single crystal",
+   "sample": "LaFeAsO_2K",
+   "tc": "26.0",
+   "anchor": "2.0 K, 0.01 T",
+   "log_jc": "6.524",
+   "n": 13
+  },
+  {
+   "source": "j.jallcom.2023.170384",
+   "compound": "LaFeAsO",
+   "form": "Single crystal",
+   "sample": "LaFeAsO_5K",
+   "tc": "26.0",
+   "anchor": "5.0 K, 0 T",
+   "log_jc": "6.184",
+   "n": 7
+  },
+  {
+   "source": "j.jallcom.2023.170384",
+   "compound": "LaFeAsO",
+   "form": "Single crystal",
+   "sample": "LaFeAsO_8K",
+   "tc": "26.0",
+   "anchor": "8.0 K, 0 T",
+   "log_jc": "5.912",
+   "n": 4
+  },
+  {
+   "source": "j.matchemphys.2023.128348",
+   "compound": "MgB2",
+   "form": "Bulk",
+   "sample": "X01",
+   "tc": "39.0",
+   "anchor": "20.0 K, 0 T",
+   "log_jc": "4.944",
+   "n": 6
+  },
+  {
+   "source": "j.matchemphys.2023.128348",
+   "compound": "MgB2",
+   "form": "Bulk",
+   "sample": "X02",
+   "tc": "39.0",
+   "anchor": "20.0 K, 0 T",
+   "log_jc": "5.068",
+   "n": 6
+  },
+  {
+   "source": "j.matchemphys.2023.128348",
+   "compound": "MgB2",
+   "form": "Bulk",
+   "sample": "X03",
+   "tc": "39.0",
+   "anchor": "20.0 K, 0 T",
+   "log_jc": "5.190",
+   "n": 6
+  }
+ ],
+ "S5": [
+  {
+   "source": "j.mtphys.2022.100783",
+   "compound": "Ba(Fe,Co)2As2",
+   "hc2": "4.5 / 50.0",
+   "provenance": "Tier 1, extrapolated",
+   "span": "0.778",
+   "beta": "0.26 (0.04)",
+   "flag": "ok"
+  },
+  {
+   "source": "j.physc.2011.02.004",
+   "compound": "PrFeAsO0.6F0.12",
+   "hc2": "12.8 / 120.0",
+   "provenance": "Tier 1, extrapolated",
+   "span": "0.983",
+   "beta": "0.16 (0.04)",
+   "flag": "ok"
+  },
+  {
+   "source": "j.jallcom.2023.170146",
+   "compound": "MgB2",
+   "hc2": "4.0 / 15.5",
+   "provenance": "Tier 1, direct match",
+   "span": "0.921",
+   "beta": "1.78 (0.07)",
+   "flag": "ok"
+  },
+  {
+   "source": "j.jallcom.2013.04.183",
+   "compound": "Bi2Sr2-xNixCa2Cu3O",
+   "hc2": "100.0 / 100.0",
+   "provenance": "Tier 3, literature default",
+   "span": "0.015",
+   "beta": "30.00 (28.64)",
+   "flag": "bound"
+  },
+  {
+   "source": "j.phpro.2012.03.421",
+   "compound": "Ba(Fe,Ru)2As2",
+   "hc2": "15.3 / 60.0",
+   "provenance": "Tier 1, extrapolated",
+   "span": "0.033",
+   "beta": "19.06 (2.63)",
+   "flag": "bound"
+  },
+  {
+   "source": "0921-4534(96)00225-0",
+   "compound": "YBaCuO",
+   "hc2": "130.0 / 130.0",
+   "provenance": "Tier 3, literature default",
+   "span": "0.038",
+   "beta": "30.00 (25.66)",
+   "flag": "bound"
+  },
+  {
+   "source": "j.jallcom.2023.170384",
+   "compound": "LaFeAsO",
+   "hc2": "5.8 / 86.0",
+   "provenance": "Tier 1, extrapolated",
+   "span": "0.260",
+   "beta": "19.18 (0.82)",
+   "flag": "bound"
+  }
+ ],
+ "S6": [
+  {
+   "candidate": "Al0.01B2Mg0.99",
+   "anchors": "38.0 K / 15.5 T",
+   "scope": "Stage 3, aggregate",
+   "t": "4.2",
+   "h": "5.0",
+   "log_jc": "4.981",
+   "interval": "4.664 to 5.265",
+   "refusal": "none"
+  },
+  {
+   "candidate": "Al0.01B2Mg0.99",
+   "anchors": "38.0 K / 15.5 T",
+   "scope": "Stage 3, aggregate",
+   "t": "20.0",
+   "h": "5.0",
+   "log_jc": "4.668",
+   "interval": "4.248 to 5.063",
+   "refusal": "none"
+  },
+  {
+   "candidate": "Co0.05Fe0.95Se1",
+   "anchors": "10.0 K / 16.0 T",
+   "scope": "Stage 2, single crystal",
+   "t": "4.2",
+   "h": "0.1",
+   "log_jc": "none",
+   "interval": "none",
+   "refusal": "H below validated range"
+  },
+  {
+   "candidate": "As1.7Eu1Fe2P0.3",
+   "anchors": "23.0 K / none",
+   "scope": "Stage 2, single crystal",
+   "t": "4.2",
+   "h": "0.1",
+   "log_jc": "5.746",
+   "interval": "5.622 to 5.804",
+   "refusal": "Hc2 unavailable"
+  },
+  {
+   "candidate": "Co0.05Fe0.95Se1",
+   "anchors": "10.0 K / 16.0 T",
+   "scope": "Stage 2, single crystal",
+   "t": "20.0",
+   "h": "0.1",
+   "log_jc": "none",
+   "interval": "none",
+   "refusal": "T above Tc"
+  },
+  {
+   "candidate": "Al0.01B2Mg0.99",
+   "anchors": "38.0 K / 15.5 T",
+   "scope": "Stage 3, aggregate",
+   "t": "29.2",
+   "h": "5.0",
+   "log_jc": "none",
+   "interval": "none",
+   "refusal": "T above validated range"
+  },
+  {
+   "candidate": "Co0.05Fe0.95Se1",
+   "anchors": "10.0 K / 16.0 T",
+   "scope": "Stage 2, single crystal",
+   "t": "4.2",
+   "h": "5.0",
+   "log_jc": "none",
+   "interval": "none",
+   "refusal": "family fails field axis"
+  }
+ ]
+}

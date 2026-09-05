@@ -11,10 +11,23 @@ introducing Table S5 went on describing rows the table no longer showed. A
 worked example that disagrees with the deposit is worse than no worked example,
 because it is the part of the supplement a reader checks first.
 
-Every row emitted here is read from the deposit and checked against
-audit/withdrawn_records.csv before it is written, so a withdrawn identifier
-cannot reappear. The selection rule for each table is stated in the code rather
-than left to whoever last edited the document.
+Every row emitted here is read from the deposit and checked against every
+withdrawal ledger in the repository before it is written, so a withdrawn
+identifier cannot reappear. The selection rule for each table is stated in the
+code rather than left to whoever last edited the document.
+
+Three ledgers, not one. audit/withdrawn_records.csv holds the seven records
+withdrawn before 2026-09-04. audit/jc_anchor_repairs.csv holds the anchor rows
+withdrawn on 2026-09-05, 26 of 96, and the papers whose values were rescaled.
+data/phase_3_form3_fits_partial_cohortB_v2_repaired.csv holds the field-axis
+fits withdrawn in the same pass. An earlier version of this file consulted only
+the first, and Table S4 went on printing six rows and Table S5 five rows drawn
+from records the later two removed. Referee A was invited to check those tables
+against the source figures, which is the check they fail.
+
+The repaired tables are read where they exist, so the values printed are the
+repaired ones. Table S4's four rows from jallcom.2013.04.183 move up a decade,
+which is the correction that paper needed and never received.
 
     python analysis/build_supplement_tables.py
     python analysis/build_supplement_tables.py --json out.json
@@ -30,7 +43,10 @@ import pandas as pd
 
 DATA = "data"
 ANCHOR = os.path.join(DATA, "phase_3_p31_jc_anchor_per_paper.csv")
+ANCHOR_REP = ANCHOR.replace(".csv", "_repaired.csv")
 FITS_H = os.path.join(DATA, "phase_3_form3_fits_partial_cohortB_v2.csv")
+FITS_H_REP = FITS_H.replace(".csv", "_repaired.csv")
+ANCHOR_LEDGER = os.path.join("audit", "jc_anchor_repairs.csv")
 PROV = os.path.join(DATA, "provenance_table_fitcohort_full.csv")
 PRED = os.path.join(DATA, "phase_3_p57_de_novo_predictions.csv")
 WITHDRAWN = os.path.join("audit", "withdrawn_records.csv")
@@ -59,15 +75,82 @@ def short(identifier):
     return s
 
 
+def add(out, i):
+    out.add(str(i))
+    out.add(short(str(i).replace("/", "_")))
+
+
 def withdrawn_tokens():
-    if not os.path.exists(WITHDRAWN):
-        return set()
-    w = pd.read_csv(WITHDRAWN)
+    """Every identifier any ledger in the repository has withdrawn."""
     out = set()
-    for i in w.identifier.astype(str):
-        out.add(i)
-        out.add(short(i.replace("/", "_")))
+    if os.path.exists(WITHDRAWN):
+        for i in pd.read_csv(WITHDRAWN).identifier.astype(str):
+            add(out, i)
+    if os.path.exists(ANCHOR_LEDGER):
+        led = pd.read_csv(ANCHOR_LEDGER)
+        for i in led.loc[led.action == "withdrawn", "paper"].astype(str):
+            # A row-level withdrawal names the paper and the sample form in
+            # brackets. It removes one record, not a paper, so it is not a ban
+            # token; the row is dropped by reading the repaired table. Banning
+            # the paper here would have removed mtphys.2022.100783 from both
+            # tables when only its polycrystal anchor was withdrawn.
+            if " (" not in i:
+                add(out, i)
+    if os.path.exists(FITS_H_REP):
+        fb = pd.read_csv(FITS_H_REP)
+        for i in fb.loc[fb.withdrawn.fillna("") != "", "withdrawn"].astype(str):
+            add(out, i)
     return out
+
+
+# The rule these tables follow, stated once. A paper withdrawn by any ledger is
+# excluded from every worked-example table, not only from the table whose
+# quantity the withdrawal names. The ledgers are not interchangeable in what
+# they remove: jpcs.2026.113652 lost its anchors because its recorded currents
+# are not the printed ones in any unit, and physc.2009.05.098 kept its anchors
+# under a unit correction while losing its field-axis fits because its critical
+# scale does not follow the axis. But a worked example exists so that a referee
+# can open the source and check it, and a paper under any withdrawal is not a
+# record that check can be asked of. The conservative rule is the honest one
+# here, and it costs five rows.
+
+
+def drop_banned(df, col, banned):
+    """Remove every row whose source identifier any ledger has withdrawn.
+
+    The selection rules pick rows, and asserting afterwards that none is banned
+    only turns a bad pick into an abort. Filtering first lets the rule choose
+    the next eligible record instead, which is what a worked-example table
+    needs. assert_clean stays as the backstop.
+    """
+    ids = df[col].astype(str)
+    keep = ~ids.apply(lambda x: any(b and b in x for b in banned))
+    return df[keep].copy()
+
+
+def anchors(banned=()):
+    """The repaired anchor table with withdrawn rows dropped, if it exists."""
+    if os.path.exists(ANCHOR_REP):
+        a = pd.read_csv(ANCHOR_REP)
+        a = a[a.withdrawn.fillna("") == ""].copy()
+    else:
+        a = pd.read_csv(ANCHOR)
+    return drop_banned(a, "paper_id", banned)
+
+
+def field_fits(banned=()):
+    """The repaired field-axis fits with withdrawn papers dropped."""
+    if os.path.exists(FITS_H_REP):
+        f = pd.read_csv(FITS_H_REP)
+        f = f[f.withdrawn.fillna("") == ""].copy()
+        for src, dst in [("beta_repaired", "beta"),
+                         ("Hc2_repaired", "Hc2_T_used"),
+                         ("range_repaired", "H_axis_range_normalized")]:
+            if src in f.columns:
+                f[dst] = f[src].where(f[src].notna(), f[dst])
+    else:
+        f = pd.read_csv(FITS_H)
+    return drop_banned(f, "arxiv_id", banned)
 
 
 def assert_clean(rows, col, banned, table):
@@ -81,7 +164,7 @@ def table_s4(banned):
     """Anchor excerpt: the PDF-verified record, then every paper contributing
     more than one sample form or more than one specimen, which is what the
     table is for."""
-    a = pd.read_csv(ANCHOR)
+    a = anchors(banned)
     lead = a[a.paper_id.str.contains("jallcom.2023.170146", regex=False)].head(1)
     rest = a[~a.paper_id.isin(lead.paper_id)]
     # Papers contributing more than one sample form come first, because the
@@ -113,7 +196,7 @@ def table_s4(banned):
 def table_s5(banned):
     """Field-axis fit excerpt: the passing fits first, then bound ones, so a
     reader sees both the applicability filter firing and not firing."""
-    f = pd.read_csv(FITS_H)
+    f = field_fits(banned)
     # One fit per source paper, so the excerpt shows six papers rather than one
     # paper six times.
     ok = (f[f.physicality == "ok"].sort_values("SE_beta")
@@ -164,12 +247,38 @@ def table_s1(_banned):
     source, and that is what the column now counts.
     """
     p = pd.read_csv(PROV)
+    # The provenance table keeps every row it ever had, including the eleven
+    # papers withdrawn on 2026-09-03 and one duplicate identifier, and carries
+    # the disposition in a column instead of deleting them. Summing without
+    # reading that column reproduces the pre-withdrawal census, which is what
+    # this table did: 62 papers, 38 compounds and 4146 points against Table I's
+    # corrected 50, 35 and 3303. The two tables are in the same document.
+    if "contributes" in p.columns:
+        before = (p.identifier.nunique(), p.compound.nunique(),
+                  int(pd.to_numeric(p.n_Jc_points, errors="coerce").sum()))
+        p = p[~p.contributes.astype(str).str.startswith("none, withdrawn")]
+        # The duplicate row is a second identifier for a paper already counted,
+        # so it is excluded from the paper count and kept in the compound and
+        # point counts, which is the rule apply_provenance_status.py states and
+        # the rule Table I's 35 compounds and 3303 points follow. Dropping it
+        # outright gave 34 and 2947 and would have put Table S1 at odds with
+        # Table I by one compound and 356 points.
+        dup = p.contributes.astype(str).str.startswith("the same paper as")
+        after = (int(p.loc[~dup, "identifier"].nunique()),
+                 int(p.compound.nunique()),
+                 int(pd.to_numeric(p.n_Jc_points, errors="coerce").sum()))
+        print("   Table S1 cohort: %d papers, %d compounds, %d points; before "
+              "the withdrawals %d, %d, %d" % (after + before))
+        p = p.copy()
+        p["counts_as_paper"] = ~dup
     rows, order = [], sorted(p.substructure_family.unique())
     for fam in order:
         g = p[p.substructure_family == fam]
         rows.append(dict(
             family=fam.replace("_", " ").replace("conventional AlB2", "MgB2-class"),
-            papers=g.identifier.nunique(),
+            papers=int(g.loc[g.get("counts_as_paper", True), "identifier"]
+                       .nunique()) if "counts_as_paper" in g
+            else g.identifier.nunique(),
             fully_fittable=int((g.contribution_flag == "fully fittable").sum()),
             cohort_a_only=int(g.contribution_flag.str.startswith("Cohort A only").sum()),
             cohort_b_only=int(g.contribution_flag.str.startswith("Cohort B only").sum()),
@@ -177,7 +286,10 @@ def table_s1(_banned):
             compounds=g.compound.nunique(),
             tier1_hc2=int(g.Hc2_provenance.str.startswith("Tier_1").sum()),
             points=int(pd.to_numeric(g.n_Jc_points, errors="coerce").sum())))
-    rows.append(dict(family="TOTAL", papers=p.identifier.nunique(),
+    rows.append(dict(family="TOTAL",
+                     papers=int(p.loc[p.get("counts_as_paper", True),
+                                      "identifier"].nunique())
+                     if "counts_as_paper" in p else p.identifier.nunique(),
                      fully_fittable=int((p.contribution_flag == "fully fittable").sum()),
                      cohort_a_only=int(p.contribution_flag.str.startswith("Cohort A only").sum()),
                      cohort_b_only=int(p.contribution_flag.str.startswith("Cohort B only").sum()),
