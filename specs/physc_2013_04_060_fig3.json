@@ -9,7 +9,7 @@
     0.63
   ],
   "dpi_scale": 4.0,
-  "note": "Fig. 3, 4.2 K Jc vs B for C-doped MgB2 wires. Both axes are as printed: B in tesla on a linear axis from 1 to 8, Jc in A/cm2. MgB2-00, -01 and -04 carry 0, 1.29 and 4.01 mol per cent C, which Table 2 gives as x = 0, 0.0386 and 0.1202. The 10^6 and 10^3 decade ticks coincide with the frame edges and cannot be walked, so the calibration rests on the two interior decades, 10^5 and 10^4. The implied frame span is the check: it should come out at 10^3 to 10^6.",
+  "note": "Fig. 3, 4.2 K Jc vs B for C-doped MgB2 wires. Both axes are as printed: B in tesla on a linear axis from 1 to 8, Jc in A/cm2. MgB2-00, -01 and -04 carry 0, 1.29 and 4.01 mol per cent C, which Table 2 gives as x = 0, 0.0386 and 0.1202. The 10^6 and 10^3 decade ticks coincide with the frame edges and cannot be walked, so the calibration rests on the two interior decades, 10^5 and 10^4. The implied frame span is the check: it should come out at 10^3 to 10^6. Correction after review: the legend's black circle sat 8 px above the old exclusion box and the black series also matched the connecting lines of the other two, giving ten points where the figure plots five markers. The box is extended and the black tolerance tightened.",
   "x": {
     "log": false,
     "label": "mu0H_T",
@@ -38,15 +38,15 @@
   "exclude_boxes": [
     [
       0.02,
-      0.72,
-      0.3,
-      0.97
+      0.66,
+      0.34,
+      0.99
     ],
     [
-      0.72,
-      0.02,
+      0.7,
+      0.0,
       0.99,
-      0.16
+      0.18
     ]
   ],
   "series": [
@@ -58,9 +58,10 @@
         0,
         0
       ],
-      "tol": 50,
+      "tol": 38,
       "n_bins": 30,
-      "inset": 10
+      "inset": 10,
+      "min_col_px": 4
     },
     {
       "name": "MgB2-01",

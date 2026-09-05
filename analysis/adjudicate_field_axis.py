@@ -310,3 +310,26 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ---------------------------------------------------------------------------
+# The census. Added after the six traced papers of stage C were shown to be a
+# selected set: four of them had been traced because they were already known to
+# be defective. These four were fixed in advance in
+# audit/field_axis_census_preregistration_20260905.md and are the complete set
+# of untraced passing papers that have a usable source document.
+# ---------------------------------------------------------------------------
+CENSUS = {
+    "elsevier_10.1016_j.physc.2013.04.060": dict(
+        traces=["physc_2013_04_060_fig2", "physc_2013_04_060_fig3"],
+        fits=8, med_abs_log=0.004, within_01="60 of 63", ratio=1.00),
+    "elsevier_10.1016_j.matchemphys.2023.128348": dict(
+        traces=["matchemphys_2023_128348_fig5"],
+        fits=4, med_abs_log=0.120, within_01="9 of 20", ratio=1.32),
+    "elsevier_10.1016_j.physc.2009.11.051": dict(
+        traces=["physc_2009_11_051_fig3"],
+        fits=8, med_abs_log=0.392, within_01="5 of 28", ratio=1.13),
+    "elsevier_10.1016_j.physc.2010.05.048": dict(
+        traces=["physc_2010_05_048_fig3"],
+        fits=8, med_abs_log=0.566, within_01="1 of 52", ratio=3.69),
+}

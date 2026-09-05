@@ -1,13 +1,13 @@
 {
   "frame_px": {
     "x_left": 245,
-    "x_right": 1167,
+    "x_right": 917,
     "y_top": 0,
     "y_bottom": 770
   },
   "dpi_scale": 4.0,
   "image_px": [
-    1168,
+    918,
     890
   ],
   "x_ticks_read": [
@@ -107,20 +107,20 @@
   "axis_span_from_ticks": {
     "x": [
       0.0,
-      22.5123
+      16.4081
     ],
     "y": [
       100.235,
       5050167.5581
     ]
   },
-  "n_points": 102,
+  "n_points": 95,
   "per_series": {
     "Undoped_MgB2_10K": 15,
-    "SiC_Doped_MgB2_10K": 22,
-    "ZrB2_Doped_MgB2_10K": 21,
-    "Ag_Doped_MgB2_10K": 23,
-    "TiC_Doped_MgB2_10K": 21
+    "SiC_Doped_MgB2_10K": 21,
+    "ZrB2_Doped_MgB2_10K": 20,
+    "Ag_Doped_MgB2_10K": 21,
+    "TiC_Doped_MgB2_10K": 18
   },
-  "reprojection_residual_px": 0.005008
+  "reprojection_residual_px": 0.005001
 }
