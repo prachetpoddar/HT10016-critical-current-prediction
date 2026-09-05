@@ -1,0 +1,101 @@
+{
+  "paper_id": "elsevier_10.1016_j.matchemphys.2023.128348",
+  "pdf": "/mnt/user-data/uploads/SuperconductorWorkflow/kappa_pipeline/analysis/v3_2_9_path_2_prep/phase_3_p19_elsevier_pdfs/10.1016_j.matchemphys.2023.128348.pdf",
+  "page": 6,
+  "clip": [
+    0.075,
+    0.66,
+    0.45,
+    0.905
+  ],
+  "dpi_scale": 4.0,
+  "note": "Fig. 5, MgB2 bulks X01 to X04 at 20 K. The x axis is H in tesla. The y axis is LABELLED Jc (kA/cm2) but its values are A/cm2: the paper states self-field Jc of 71.2, 83.7, 144.6 and 155.5 kA/cm2 for X01 to X04, and the curves start at about 7e4, 8e4, 1.4e5 and 1.5e5 on the printed decades. Taking the axis at face value would put the top of every curve near 1e8 A/cm2. The majors are therefore entered as printed and the output is A/cm2.",
+  "x": {
+    "log": false,
+    "label": "mu0H_T",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 0.0,
+      "last_major": 3.0,
+      "tick_side": "bottom",
+      "tick_min_len": 5,
+      "tick_direction": "outward",
+      "max_uniformity": 0.05,
+      "tick_darkness": 110,
+      "tick_min_count": 4
+    }
+  },
+  "y": {
+    "log": true,
+    "label": "Jc_A_per_cm2",
+    "calibration": "geometry",
+    "geometry": {
+      "first_major": 1000000.0,
+      "last_major": 0.1,
+      "tick_side": "left",
+      "tick_min_len": 4,
+      "tick_darkness": 60,
+      "tick_direction": "outward",
+      "tick_min_count": 6
+    }
+  },
+  "exclude_boxes": [
+    [
+      0.72,
+      0.03,
+      0.99,
+      0.3
+    ]
+  ],
+  "series": [
+    {
+      "name": "X01",
+      "temperature_K": 20.0,
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "tol": 45,
+      "n_bins": 34,
+      "inset": 12
+    },
+    {
+      "name": "X02",
+      "temperature_K": 20.0,
+      "rgb": [
+        240,
+        10,
+        10
+      ],
+      "tol": 70,
+      "n_bins": 34,
+      "inset": 8
+    },
+    {
+      "name": "X03",
+      "temperature_K": 20.0,
+      "rgb": [
+        4,
+        106,
+        169
+      ],
+      "tol": 70,
+      "n_bins": 34,
+      "inset": 8
+    },
+    {
+      "name": "X04",
+      "temperature_K": 20.0,
+      "rgb": [
+        3,
+        130,
+        90
+      ],
+      "tol": 70,
+      "n_bins": 34,
+      "inset": 8
+    }
+  ],
+  "open_frame": true
+}
