@@ -29,10 +29,21 @@ DATA = "data"
 
 UPSTREAM = dict(
     articles_screened=934,          # retrieval corpus, Elsevier + Springer
-    fittable_compounds_v321=23,     # 3DSC canonical cohort, v3.2.1
+    # Re-derived on 2026-09-05 by rerunning the closed-form fitter with the
+    # eleven withdrawn papers removed, which is what Table I row 5 now prints.
+    # It was 23 of 27 and is 20 of 24: three compounds lose every row they had.
+    # analysis/rerun_closed_form_without_withdrawn.py.
+    fittable_compounds_v321=20,
     partial_fits_v322B=175,         # v3.2.2B partial-fit count
     vision_cache_entries=662,       # vision-pass cache size
 )
+
+# What Table I of the manuscript prints, in the order Figure 1 panel (a) draws
+# them. The figure and the table are the same six numbers and there is no
+# reason for them ever to differ, so they are pinned here and asserted.
+TABLE_I = dict(articles_screened=934, fitted_curve_papers=50,
+               fitted_curve_compounds=35, extracted_points=3303,
+               fittable_compounds=20, anchor_rows=96)
 
 # The family label each substructure key carries in the figures. MgB2 is set
 # in mathtext so the 2 subscripts; the others are plain.
@@ -51,13 +62,47 @@ def _p(name):
 
 
 def from_deposit():
-    """Recompute every deposit-derived count the figures print."""
+    """Recompute every deposit-derived count the figures print.
+
+    Read the repaired cohort, which is what Table I reports. The deposited
+    tables are still the input for the pre-repair columns elsewhere in the
+    audit, but a figure printed beside Table I has to agree with Table I, and
+    reading the unrepaired tables here is how Figure 1 came to print 62, 38 and
+    4146 against a table saying 50, 35 and 3303 in the same document.
+
+    That is the third time these figures have drifted, and the first two are in
+    this module's own docstring. The reason it keeps happening is that the
+    document checker reads word/document.xml and cannot see inside an embedded
+    image, so nothing compares the picture with the table. The assertion at the
+    end of this function is the fix: the six numbers Figure 1 shares with
+    Table I are pinned and checked here, where they are computed, rather than
+    in a checker that cannot reach them.
+    """
     if not os.path.isdir(DATA):
         raise SystemExit("run from the repository root")
     a = pd.read_csv(_p("phase_3_p31_jc_anchor_per_paper.csv"))
     prov = pd.read_csv(_p("provenance_table_fitcohort_full.csv"))
-    bt = pd.read_csv(_p("phase_3_p44_post_UCLA_beta_T_fits.csv"))
+    bt = pd.read_csv(_p("phase_3_p44_post_UCLA_beta_T_fits_repaired.csv"))
     fh = pd.read_csv(_p("phase_3_form3_fits_partial_cohortB_v2.csv"))
+    prot = pd.read_csv(os.path.join("audit", "fit_protocol_applied.csv"))
+    # Rows the provenance table still counts as contributing. contributes and
+    # second_identifier_for_the_same_paper were added by
+    # analysis/apply_provenance_status.py; before that this function summed
+    # every row, withdrawn ones included, which is how the figure came to print
+    # 62, 38 and 4146.
+    #
+    # The duplicate is deducted from the PAPER count and from nothing else, and
+    # that asymmetry is deliberate. 1002.0208v2 appears under two identifiers,
+    # and the second carries its own compound, PrFeAsO0.6F0.12, and its own
+    # extracted points. Those are real measurements that happen to share a
+    # source paper, so they belong in the compound and point counts while the
+    # paper is counted once. Deducting the row everywhere gave 34 compounds and
+    # 2947 points against Table I's 35 and 3303, and the assertion below caught
+    # it.
+    live = prov[prov.contributes != "none, withdrawn"]
+    papers = live[~live.second_identifier_for_the_same_paper.astype(bool)]
+    keep = bt[bt.reproduced & bt.beta_T_repaired.notna()]
+    adm = prot[prot.admitted]
     p57 = pd.read_csv(_p("phase_3_p57_de_novo_predictions.csv"), low_memory=False)
 
     emitted = p57[p57.refusal_flag.fillna("") == ""]
@@ -91,20 +136,35 @@ def from_deposit():
         raise SystemExit("no figure label for substructure(s): %s"
                          % ", ".join(missing))
 
-    return dict(
-        fitted_curve_papers=int(prov.identifier.nunique()),
-        fitted_curve_compounds=int(prov.compound.nunique()),
-        extracted_points=int(pd.to_numeric(prov.n_Jc_points,
+    out = dict(
+        fitted_curve_papers=int(papers.identifier.nunique()),
+        fitted_curve_compounds=int(live.compound.nunique()),
+        extracted_points=int(pd.to_numeric(live.n_Jc_points,
                                            errors="coerce").sum()),
-        temperature_axis_fits=int(len(bt)),
-        field_axis_fits_ok=int(len(fh[fh.physicality == "ok"])),
-        field_axis_ok_papers=int(fh[fh.physicality == "ok"].arxiv_id.nunique()),
+        temperature_axis_fits=int(len(keep)),
+        field_axis_fits_ok=int(len(adm)),
+        field_axis_ok_papers=int(adm.paper.nunique()),
         anchor_rows=int(len(a)),
         anchor_papers=int(a.paper_id.nunique()),
         candidate_compounds=int(p57.compound_formula.nunique()),
         dispatched_compounds=int(emitted.compound_formula.nunique()),
         families=fams,
     )
+
+    # Figure 1 and Table I print the same six numbers. If they disagree the
+    # figure must not be drawn, because a figure that contradicts the table
+    # facing it is worse than no figure.
+    checks = [("fitted_curve_papers", out["fitted_curve_papers"]),
+              ("fitted_curve_compounds", out["fitted_curve_compounds"]),
+              ("extracted_points", out["extracted_points"]),
+              ("anchor_rows", out["anchor_rows"]),
+              ("fittable_compounds", UPSTREAM["fittable_compounds_v321"])]
+    bad = ["%s: %s computed, %s in Table I" % (k, v, TABLE_I[k])
+           for k, v in checks if v != TABLE_I[k]]
+    if bad:
+        raise SystemExit("Figure 1 would contradict Table I:\n   "
+                         + "\n   ".join(bad))
+    return out
 
 
 if __name__ == "__main__":
