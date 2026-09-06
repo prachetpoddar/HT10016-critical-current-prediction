@@ -55,14 +55,19 @@ from PIL import Image
 # fail on the machine that did not draw it, so Figure 3 is checked only where
 # it counts, against the copy embedded in the document.
 #
-# Figure 4 is absent on purpose. No generator in this deposit writes
-# figures/manuscript_figure_4.png: analysis/manuscript_figure_4.py writes
-# figures/figure_4_anchor_count.png, which is a different image at a different
-# size. That figure therefore cannot be checked against the data here, and
-# saying so is better than implying it was.
+# Figure 4 was absent from this list until 2026-09-06, when it was redrawn:
+# its y axis had said "pooled error in the field exponent" for a quantity that
+# is a difference of base-10 logarithms, and it drew an in-corpus baseline that
+# nothing in the deposit derives. analysis/manuscript_figure_4.py writes
+# figures/figure_4_anchor_count.png, so the figure is now checked against its
+# generator like the others. The stale figures/manuscript_figure_4.png that
+# this map used to point at is the pre-redraw image and has been removed; while
+# it existed, this check compared the document against a figure the document
+# does not contain and reported the disagreement as a defect in the document.
 GENERATED = [
     (1, "analysis/manuscript_figure_1.py", "figures/manuscript_figure_1.png"),
     (2, "analysis/manuscript_figure_2.py", "figures/manuscript_figure_2.png"),
+    (4, "analysis/manuscript_figure_4.py", "figures/figure_4_anchor_count.png"),
     (5, "analysis/manuscript_figure_5.py", "figures/manuscript_figure_5.png"),
 ]
 # figure number by order of appearance in the document
@@ -70,7 +75,7 @@ IN_DOCUMENT = {
     1: "figures/manuscript_figure_1.png",
     2: "figures/manuscript_figure_2.png",
     3: "figures/manuscript_figure_3.png",
-    4: "figures/manuscript_figure_4.png",
+    4: "figures/figure_4_anchor_count.png",
     5: "figures/manuscript_figure_5.png",
 }
 
@@ -303,8 +308,11 @@ def main():
     if not os.path.isdir("data"):
         sys.exit("run from the repository root")
     print("figures against the deposit\n")
+    # Pinned, so a figure quietly dropping off this list fails here rather
+    # than passing as one fewer thing checked. It was 3 until Figure 4 was
+    # redrawn on 2026-09-06 and could be checked against its generator.
     check("the regeneration list still holds %d figures" % len(GENERATED),
-          len(GENERATED) == 3, "figures %s"
+          len(GENERATED) == 4, "figures %s"
           % ", ".join(str(n) for n, _, _ in GENERATED))
 
     # Whether a regenerated figure may be compared with the committed one at
