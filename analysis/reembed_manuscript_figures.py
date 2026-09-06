@@ -55,6 +55,12 @@ REPLACE = {
     # actual_log_Jc|, and it drew an in-corpus baseline of 0.567 that is not
     # derivable from anything in the deposit.
     4: os.path.join("figures", "figure_4_anchor_count.png"),
+    # Figure 5 was redrawn on 2026-09-06: its family parameters were a frozen
+    # artifact from a cohort state not in the deposit, because the module that
+    # regenerated them fitted them to the dispatch table's own predictions and
+    # crashed once two of the three families stopped dispatching. They are now
+    # the family median exponents and anchors over the fitted cohorts.
+    5: os.path.join("figures", "manuscript_figure_5.png"),
 }
 # Figures 3, 4 and 5 in the document are byte-identical to figures/ as of
 # 2026-09-05 and are left alone; only their extents are recomputed. Figures 1

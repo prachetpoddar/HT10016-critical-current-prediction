@@ -108,9 +108,24 @@ axR.set_xlim(0,0.95); axR.set_title(r"(b)  at 4.2 K",fontsize=9,loc="left")
 axR.tick_params(labelleft=False)
 ylo=min(axL.get_ylim()[0],3.1); yhi=6.35
 axL.set_ylim(ylo,yhi); axR.set_ylim(ylo,yhi)
-axR.plot([0.589],[5.463],marker="x",ms=5,mew=1.2,color="0.25",zorder=5)
-axR.annotate("ordering reverses",xy=(0.589,5.463),xytext=(0.40,6.05),fontsize=7,color="0.25",
+# The crossing is computed from the parameters rather than pinned, because the
+# parameters are now rebuilt from the fitted cohorts and an earlier hardcoded
+# (0.589, 5.463) would have drifted off the curves without anything noticing.
+_a,_b=P["iron_chalcogenide_11"],P["iron_pnictide_122"]
+_h=np.linspace(1e-4,0.949,400000)
+_ya=_a["logJc_H"]+_a["beta_H"]*np.log10(1-_h)
+_yb=_b["logJc_H"]+_b["beta_H"]*np.log10(1-_h)
+_i=int(np.argmin(np.abs(_ya-_yb)))
+if abs(_ya[_i]-_yb[_i])>0.01:
+    raise SystemExit("the two envelopes no longer cross inside the plotted "
+                     "range; the annotation would point at nothing")
+CROSS_H,CROSS_Y=float(_h[_i]),float(_ya[_i])
+axR.plot([CROSS_H],[CROSS_Y],marker="x",ms=5,mew=1.2,color="0.25",zorder=5)
+axR.annotate("ordering reverses",xy=(CROSS_H,CROSS_Y),xytext=(0.40,6.05),fontsize=7,color="0.25",
              arrowprops=dict(arrowstyle="-",lw=0.6,color="0.45"))
+print(f"  envelopes cross at reduced field {CROSS_H:.3f}, log10 Jc {CROSS_Y:.3f}; "
+      f"the 122-type envelope is higher by "
+      f"{_yb[np.argmin(abs(_h-0.9))]-_ya[np.argmin(abs(_h-0.9))]:.2f} dex at 0.9")
 
 handles=[Line2D([],[],color=COL[k],lw=1.6,label=LAB[k]) for k in ORDER]
 handles+=[Line2D([],[],color="0.35",lw=1.2,ls=(0,(4,2)),label="outside applicability window"),
