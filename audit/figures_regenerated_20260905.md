@@ -244,3 +244,49 @@ holds two stages, it refuses rather than guessing.
 A check was also added for the manuscript side of the conditioning claim. Only
 the response side was watched, which is why the manuscript could carry the
 retired wording for two revisions without the check noticing.
+
+## Figure 1 composited from the author's own renders
+
+Recorded 2026-09-06. The author supplied the asset folders the original figure
+was built from, and the earlier matplotlib funnel is gone.
+
+`figures/fig1_assets/` now holds the Blender renders and the Inkscape drawing:
+the funnel, the Jc(T,H) surface with its two confidence sheets, prototype
+structures for the four substructure families, and the gate Venn. Figure 1 is
+composited from them.
+
+Three things had to be done to the assets, each a function in the generator
+rather than a manual step.
+
+The renders are composited over black, so their RGB is premultiplied by
+coverage. `key_black` recovers an alpha from luminance and divides the
+premultiplication back out; without that the antialiased rim carries a dark
+halo onto the light panel. It also drops a faint full-frame ambient wash that
+would otherwise defeat the crop.
+
+The Venn is an SVG whose subscript uses `font-size:65%` with `baseline-shift`,
+neither of which cairosvg honours: the first render put a giant stray "C" in
+the corner, and an attempt to fix it with `dy` pushed the fragment out of its
+centred run. The subscript is written inline instead.
+
+The Venn also printed a population threshold, "(2<=n<=6 compounds)", that
+appears nowhere in the manuscript; an earlier baked PNG of the same drawing
+printed "(n >= 5 compounds)", a third value. Sec. III.E says three families
+meet the requirement, and that is what the label now says.
+
+**The 3D bar chart is deliberately unused.** Its three bars are the Stage 1,
+Stage 2 and Stage 3 errors of 10.10, 0.43 and 0.84, and Sec. III.A withdraws
+that comparison: the first two are computed on different cohorts, nine
+families against five, and both are in-sample. Drawing the bars would
+re-assert with their heights the claim the text retracts in words.
+
+The funnel band labels are checked against the funnel's own silhouette, read
+from the render's alpha channel, rather than against a taper written by hand.
+Two labels overflowed the hand-written version.
+
+The caption needed a second pass. Its panel (b) sentence said the conditioning
+claim rests on the variance-decomposition diagnostic, which was true when the
+caption was written and false four edits later, once Sec. III.A had been
+repaired. Panel (c) claimed its circles are how the five refusal codes group;
+the Venn shows three of the gates of Sec. II.D and no longer claims to
+partition them.

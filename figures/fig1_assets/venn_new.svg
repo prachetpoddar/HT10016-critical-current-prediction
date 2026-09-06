@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   sodipodi:docname="venn.svg"
+   inkscape:export-filename="venn_newer"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#000000"
+     bordercolor="#000000"
+     borderopacity="0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2.8129192"
+     inkscape:cx="162.64243"
+     inkscape:cy="164.24219"
+     inkscape:window-width="1512"
+     inkscape:window-height="945"
+     inkscape:window-x="0"
+     inkscape:window-y="37"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="100"
+       height="100"
+       id="page5"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <color-profile
+       name="Generic-RGB-Profile"
+       xlink:href="file:///System/Library/ColorSync/Profiles/Generic%20RGB%20Profile.icc"
+       id="color-profile1" />
+    <color-profile
+       name="SMPTE-RP-431-2-2007-DCI-P3"
+       xlink:href="file:///System/Library/ColorSync/Profiles/DCI(P3)%20RGB.icc"
+       id="color-profile2" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="opacity:0.78125;fill:#7aaed4;fill-opacity:0.752941;stroke:#3d6088;stroke-width:0.4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2"
+       cx="35"
+       cy="35"
+       r="19.865891" />
+    <circle
+       style="opacity:0.78125;fill:#5ba89f;fill-opacity:0.603922;stroke:#2e5953;stroke-width:0.4;stroke-dasharray:none;stroke-opacity:1"
+       id="circle2"
+       cx="54.050018"
+       cy="35"
+       r="19.865891" />
+    <circle
+       style="opacity:0.78125;fill:#9b7ab8;fill-opacity:0.603922;stroke:#5c4670;stroke-width:0.4;stroke-dasharray:none;stroke-opacity:1"
+       id="circle3"
+       cx="44.525009"
+       cy="52.462517"
+       r="19.865891" />
+    <circle
+       style="opacity:0.78125;fill:#7aaed4;fill-opacity:0;stroke:#3d6088;stroke-width:0.4;stroke-dasharray:none;stroke-opacity:1"
+       id="circle4"
+       cx="35"
+       cy="35"
+       r="19.865891" />
+    <circle
+       style="opacity:0.78125;fill:#5ba89f;fill-opacity:0;stroke:#2e5953;stroke-width:0.4;stroke-dasharray:none;stroke-opacity:1"
+       id="circle5"
+       cx="54.050018"
+       cy="35"
+       r="19.865891" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.11667px;text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:0.78125;fill:#5ba89f;fill-opacity:0;stroke:#5c4670;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+       x="44.450325"
+       y="38.607269"
+       id="text5"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         x="44.450325"
+         y="38.607269"
+         id="tspan6">Screening-grade</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         x="44.450325"
+         y="41.253105"
+         id="tspan7">predictions</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.11667px;text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:0.78125;fill:#5ba89f;fill-opacity:0;stroke:#5c4670;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+       x="64.322205"
+       y="32.219265"
+       id="text5-1"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         x="64.322205"
+         y="32.219265"
+         id="tspan7-3">Monotonic J<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan15">c</tspan>(T) </tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         x="64.322205"
+         y="34.865101"
+         id="tspan8">(Phase-2 refusal)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.11667px;text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:0.78125;fill:#5ba89f;fill-opacity:0;stroke:#5c4670;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+       x="25.693001"
+       y="32.219265"
+       id="text10"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         x="25.693001"
+         y="32.219265"
+         id="tspan10">K ≥ 3 anchors</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         x="25.693001"
+         y="34.865101"
+         id="tspan11">(per regime)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.11667px;text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:0.78125;fill:#5ba89f;fill-opacity:0;stroke:#5c4670;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+       x="44.450325"
+       y="60.303123"
+       id="text13"
+       inkscape:export-filename="venn_predictions.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         x="44.450325"
+         y="60.303123"
+         id="tspan13">Populated substructure </tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         x="44.450325"
+         y="62.948959"
+         id="tspan14">(2≤n≤6 compounds)</tspan></text>
+  </g>
+</svg>
