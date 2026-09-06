@@ -15,7 +15,18 @@ Four families of check.
   Cross-document. A number printed in two documents must be the same number.
   Internal contradiction. Statements the revision has made mutually exclusive.
 
-    python analysis/final_consistency_check.py
+    python analysis/final_consistency_check.py OUT_DIR
+
+OUT_DIR holds the three documents to check. It is required, and the three are
+discovered by prefix rather than by version-stamped filename.
+
+It used to be neither: the directory and all three filenames were constants
+naming the final13 documents of 2026-09-05, and the script accepted and
+ignored any arguments given to it. Three later stages of the document lineage
+were checked by passing their paths on the command line, and every one of
+those runs read final13 and reported that it passed. A checker that reads a
+file nobody asked it to read is worse than no checker, because its output is
+quoted.
 
 Run from the repository root.
 """
@@ -26,10 +37,35 @@ import docx
 import numpy as np
 import pandas as pd
 
-OUT = "out_send"
-DOCS = {"manuscript": "HT10016_revised_final13.docx",
-        "supplement": "SUPPLEMENTAL_MATERIAL_revised_final13.docx",
-        "response": "RESPONSE_TO_REFEREES_final13.docx"}
+# Filled by main() from the required OUT_DIR argument. Prefixes, not names,
+# so the check follows the lineage instead of pinning one stage of it.
+PREFIX = {"manuscript": "HT10016_revised_",
+          "supplement": "SUPPLEMENTAL_MATERIAL_revised_",
+          "response": "RESPONSE_TO_REFEREES_"}
+OUT = None
+DOCS = {}
+
+
+def resolve(out_dir):
+    """Find exactly one document per prefix in out_dir, or refuse."""
+    global OUT, DOCS
+    if not os.path.isdir(out_dir):
+        raise SystemExit("not a directory: %s" % out_dir)
+    names = [n for n in sorted(os.listdir(out_dir))
+             if n.endswith(".docx") and not n.startswith("~$")]
+    OUT = out_dir
+    DOCS = {}
+    for key, pre in PREFIX.items():
+        hit = [n for n in names if n.startswith(pre)]
+        if len(hit) != 1:
+            raise SystemExit(
+                "%s: found %d file(s) starting %r, need exactly one: %s"
+                % (out_dir, len(hit), pre, ", ".join(hit) or "none"))
+        DOCS[key] = hit[0]
+    print("checking")
+    for key in ("manuscript", "supplement", "response"):
+        print("   %-11s %s" % (key, os.path.join(out_dir, DOCS[key])))
+    print()
 
 # Paragraphs in the response that quote a referee rather than answer one. A
 # retired figure appearing inside the objection itself is the objection, not a
@@ -63,6 +99,10 @@ def text(name):
 
 
 def main():
+    import sys
+    if len(sys.argv) != 2:
+        raise SystemExit("usage: final_consistency_check.py OUT_DIR")
+    resolve(sys.argv[1])
     T = {k: text(k) for k in DOCS}
     P = {k: paragraphs(k) for k in DOCS}
     fails, notes = [], []
@@ -127,6 +167,12 @@ def main():
     pairs = [
         ("the conditioning claim rests on the diagnostic",
          "It rests on the variance-decomposition diagnostic", "response"),
+        # The same claim, on the manuscript side. Only the response was
+        # watched, and the manuscript kept saying for two revisions that the
+        # claim rests on the diagnostic while reply paragraph 38 said resting
+        # it there will not do. Rebuilding Figure 1 is what found it.
+        ("the conditioning claim rests on the diagnostic",
+         "The conditioning claim rests on this test", "manuscript"),
         ("a family passes field-axis validation",
          "pass field-axis validation", "manuscript"),
         ("the one grid point",

@@ -86,9 +86,11 @@ AMBER_T = "#7A5C16"
 # difference between a figure that can be checked against the text and one
 # that cannot.
 RESULTS = dict(
-    # Sec. III.C, para "On the field axis we report no family-level verdict
-    # at all": the fraction of between-paper variance the family label
-    # accounts for, with papers as the permutation unit.
+    # Sec. III.C, the permutation test on the substructure label with source
+    # papers as the unit. The temperature-axis half was added to the
+    # manuscript on 2026-09-05: it is the evidence reply paragraph 38 points
+    # at, and until then the paper reported only the field-axis half.
+    eta2_temperature=0.524, perm_p_temperature=0.007,
     eta2_field=0.038, perm_p_field=0.98,
     # Sec. III.A, after the anchor repair of Sec. III.F. The manuscript gives
     # the three ratios; the sample counts beside them are not reproduced here,
@@ -214,16 +216,20 @@ L.txt(76, 87.4, "Multi-stage substructure", size=11.2, weight="bold")
 L.txt(76, 84.2, "conditional aggregation", size=11.2, weight="bold")
 
 L.box(56.5, 74.2, 39, 8.2, PILL, ec=PILL_E, lw=1.3, r=0.9, name="headline")
-L.txt(76, 80.2, "the conditioning claim is a", size=8.6, weight="bold",
+L.txt(76, 80.2, "the family label accounts for %.2f of the"
+      % RESULTS["eta2_temperature"], size=8.6, weight="bold", color=AMBER_T)
+L.txt(76, 77.4, "temperature-exponent variance, p = %.3f"
+      % RESULTS["perm_p_temperature"], size=8.6, weight="bold",
       color=AMBER_T)
-L.txt(76, 77.4, "temperature-axis claim", size=8.6, weight="bold",
-      color=AMBER_T)
-L.txt(76, 71.8, "on the field axis the family label accounts for %.3f of the"
-      % RESULTS["eta2_field"], size=6.9, color=SOFT, style="italic")
-L.txt(76, 69.8, "between-paper variance in the exponent, at p = %.2f, and no"
-      % RESULTS["perm_p_field"], size=6.9, color=SOFT, style="italic")
-L.txt(76, 67.8, "family-level verdict is reported for it (Table III)",
+L.txt(76, 71.8, "source papers are the permutation unit, and this is the one",
       size=6.9, color=SOFT, style="italic")
+L.txt(76, 69.8, "result that improved under every correction. On the field",
+      size=6.9, color=SOFT, style="italic")
+L.txt(76, 67.8, "axis it is %.3f at p = %.2f, and no family-level verdict"
+      % (RESULTS["eta2_field"], RESULTS["perm_p_field"]), size=6.9,
+      color=SOFT, style="italic")
+L.txt(76, 65.8, "is reported (Table III)", size=6.9, color=SOFT,
+      style="italic")
 
 STAGES = [(64.0, "Stage 1", ("monolithic", "regression on one",
                              "descriptor; rank", "scope only")),
@@ -232,16 +238,16 @@ STAGES = [(64.0, "Stage 1", ("monolithic", "regression on one",
           (88.0, "Stage 3", ("substructure", "aggregate median",
                              "with an explicit", "IQR bound"))]
 for cx, head, lines in STAGES:
-    L.box(cx - 6.2, 51.0, 12.4, 13.4, WHITE, ec="#DED6C4", r=0.6,
+    L.box(cx - 6.2, 50.0, 12.4, 13.4, WHITE, ec="#DED6C4", r=0.6,
           name="stage %s" % head[-1])
-    L.txt(cx, 62.4, head, size=8.2, weight="bold")
+    L.txt(cx, 61.4, head, size=8.2, weight="bold")
 for cx, head, lines in STAGES:
     for i, line in enumerate(lines):
-        L.txt(cx, 59.2 - i * 2.2, line, size=6.1, color=SOFT)
+        L.txt(cx, 58.2 - i * 2.2, line, size=6.1, color=SOFT)
 
-L.txt(76, 47.6, "log$_{10}$J$_c$ = log$_{10}$J$_{c,\\mathrm{partial}}$ + "
+L.txt(76, 46.6, "log$_{10}$J$_c$ = log$_{10}$J$_{c,\\mathrm{partial}}$ + "
                 "$\\beta$ log$_{10}$(1 $-$ x/x$_c$)", size=9.2)
-L.txt(76, 44.4, "fitted per axis:  $\\beta_T$ separately,  $\\beta_H$ "
+L.txt(76, 43.6, "fitted per axis:  $\\beta_T$ separately,  $\\beta_H$ "
                 "separately", size=7.0, color=SOFT, style="italic")
 
 L.txt(76, 39.8, "No fold improvement is reported.", size=7.3,

@@ -189,3 +189,58 @@ fixtures are built from the measured width of a real string and placed one
 unit either side of the boundary, because the review's finding was that every
 fixture in this repository sat far enough from its boundary to pass whatever
 the check had been loosened to.
+
+## The four document repairs, and a checker that was reading the wrong files
+
+Recorded 2026-09-06. Script `analysis/apply_conditioning_claim_edits.py`,
+output `out_final18/*_final18.docx`.
+
+Rebuilding Figure 1 forced the question of what each panel is allowed to say,
+and answering it surfaced four disagreements inside the documents. All four
+predate the figure work. The author's decision was to repair all four.
+
+**Where the conditioning claim rests.** Sec. III.A opened the diagnostic
+paragraph with "The conditioning claim rests on this test rather than on the
+stage comparison above". Reply paragraph 38 says resting it there will not do,
+because sample form is nearly a relabelling of source paper and no family cell
+can reach a probability below 0.10 under the only null that respects that
+structure, and moves the claim onto the temperature axis. The paragraph now
+says the diagnostic sets the conditioning rule the predictor follows and that
+the claim rests on the temperature-axis separation of Sec. III.C.
+
+**The evidence that claim points at was not in the paper.** The manuscript
+reported the field-axis half of the permutation test, 0.038 at p 0.98, and
+never the temperature-axis half. Sec. III.C now gives it: 0.524 at p 0.007
+after the anchor repair, 0.436 at p 0.016 matched on the same seventeen
+papers before it. Source `audit/headline_recomputed_20260905.md`.
+
+**A repaired ratio beside a pre-repair count.** "0.37 on 7" is now "0.37 on
+5". `audit/variance_decomposition_repaired.csv` has n = 5 for that family on
+the repaired cohort; 7 is its paper count on the deposited one.
+
+**Two Table III cells behind their own body text.** The diagnostic row
+reported the deposited 37/49/12 as the result while Sec. III.A gives the
+repaired 0.81/0.37/0.04; it now gives both and says which is which. The
+conditioning row credited a reduction "by between one and about two-fold";
+it now reports the two errors and says no fold improvement is reported.
+
+### The checker was reading files nobody asked it to read
+
+`analysis/final_consistency_check.py` took no arguments. `OUT` and all three
+filenames were constants naming the `out_send/*_final13.docx` documents of
+2026-09-05. Three later stages of the lineage were checked by passing their
+paths on the command line, the paths were accepted and ignored, and each of
+those runs read final13 and printed that everything passed. Those passes were
+reported as evidence that the shipped documents were consistent. They were
+not evidence of that.
+
+The script now requires an output directory and discovers the three documents
+in it by prefix, refusing if a directory holds more or fewer than one match
+per prefix. It was verified to fire: on `out_final17`, the stage before these
+repairs, it reports the conditioning-claim contradiction and exits non-zero;
+on `out_final18` it passes; with no argument it refuses; on `out_send`, which
+holds two stages, it refuses rather than guessing.
+
+A check was also added for the manuscript side of the conditioning claim. Only
+the response side was watched, which is why the manuscript could carry the
+retired wording for two revisions without the check noticing.
