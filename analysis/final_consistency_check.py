@@ -500,6 +500,23 @@ def main():
          "identically 1", "response", True),
         ("the second pass names the withdrawn supplement section",
          "we withdraw it rather than recompute it", "response", True),
+        # B5, 2026-09-06. The manuscript's version history is out and every
+        # value it carried is in the letter. These fail if a draft reference
+        # comes back, or if a withdrawal is dropped from both documents.
+        ("no draft history in the manuscript",
+         "An earlier version", "manuscript", False),
+        ("no previous-version history in the manuscript",
+         "A previous version", "manuscript", False),
+        ("no earlier-presentation history in the manuscript",
+         "earlier presentation", "manuscript", False),
+        ("the withdrawn in-corpus baseline is in the letter",
+         "an in-corpus baseline of 0.567", "response", True),
+        ("the withdrawn 0.1 T medians are in the letter",
+         "family medians of 6.00, 5.75 and 5.32", "response", True),
+        ("the withdrawn Spearman is in the letter",
+         "0.635", "response", True),
+        ("the withdrawn Stage 3 error is in the letter",
+         "0.816 rather than 0.84", "response", True),
         # One validation status, propagated 2026-09-06. The phrase "three
         # validated substructure families" meant three different things in
         # the abstract, Table III and the conclusion, and Table IV's
