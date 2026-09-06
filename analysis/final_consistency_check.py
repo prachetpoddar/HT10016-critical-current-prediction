@@ -488,6 +488,18 @@ def main():
          "manuscript", False),
         ("the stale temperature-axis paper count",
          "18 of the 20", "supplement", False),
+        # A6, 2026-09-06. The letter's inventory of corrections now covers the
+        # second pass, made after the tables were frozen.
+        ("the pass is no longer called final",
+         "A final pass over every reported quantity", "response", False),
+        ("the second pass is reported",
+         "A second pass, made after the tables were frozen, found seven more.",
+         "response", True),
+        ("the second pass names the null correction",
+         "that family admits a single labelling and its probability is "
+         "identically 1", "response", True),
+        ("the second pass names the withdrawn supplement section",
+         "we withdraw it rather than recompute it", "response", True),
         # One validation status, propagated 2026-09-06. The phrase "three
         # validated substructure families" meant three different things in
         # the abstract, Table III and the conclusion, and Table IV's
