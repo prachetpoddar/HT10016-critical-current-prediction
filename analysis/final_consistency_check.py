@@ -360,9 +360,11 @@ def main():
          True),
         ("the compound-level null in the letter",
          "966 distinct ways of forming three families", "response", True),
+        # The token is the count and the fact, not the sentence that carried
+        # them: the compaction of 2026-09-06 rewrote this paragraph and the
+        # longer phrasing this check used to require went with it.
         ("the audit's five defects in the letter",
-         "found five more defects and we correct all of them", "response",
-         True),
+         "found five more defects", "response", True),
         ("Stage 3 corrected in the letter",
          "0.816 rather than 0.84", "response", True),
         ("the propagation corrected in the letter",
@@ -389,6 +391,14 @@ def main():
          True),
         ("Figure S1 cited to the referee",
          "opens with Fig. S1", "response", True),
+        # The Figure 5 crossing, which the letter still quoted at its
+        # pre-rebuild value. The figure checks compare images and the text
+        # checks compared only the manuscript, so nothing looked at whether
+        # the letter agreed with either.
+        ("the stale crossing in the letter", "reduced field of 0.59",
+         "response", False),
+        ("the rebuilt crossing in the letter", "reduced field of 0.58",
+         "response", True),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
