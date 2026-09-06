@@ -196,3 +196,57 @@ moves the reduction from 39.7 to 26.6 percent, because whole curves drop out
 of cells as they thin rather than because curves are smooth. And
 `1611_08455v1` figure 5b is digitised twice into files carrying identical
 values, with nothing marking either canonical.
+
+## Does the retrace strengthen claim 1? A third answer, and a third retraction
+
+I proposed that the published statistic cannot isolate the reduced variables,
+because it compares reduced-binned scatter against ungrouped global scatter, so
+that any binning of a monotonic function would produce a reduction. I proposed
+comparing reduced coordinates against absolute ones instead.
+
+**The premise is false.** Binning the same 6070 points on two uniform random
+coordinates, 9 by 9, floor 5, over 200 draws, gives a median reduction of minus
+0.02 per cent, with a 5th to 95th percentile band of minus 0.99 to plus 1.04.
+Binning by itself buys nothing. The published statistic has an exactly zero
+null and does measure how much of log Jc a reduced-coordinate grid captures.
+
+**The replacement test does not survive either.** Absolute binning appeared to
+beat reduced binning, 67.0 against 39.3 per cent, but equal-width bins over the
+absolute range are degenerate: five of the 42 kept cells hold 68 per cent of
+the records, against 37 per cent for the top five reduced cells. Restricting to
+cells that hold more than one compound removes most of the gap, 0.935 against
+0.984 dex, and that residue is noise: bootstrapping over papers gives a
+difference of minus 0.050 with a bootstrap standard deviation of 0.215 and a
+sign that flips in 4 of 27 jackknife refits.
+
+Every principled variant reverses it. The pooled summary gives 1.291 reduced
+against 1.456 absolute, favouring reduced, with the sign stable in 27 of 27
+refits. Equal-occupancy bins favour reduced at every resolution tested. A
+grid-free nearest-neighbour version, excluding neighbours from the same curve,
+favours reduced at every neighbourhood size. Out of sample, leave-one-paper-out
+prediction from reduced cell means beats a constant model, 1.670 against 1.744
+in RMSE, while absolute coordinates lose to a constant outright.
+
+So reduced coordinates carry a small signal, absolute coordinates carry none,
+and the reduced-versus-absolute comparison does not strengthen the manuscript.
+
+## What does strengthen it
+
+**The pooled summary.** `1 - median within / global` is not a variance
+decomposition and can be negative; on the deposited file's own `log_Jc_norm`
+column it is minus 11.3 per cent. The pooled within-cell standard deviation is
+bounded and is what the sentence claims to compute. On the deposited file it
+gives 6.78 per cent and 13.09, against the printed 13.00 and 24.31. That is
+half the reduction, further below the 30 per cent threshold, from the summary
+that can actually be defended.
+
+**The out-of-sample statement.** Reduced-coordinate cell means barely beat a
+constant model, which is a cleaner way to say the grid organises very little
+than an in-sample within-bin ratio.
+
+**A correction to this repository.** `audit/headline_numbers_recheck.md` said
+the printed figure could not be reproduced from the deposit because the global
+standard deviation needs the raw points. It does not: the law of total variance
+recovers 1.4232 exactly from the per-cell counts, means and standard
+deviations, and the reduction is 13.00 and 24.31 to the digit. That section is
+corrected.
