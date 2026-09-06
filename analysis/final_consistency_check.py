@@ -399,6 +399,18 @@ def main():
          "response", False),
         ("the rebuilt crossing in the letter", "reduced field of 0.58",
          "response", True),
+        # The opening section added 2026-09-06. The letter had no page that
+        # said what the paper found: 37 percent of its paragraphs carried a
+        # concession, eleven opened with one, and six stated a result with
+        # no apology attached.
+        ("the letter states what the paper establishes",
+         "What the paper establishes", "response", True),
+        ("the four claims are in the letter's opening",
+         "The framework declines to predict outside its validated scope",
+         "response", True),
+        ("the reproducibility standard is stated",
+         "every printed count is asserted against the deposited tables",
+         "response", True),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
