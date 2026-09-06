@@ -16,12 +16,22 @@ The three panels are chosen to span the outcomes rather than to flatter:
                    span is 0.571 of that scale, which clears the applicability
                    bound, and beta_H is 0.107 with a standard error of 0.018.
 
-  (b) bound-hit.   Bi-2212 at 53 K, s41467-025-55880-4. Six points spanning
-                   0.01 to 0.25 T against a literature 100 T scale, a span of
-                   0.0024. The fit runs to the numerical ceiling at beta_H = 30
-                   with a standard error of 37.6, larger than the estimate
-                   itself. This is the failure mode of Sec. III.F, and the row
-                   is in Table S5 for the same reason.
+  (b) bound-hit.   Bi-2223 at 10 K, j.jallcom.2013.04.183, sample N1. Seven
+                   points spanning 0 to 1.5 T against a literature 100 T scale,
+                   a span of 0.015. The fit runs to the numerical ceiling at
+                   beta_H = 30 with a standard error of 28.6, larger than the
+                   estimate itself. This is the failure mode of Sec. III.F.
+
+                   This panel used to show s41467-025-55880-4 at 53 K. That
+                   paper was withdrawn on the field axis after it was read:
+                   audit/withdraw_s41467_field_axis.md records that it reports
+                   critical currents in microamps over sweeps to 25 millitesla
+                   and contains the string "current density" zero times, so the
+                   six field-axis fits attributed to it are not readings of it.
+                   Its fits left the fit table with the withdrawal and this
+                   generator has been unable to run since, which nothing
+                   noticed because no document contained the figure. The
+                   replacement is a live record of the same kind.
 
   (c) withdrawn.   FeTe0.61Se0.39 at 2 K, physc.2010.03.003. Five points falling
                    by exactly 0.5 dex each across field intervals of 4.5, 10, 10
@@ -66,8 +76,8 @@ PANELS = [
     dict(file="physc_2010_05_048_field_axis.csv", T=2.0, sample="FeTe0.59Se0.41",
          doi="j.physc.2010.05.048", key="physc.2010.05.048", fixed=2.0,
          title="(a)  retained", colour=OK),
-    dict(file="s41467_025_55880_4_field_axis.csv", T=53.0, sample="s1",
-         doi="s41467-025-55880-4", key="s41467-025-55880-4", fixed=53.0,
+    dict(file="jallcom_2013_04_183_field_axis.csv", T=10.0, sample="N1",
+         doi="j.jallcom.2013.04.183", key="jallcom.2013.04.183", fixed=10.0,
          title="(b)  applicability bound", colour=ACC),
     dict(file="physc_2010_03_003_withdrawn_field_axis.csv", T=2.0,
          sample="FeTe0.61Se0.39", doi="j.physc.2010.03.003", key=None,

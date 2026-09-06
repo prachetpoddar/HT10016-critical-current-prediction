@@ -160,6 +160,19 @@ def main():
             if bad:
                 fails.append("%s in %s: %s" % (token, doc, bad[0][:110]))
 
+    print("\nimages, which the text checks above cannot see\n")
+    import zipfile as _zip
+    want_images = {"manuscript": 5, "supplement": 1, "response": 0}
+    for key, n_want in want_images.items():
+        z = _zip.ZipFile(os.path.join(OUT, DOCS[key]))
+        got = len([n for n in z.namelist() if n.startswith("word/media/")])
+        ok = got == n_want
+        print("   %-30s document %5d   expected %5d   %s"
+              % (key + " images", got, n_want, "ok" if ok else "MISMATCH"))
+        if not ok:
+            fails.append("%s holds %d image(s), expected %d"
+                         % (key, got, n_want))
+
     print("\ncross-document agreement\n")
     shared = [("52", "the admitted field cohort"),
               ("257", "the temperature cohort"),
@@ -362,6 +375,20 @@ def main():
         ("the retraction of it, in the referee response",
          "the audit section below withdraws that description", "response",
          True),
+        # Supplemental Figure S1, embedded 2026-09-06. It had a generator
+        # and a committed PNG since 2026-09-02 and appeared in no document,
+        # and its generator could not run because the paper behind its
+        # middle panel had been withdrawn from the field axis.
+        ("the Figure S1 caption", "FIG. S1.", "supplement", True),
+        ("the replacement panel's record", "j.jallcom.2013.04.183",
+         "supplement", True),
+        ("the withdrawal that forced it", "s41467-025-55880-4", "supplement",
+         True),
+        ("Figure S1 cited in its own section",
+         "Fig. S1 shows the curves behind three such records", "supplement",
+         True),
+        ("Figure S1 cited to the referee",
+         "opens with Fig. S1", "response", True),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
