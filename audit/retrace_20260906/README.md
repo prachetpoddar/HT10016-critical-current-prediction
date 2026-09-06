@@ -339,3 +339,25 @@ deposited anchor rows only at paper level, on 11 papers, which is the wrong
 unit because the anchor is defined per sample at one temperature. At that unit
 the correlation is 0.47 to 0.54, which is too coarse to verify the numerical
 correspondence. What is verified here is the definitional one.
+
+## Do materials cluster by substructure family?
+
+On the magnitude, yes to the eye and no to a test that respects the design.
+
+Nested on 6070 points: 54.3 percent of the variance of log10 Jc is between
+families, 15.2 between compounds inside a family, 12.8 between papers on one
+compound, 11.6 between curves in one paper, 6.2 along a curve. Family is the
+single largest term.
+
+But the cohort holds 18 compounds in 7 families, three of them singletons.
+Taking the 171 curve magnitudes and shuffling the family label between the 18
+compounds, which is the only unit that respects the nesting, the observed eta
+squared of 0.439 sits against a null median of 0.327 and a 95th percentile of
+0.503, giving p = 0.164. A random partition of 18 compounds into groups of
+those sizes already captures a third of the variance.
+
+The distinction that matters: the manuscript's significant family result, 0.524
+at p 0.007 with papers as the unit, is clustering of the fitted temperature
+EXPONENT, not of the magnitude. On this cohort the magnitude is where the
+variance is and family conditioning of it is not demonstrated. The two are
+different quantities and the paper is right to rest its claim on the exponent.
