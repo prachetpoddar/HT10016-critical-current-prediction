@@ -465,8 +465,29 @@ def main():
         ("the stale field span under Table S6",
          "0.22 dex from 0.1 to 5 T", "supplement", False),
         ("the reproducibility standard is stated",
-         "every printed count is asserted against the deposited tables",
-         "response", True),
+         "every printed count is asserted against those tables", "response",
+         True),
+        # A5, 2026-09-06. The dispatch table now regenerates from the four
+        # scripts that produce it, so the letter says so and the standard names
+        # it beside the figures.
+        ("the letter claims the dispatch table regenerates",
+         "the candidate dispatch table regenerates from the deposited tables "
+         "cell for cell", "response", True),
+        ("the withdrawn non-reproduction disclosure",
+         "The deposited prediction file does not reproduce from its own "
+         "generator.", "response", False),
+        ("the letter states the fix",
+         "did not reproduce from its own generator, and now does", "response",
+         True),
+        ("the stale dispatch spread",
+         "span 0.0098 dex", "manuscript", False),
+        ("the rebuilt dispatch spread",
+         "span 0.0085 dex", "manuscript", True),
+        ("the stale 122-family temperature count",
+         "the 36 field-axis fits and the 106 temperature-axis fits",
+         "manuscript", False),
+        ("the stale temperature-axis paper count",
+         "18 of the 20", "supplement", False),
         # One validation status, propagated 2026-09-06. The phrase "three
         # validated substructure families" meant three different things in
         # the abstract, Table III and the conclusion, and Table IV's

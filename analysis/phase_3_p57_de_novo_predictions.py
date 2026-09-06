@@ -328,6 +328,47 @@ def bootstrap_draws(pool_vals: np.ndarray, rng: np.random.Generator, n: int) -> 
 
 
 # ----------------------------------------------------------------------------
+# Which families are conditioned on sample form
+
+_REGIME_CACHE = {}
+
+
+def conditioned_family(sub: str) -> bool:
+    """True when the family's regime uses sample-form-conditional scope.
+
+    Read from the deposited variance decomposition rather than hard-coded, so
+    a change to the diagnostic reaches the predictor instead of leaving the two
+    to disagree silently. Outcome C, the minor-separation regime, uses
+    substructure-aggregate scope throughout; A and B use the conditional cell
+    where it is populated. A family absent from the decomposition keeps the
+    conditional path, which is the behaviour before this rule existed.
+    """
+    if not _REGIME_CACHE:
+        import csv as _csv
+        path = PREP / "phase_3_p31_variance_decomposition_repaired.csv"
+        if not path.exists():
+            path = PREP / "phase_3_p31_variance_decomposition.csv"
+        if not path.exists():
+            raise SystemExit(
+                "no variance decomposition in %s, so the per-family regime "
+                "the predictor follows cannot be read" % PREP)
+        with open(path, newline="") as fh:
+            for r in _csv.DictReader(fh):
+                if r.get("scope") != "per_substructure":
+                    continue
+                try:
+                    ratio = float(r["ratio_between_total"])
+                except (TypeError, ValueError):
+                    continue
+                # The same two cuts Sec. III.A states: above 0.7 sample-form
+                # dominant, 0.3 to 0.7 moderate, below 0.3 minor.
+                _REGIME_CACHE[r["substructure"]] = ratio >= 0.3
+        if not _REGIME_CACHE:
+            raise SystemExit("%s carries no per_substructure rows" % path)
+    return _REGIME_CACHE.get(sub, True)
+
+
+# ----------------------------------------------------------------------------
 # Per-candidate prediction
 
 def predict_candidate(
@@ -350,8 +391,27 @@ def predict_candidate(
     # Build bootstrap draws once per candidate
     beta_T_samples = bootstrap_draws(beta_t_pool[sub], rng, N_BOOT)
 
-    # Stage 2 sample-form-conditional for β_H + log_jcp (only when commitment set)
-    cond_key = (sub, sample_form_commitment) if sample_form_commitment else None
+    # Stage 2 sample-form-conditional for β_H + log_jcp, but only for families
+    # the variance-decomposition diagnostic puts in a sample-form-conditioned
+    # regime. Sec. II.D and Sec. III.E of the manuscript state that a family in
+    # Outcome C, where sample form explains little of the anchor variance, uses
+    # substructure-aggregate scope throughout. This routine did not implement
+    # that: it took the conditional cell for any family whenever a candidate
+    # carried a sample-form label and the cell held three fits.
+    #
+    # The consequence was confined to one paper and was not small. Four MgB2
+    # candidate records inherit a wire label from
+    # elsevier_10.1016_j.matpr.2019.05.078 and were predicted from the wire
+    # cell, at 5.20 in log10 Jc against 4.98 for every other MgB2 candidate.
+    # That turns the spread of the dispatched set at 4.2 K and 5 T from 0.0098
+    # dex into 0.2242, and Sec. III.E's argument that the output is a family
+    # envelope rather than a per-compound ranking is stated against the 0.0098.
+    # The deposited prediction file carries the aggregate scope for those four
+    # records, so the rule was applied to the deposit and never to the
+    # generator, which is why the released generator did not reproduce the
+    # released file.
+    cond_key = ((sub, sample_form_commitment)
+                if sample_form_commitment and conditioned_family(sub) else None)
     if cond_key in beta_h_cond_pool and beta_h_cond_pool[cond_key]["n"] >= 3:
         cell = beta_h_cond_pool[cond_key]
         beta_h_pool_arr = cell["beta_H"]

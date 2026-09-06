@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Why the dispatched predictions span 0.0098 dex at 4.2 K, and what is not true.
+"""Why the dispatched predictions span 0.0085 dex at 4.2 K, and what is not true.
 
 Referee A: "The spread of Jc at H = 0 is also suspiciously small." The response
 letter concedes the point and gives the figure: at 4.2 K and 5 T the 86
-MgB2-class records covering 84 compounds span 0.0098 dex. It explains this as
+MgB2-class records covering 84 compounds span 0.0085 dex. It explains this as
 the conditioning fixing every parameter, leaving the critical-field anchor and
 the transition temperature as the compound-specific inputs.
 
@@ -38,7 +38,7 @@ It is NOT the family anchor returned unchanged. That was the second thing review
 broke. The anchor is 5.324 and the prediction is 4.980; the shared field term
 displaces it by 0.344 dex.
 
-**The residual 0.0098 dex is bootstrap Monte Carlo and nothing else.** The
+**The residual 0.0085 dex is bootstrap Monte Carlo and nothing else.** The
 plus or minus 20 percent parent-anchor envelope does not enter it: the dispatch
 takes the median of three symmetric perturbations, which returns the
 unperturbed value exactly. It does widen the quoted interval, from 0.395 dex on
@@ -74,7 +74,13 @@ FITS_B = os.path.join("data", "phase_3_form3_fits_partial_cohortB_v2.csv")
 # predictions" is the median over both grid points, 0.6117. A first version
 # checked the letter's figure against the manuscript's quantity and passed on
 # the conflation; substituting the correct definition made it fail.
-QUOTED = dict(records=86, compounds=84, span=0.0098,
+# The figures the documents print. span was 0.0098 until 2026-09-06, when
+# analysis/rebuild_dispatch.py regenerated the dispatch table from the four
+# scripts that produce it and the generator stopped routing one paper's MgB2
+# records through a wire cell. 0.0085 is the same quantity on the regenerated
+# table, and both are ordinary draws from the 0.0092 plus or minus 0.0016 this
+# script simulates.
+QUOTED = dict(records=86, compounds=84, span=0.0085,
               width_at_point=0.60, width_all_emitted=0.61)
 
 
@@ -257,10 +263,16 @@ def main():
 
     print("\n   the residual span is bootstrap Monte Carlo on the %d-fit "
           "AlB2 pool, median beta_H %.4f" % (len(pool), np.median(pool.beta)))
-    print("   the 20 K figures depend on beta_T, which "
-          "audit/beta_T_withdrawal_notes.md records")
-    print("   as having moved without this file being regenerated; do not "
-          "quote them until it is")
+    # This used to end by saying the 20 K figures depend on beta_T, that
+    # audit/beta_T_withdrawal_notes.md records the pool as having moved without
+    # this file being regenerated, and that they should not be quoted until it
+    # is. The file was regenerated on 2026-09-06 by
+    # analysis/rebuild_dispatch.py, which reproduces it from the four scripts
+    # that produce it, so the block is lifted and the 20 K figures are quotable.
+    print("   the dispatch table is the one analysis/rebuild_dispatch.py "
+          "reproduces from the deposit,")
+    print("   so the 20 K figures rest on the same beta_T pool as the rest of "
+          "the paper")
     return 0
 
 

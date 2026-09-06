@@ -255,3 +255,50 @@ eighteen rows, four of them emitted, and it was present in the released file
 before any correction in this revision. The withdrawal-enforcement gap is
 separate, affects no emitted prediction, and is a fixable defect in how a
 withdrawal is applied rather than a defect in a reported number.
+
+## Closed, 2026-09-06
+
+Both open items are resolved and the deferral recorded above is lifted.
+
+**The prediction file reproduces.** `analysis/rebuild_dispatch.py` runs the four
+scripts that produce it, in order, in a scratch copy of the repository, and
+compares the result with the deposited file cell by cell. It reports no
+difference. The four are `phase_3_p57_de_novo_predictions.py`,
+`withdraw_records.py`, `apply_field_window_gate.py` and
+`apply_temperature_window_gate.py`. Only the first was named anywhere before,
+which is why a reader who ran it alone got 2151 rows against the deposited 2097
+and two of the five refusal codes.
+
+**The wire cell is gone, by rule rather than by hand.** This note recommended
+that it not be shown to a referee: it holds 8 fits from 2 papers, and the
+records it predicts come from one of them. The generator now reads each family's
+regime from the deposited variance decomposition and commits a family in the
+minor-separation regime, Outcome C, to substructure-aggregate scope, which is
+what Sec. II.D already said the model does and what the deposited file already
+showed. That closes the finding this note recorded as the more serious one: the
+rule had been applied to the file and never written into the code, and nothing
+in the repository recorded who applied it.
+
+**The withdrawals are enforced by the chain rather than by the generator.** This
+note is right that the generator cannot enforce them, because its candidate list
+is rebuilt from the extraction directory. `withdraw_records.py` is step 2 of the
+chain for that reason, and the six candidate records of `physc.2010.03.003` and
+`physb.2025.417755` are removed there. A regeneration that skips it brings them
+back, which is what the reproduction check is for.
+
+**What moved, and what did not.** Regenerating changed two printed numbers. The
+spread at 4.2 K and 5 T falls from 0.0098 dex to 0.0085, and at 20 K and 5 T
+from 0.2592 to 0.2543. The regression slope at 20 K moves from 1.216 to 1.209.
+The median width on the three exact-anchor records moves from 0.3949 to 0.3982.
+Unchanged: 163 emitted predictions, 84 compounds, 86 and 77 records at the two
+grid points, all five refusal counts, the 321 of 540 split, the 4.980 family
+constant, the 5.3241 anchor and its 0.344 dex displacement, the 18-fit pool, and
+the median widths of 0.6124 and 0.6016 dex, which the documents print as 0.61
+and 0.60.
+
+The 0.0085 is the same kind of quantity the 0.0098 was, and this note's own
+simulation covers both: 84 independent draws on the 18-fit pool give a span of
+0.0092 with a standard deviation of 0.0016.
+
+**The block on the 20 K half is lifted.** The file behind those figures is now
+the one the chain reproduces.

@@ -71,8 +71,14 @@ def quantities():
         DATA, "phase_3_p56_candidate_tier_assignment.csv"))
     prov = pd.read_csv(os.path.join(DATA,
                                     "provenance_table_fitcohort_full.csv"))
-    bt = pd.read_csv(os.path.join(DATA,
-                                  "phase_3_p44_post_UCLA_beta_T_fits.csv"))
+    # The repaired table with the reproduced filter, which is the cohort the
+    # manuscript reports as 257. This read the unrepaired file and counted all
+    # 260 of its rows, so the one temperature-axis count it binds disagreed
+    # with the documents by three and with analysis/final_consistency_check.py,
+    # which has always used the repaired cohort.
+    bt_all = pd.read_csv(os.path.join(
+        DATA, "phase_3_p44_post_UCLA_beta_T_fits_repaired.csv"))
+    bt = bt_all[bt_all.reproduced & np.isfinite(bt_all.beta_T_repaired)]
     fh = pd.read_csv(os.path.join(
         DATA, "phase_3_form3_fits_partial_cohortB_v2.csv"))
     a = pd.read_csv(os.path.join(DATA,
@@ -193,7 +199,7 @@ def quantities():
          r"gives ([\d.]+) for MgB2-class", "%.3f"),
         ("field LOO conditioned, 122", _loo(loo, "iron_pnictide_122",
                                             "compound_loo_mae"),
-         r"([\d.]+) for iron pnictide 122-type and", "%.3f"),
+         r"for MgB2-class, ([\d.]+) for iron pnictide 122-type and", "%.3f"),
         ("field LOO conditioned, chalcogenide",
          _loo(loo, "iron_chalcogenide_11", "compound_loo_mae"),
          r"and ([\d.]+) for iron chalcogenide 11-type", "%.3f"),
@@ -269,9 +275,24 @@ def main():
         sys.exit("run from the repository root")
 
     Q = quantities()
-    artifacts = [("manuscript", "HT10016_revised_corrected.docx"),
-                 ("supplement", "SUPPLEMENTAL_MATERIAL_revised_corrected.docx"),
-                 ("letter", "RESPONSE_TO_REFEREES_corrected.docx")]
+    # Discovered by prefix, not by version-stamped filename. These were the
+    # three "_corrected.docx" names of an early stage of the lineage, which
+    # stopped existing several stages ago, so every run since reported three
+    # MISSING artifacts and zero bound tokens and passed as a checker that
+    # checked nothing. analysis/final_consistency_check.py carried the same
+    # defect and was fixed the same way.
+    prefixes = [("manuscript", "HT10016_revised_"),
+                ("supplement", "SUPPLEMENTAL_MATERIAL_revised_"),
+                ("letter", "RESPONSE_TO_REFEREES_")]
+    present = [n for n in sorted(os.listdir(args.dir))
+               if n.endswith(".docx") and not n.startswith("~$")]
+    artifacts = []
+    for label, pre in prefixes:
+        hit = [n for n in present if n.startswith(pre)]
+        if len(hit) != 1:
+            sys.exit("%s: found %d file(s) starting %r, need exactly one: %s"
+                     % (args.dir, len(hit), pre, ", ".join(hit) or "none"))
+        artifacts.append((label, hit[0]))
 
     failures, total_bound, total_nums = [], 0, 0
     print("numeric claims bound to deposit quantities\n")
