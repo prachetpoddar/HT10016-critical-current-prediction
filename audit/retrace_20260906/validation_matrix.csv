@@ -1,0 +1,11 @@
+family,axis,compounds,fits,error,printed,status
+conventional_AlB2,temperature,0,0,,,not assessable
+conventional_AlB2,field,6,17,1.2296772604924975,1.23,does not clear the threshold
+iron_chalcogenide_11,temperature,3,87,0.5463755652377464,0.546,clears the threshold
+iron_chalcogenide_11,field,2,9,0.7072739687753693,0.707,clears the threshold
+iron_pnictide_111,temperature,1,11,,,"not assessable, one compound"
+iron_pnictide_111,field,0,0,,,not assessable
+iron_pnictide_1111,temperature,3,54,0.5129359721270709,0.513,clears the threshold
+iron_pnictide_1111,field,3,9,3.359579471867293,3.327,does not clear the threshold
+iron_pnictide_122,temperature,2,105,0.57966338706348,0.58,clears the threshold
+iron_pnictide_122,field,3,17,1.9569558936671845,1.957,does not clear the threshold
