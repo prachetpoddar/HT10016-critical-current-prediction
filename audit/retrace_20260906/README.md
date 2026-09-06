@@ -361,3 +361,45 @@ at p 0.007 with papers as the unit, is clustering of the fitted temperature
 EXPONENT, not of the magnitude. On this cohort the magnitude is where the
 variance is and family conditioning of it is not demonstrated. The two are
 different quantities and the paper is right to rest its claim on the exponent.
+
+## Which families are powered enough to carry the diagnostic
+
+Recorded 2026-09-06, for the proposal to keep the variance decomposition as it
+stands and report the adequately powered families separately.
+
+A family can return a probability at all only if the clustered null has enough
+distinct labellings. The floor is one over the support.
+
+**On the anchors as deposited**, three families clear a floor of 0.05:
+
+| family | n | papers | support | floor | eta2 | omega2 | p | 95% CI on eta2 |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| iron chalcogenide 11 | 12 | 7 | 140 | 0.007 | 0.374 | 0.219 | 0.514 | [0.00, 0.94] |
+| iron pnictide 122 | 10 | 7 | 140 | 0.007 | 0.488 | 0.318 | 0.286 | [0.04, 0.96] |
+| iron pnictide 1111 | 6 | 6 | 60 | 0.017 | 0.143 | -0.333 | 0.800 | [0.00, 1.00] |
+
+MgB2-class does not: 4 papers, support 6, floor 0.167. Two cuprate families
+carry one sample form and cannot be tested at all.
+
+**After the anchor repair only one family still clears it**, iron pnictide
+1111, whose six rows the repair does not touch and whose omega squared is
+negative. The chalcogenide floor rises to 0.25, the 122 floor to 0.10 and the
+MgB2 floor to 0.33.
+
+**What the powered families show.** Not a relationship. Three families had the
+power to return a probability below 0.05 on the deposited anchors and none did.
+The two with the largest effects, 0.374 and 0.488, return 0.514 and 0.286, and
+their intervals run from about zero to about 0.95. The data neither establish a
+substantial sample-form effect in those families nor exclude one.
+
+That is still a usable statement, and it is the strongest one available: within
+the two best-populated families the effect is unresolved rather than absent,
+and the measurement that would resolve it is named in Sec. III.A, source papers
+reporting several sample forms of one compound. It is a statement about what
+the corpus cannot yet decide, not a positive finding and not a forward-looking
+one.
+
+The bootstrap interval for the 122 family, [0.04, 0.96], excludes zero at its
+lower bound while the permutation probability is 0.286. The two disagree
+because a bootstrap over seven papers is unreliable at its 2.5th percentile.
+The permutation is the one to quote.
