@@ -1,0 +1,18 @@
+test,statistic,observed,null_mean,p,cells,median_compounds,single_compound_cells,lo,hi,raw
+rotation,median,39.30665875501232,41.60215090041353,0.8225,73.0,,,,,
+rotation,pooled,19.488307792550653,19.059364157294027,0.2275,73.0,,,,,
+rotation,mean,39.640349766384716,37.90824099609159,0.14,73.0,,,,,
+coordinates,"T/Tc and H/Hc2,0",39.30665875501232,,,73.0,4.0,3.0,,,
+coordinates,T/Tc and H,61.121519882199095,,,44.0,3.0,15.0,,,
+coordinates,"T and H/Hc2,0",49.123653817125565,,,57.0,4.0,12.0,,,
+coordinates,T and H,67.00720489732963,,,42.0,2.0,17.0,,,
+bootstrap,reduced,39.30665875501232,,,,,,36.13178997720523,63.71439133656728,
+bootstrap,unreduced,67.00720489732963,,,,,,59.45110004844965,81.68528129101432,
+bootstrap,unreduced minus reduced,27.700546142317307,,0.008,,,,4.697453982082674,37.54473387921204,
+leave one family out,conventional_AlB2,48.1402520519399,,,,,,,,67.61060722481693
+leave one family out,cuprate_BSCCO,40.04240004653921,,,,,,,,67.40751659074024
+leave one family out,cuprate_LSCO,42.24446941969319,,,,,,,,66.83728856250438
+leave one family out,iron_chalcogenide_11,49.87487973014218,,,,,,,,50.46079752341329
+leave one family out,iron_pnictide_111,39.19910930211149,,,,,,,,67.24471391649699
+leave one family out,iron_pnictide_1111,44.62740343390992,,,,,,,,69.65308891680064
+leave one family out,iron_pnictide_122,33.46453243260827,,,,,,,,61.91631790751572
