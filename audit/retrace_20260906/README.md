@@ -250,3 +250,52 @@ standard deviation needs the raw points. It does not: the law of total variance
 recovers 1.4232 exactly from the per-cell counts, means and standard
 deviations, and the reduction is 13.00 and 24.31 to the digit. That section is
 corrected.
+
+## The curve-motion question, and where it lands
+
+The author objected that the analysis should use every digitised point and
+should capture the material's response to stimulus, and that collapsing a curve
+to one record per cell destroys exactly that. Both halves are right, and
+following them through changes what claim 1 should say.
+
+**Where the variance lives.** On this cohort, of the variance of log10 Jc that
+the published test bins, 82.2 percent is between papers, 11.6 percent is
+between curves inside a paper, and 6.2 percent is the motion along a curve. The
+test is 94 percent a test of prefactor agreement and 6 percent a test of curve
+shape.
+
+**The temperature axis cannot be tested here at all.** All 171 digitised curves
+in `data/reextraction` are isothermal field sweeps. Removing a per-curve
+prefactor therefore sets the mean of every temperature row to exactly zero, so
+the temperature axis carries no information after centring and only the field
+response is testable on this cohort.
+
+**The coarse grid is not an artifact for the published quantity.** At the
+published 9 by 9 resolution only about 1 percent of within-cell scatter is one
+curve moving across its bin, because prefactor differences dominate so
+completely. Refining the field axis to 18 and 36 bins moves the median rule
+from 46.2 to 42.0 percent and the pooled rule from 18.5 to 20.5. The published
+statistic is stable against grid refinement.
+
+**On the shape alone, reduced coordinates do not beat absolute ones.** Once the
+prefactor is removed, absolute coordinates win on quantile bins, on the R
+squared of a best universal one-dimensional function, and on pairwise shape
+mismatch after offset removal; equal-width bins are the only framing that
+favours reduced coordinates, and that advantage is a binning artifact.
+
+**Two errors of mine, corrected here.** I reported 42.72 percent for the
+centred quantity in reduced coordinates. That used bin edges over the occupied
+range; on the manuscript's fixed 0 to 0.9 grid it is 37.86 percent. And I
+reported that the collapse is real at high reduced field and absent at low
+reduced field. It is not: at h below 0.1, where 55 percent of the records sit,
+76 percent of the within-cell scatter is a single curve falling across one
+over-wide bin, and the between-curve disagreement there is lower than at
+h of 0.2 to 0.35, not higher.
+
+**What this means for the claim.** The paper's conclusion is not weakened by
+any of it, and the reason it holds is sharper than the reason the paper gives.
+Universal reduced-variable scaling fails here not because the curve shapes
+disagree, since they partly agree, but because the prefactor does not collapse
+at all and the prefactor is 94 percent of the variance. That statement is
+robust to grid refinement, to the record unit, and to the summary rule, and it
+is the one worth making.
