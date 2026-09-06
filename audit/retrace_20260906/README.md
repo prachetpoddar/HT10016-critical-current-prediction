@@ -299,3 +299,43 @@ disagree, since they partly agree, but because the prefactor does not collapse
 at all and the prefactor is 94 percent of the variance. That statement is
 robust to grid refinement, to the record unit, and to the summary rule, and it
 is the one worth making.
+
+## Is the prefactor the intercept?
+
+Yes, in the sense that matters, and the paper already has two names for it.
+
+`log Jc,partial` in Form 3 is the intercept: the value the fit extrapolates to
+zero reduced coordinate. It depends on the fitted exponent and on the critical
+scale. `log10 Jc anchor` is the measured value at a curve's lowest measured
+temperature and field, and Sec. III.A runs the variance-decomposition
+diagnostic on it precisely because it uses no fitted exponent and no
+critical-field scale. This retrace used a third variant, the curve's mean over
+the window, which correlates 0.959 with the value at its lowest field and sits
+a median 0.54 dex below it.
+
+**The split depends on which one you pick, and the mean is the most
+favourable.** Referred to the curve mean, the variance is 93.8 percent
+magnitude and 6.2 percent motion. Referred to the value at the lowest measured
+field, which is the anchor's definition, it is 74.8 and 25.2. Centring on the
+mean minimises the residual by construction, so it maximises the magnitude
+share. The magnitude dominates either way, but 94 percent is the high end of
+the range and should be quoted as such.
+
+For scale: the deposited anchor has a standard deviation of 0.894 dex over its
+96 rows, against 0.398 dex for the motion along a curve in this cohort. The
+anchor varies about twice as much as the curve moves.
+
+**What this connects.** Claim 1 and claim 2 are about the same quantity and the
+manuscript does not say so. Claim 1 fails because the anchor does not collapse
+under reduced coordinates, and it is most of the variance. Claim 2 asks what
+explains the within-family scatter of that same anchor, and answers that sample
+form is the rule the predictor follows without being established to
+significance. Stated together they are one argument: the anchor is what fails
+to collapse, and the paper's diagnostic is an attempt to explain the anchor's
+scatter by an experimental variable rather than by a universal law.
+
+One caution on the linkage. The re-extraction curves can be matched to the
+deposited anchor rows only at paper level, on 11 papers, which is the wrong
+unit because the anchor is defined per sample at one temperature. At that unit
+the correlation is 0.47 to 0.54, which is too coarse to verify the numerical
+correspondence. What is verified here is the definitional one.
