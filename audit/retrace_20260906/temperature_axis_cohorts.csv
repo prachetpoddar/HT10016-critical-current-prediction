@@ -1,0 +1,15 @@
+cohort,quantity,family,value,eps,p,papers,compounds,n
+"deposited, repaired anchors (the reported cohort)",separation,,0.5239901961407548,0.45598879558943406,0.007129964350178249,17.0,,
+"deposited, repaired anchors (the reported cohort)","compound LOO, per fit",iron_chalcogenide_11,0.5463755652377464,,,,3.0,87.0
+"deposited, repaired anchors (the reported cohort)","compound LOO, per fit",iron_pnictide_1111,0.5129359721270709,,,,3.0,54.0
+"deposited, repaired anchors (the reported cohort)","compound LOO, per fit",iron_pnictide_122,0.57966338706348,,,,2.0,105.0
+"deposited, repaired anchors (the reported cohort)","compound LOO, per paper",iron_chalcogenide_11,0.4716591367343776,,,,3.0,6.0
+"deposited, repaired anchors (the reported cohort)","compound LOO, per paper",iron_pnictide_1111,0.30128576622386827,,,,3.0,4.0
+"deposited, repaired anchors (the reported cohort)","compound LOO, per paper",iron_pnictide_122,0.4761388915256916,,,,2.0,7.0
+rebuilt from the figure traces,separation,,0.35926560298299176,0.26069108036499045,0.036599817000915,16.0,,
+rebuilt from the figure traces,"compound LOO, per fit",iron_chalcogenide_11,1.4345798415627178,,,,3.0,50.0
+rebuilt from the figure traces,"compound LOO, per fit",iron_pnictide_1111,2.415008914961959,,,,3.0,40.0
+rebuilt from the figure traces,"compound LOO, per fit",iron_pnictide_122,1.1843762914313787,,,,2.0,70.0
+rebuilt from the figure traces,"compound LOO, per paper",iron_chalcogenide_11,0.8669974559184503,,,,3.0,5.0
+rebuilt from the figure traces,"compound LOO, per paper",iron_pnictide_1111,2.2644570475214527,,,,3.0,4.0
+rebuilt from the figure traces,"compound LOO, per paper",iron_pnictide_122,1.006744044822454,,,,2.0,7.0

@@ -306,6 +306,18 @@ def main():
          "removes 11 of the 63 fits", "manuscript", True),
         ("the promised disposition table",
          "Disposition of the 94 field-axis fits", "supplement", True),
+        # The figure-rebuilt exponents, disclosed 2026-09-06. None of the
+        # deposited temperature-axis exponents reproduces from its source
+        # figure, the rebuild is deposited, and on it the separation survives
+        # while the applicability result does not.
+        ("the figure rebuild is reported",
+         "median ratio of refitted to deposited is 0.42", "manuscript", True),
+        ("the separation survives the rebuild",
+         "0.359 with a permutation probability of 0.037", "manuscript", True),
+        ("the applicability result does not",
+         "1.435, 1.184 and 2.415", "manuscript", True),
+        ("the composition is not the cause",
+         "still gives a median exponent of 1.277", "manuscript", True),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
