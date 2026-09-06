@@ -378,26 +378,26 @@ def main():
          "correcting the anchors makes the separation stronger", "response",
          False),
         ("the pre-withdrawal value in the letter",
-         "the fraction is 0.107 with a probability of 0.355", "response",
+         "0.107 with a probability of 0.355", "response",
          True),
         ("the compound-level null in the letter",
-         "966 distinct ways of forming three families", "response", True),
+         "966 ways of forming three families", "response", True),
         # The token is the count and the fact, not the sentence that carried
         # them: the compaction of 2026-09-06 rewrote this paragraph and the
         # longer phrasing this check used to require went with it.
         ("the audit's five defects in the letter",
          "found five more defects", "response", True),
         ("Stage 3 corrected in the letter",
-         "0.816 rather than 0.84", "response", True),
+         "Under genuine withholding it is 0.816", "response", True),
         ("the propagation corrected in the letter",
-         "0.27 dex rather than 0.29", "response", True),
+         "on the repaired exponent it is 0.27 dex", "response", True),
         # The description was withdrawn in one paragraph and repeated in
         # another, well away from it, inside the Referee A response.
         ("the second, stale copy of the withdrawn description",
          "the one result in this paper that improved under every correction "
          "we made", "response", False),
         ("the retraction of it, in the referee response",
-         "the audit section below withdraws that description", "response",
+         "the section below withdraws that description", "response",
          True),
         # Supplemental Figure S1, embedded 2026-09-06. It had a generator
         # and a committed PNG since 2026-09-02 and appeared in no document,
@@ -465,14 +465,14 @@ def main():
         ("the stale field span under Table S6",
          "0.22 dex from 0.1 to 5 T", "supplement", False),
         ("the reproducibility standard is stated",
-         "every printed count is asserted against those tables", "response",
+         "every printed count is asserted against the deposited tables", "response",
          True),
         # A5, 2026-09-06. The dispatch table now regenerates from the four
         # scripts that produce it, so the letter says so and the standard names
         # it beside the figures.
         ("the letter claims the dispatch table regenerates",
-         "the candidate dispatch table regenerates from the deposited tables "
-         "cell for cell", "response", True),
+         "the candidate dispatch table regenerates cell for cell", "response",
+         True),
         ("the withdrawn non-reproduction disclosure",
          "The deposited prediction file does not reproduce from its own "
          "generator.", "response", False),
@@ -493,10 +493,10 @@ def main():
         ("the pass is no longer called final",
          "A final pass over every reported quantity", "response", False),
         ("the second pass is reported",
-         "A second pass, made after the tables were frozen, found seven more.",
+         "A second pass, made after the tables were frozen, found seven more",
          "response", True),
         ("the second pass names the null correction",
-         "that family admits a single labelling and its probability is "
+         "that family admits one labelling and its probability is "
          "identically 1", "response", True),
         ("the second pass names the withdrawn supplement section",
          "we withdraw it rather than recompute it", "response", True),
@@ -510,13 +510,14 @@ def main():
         ("no earlier-presentation history in the manuscript",
          "earlier presentation", "manuscript", False),
         ("the withdrawn in-corpus baseline is in the letter",
-         "an in-corpus baseline of 0.567", "response", True),
+         "the in-corpus baseline of 0.567", "response", True),
         ("the withdrawn 0.1 T medians are in the letter",
          "family medians of 6.00, 5.75 and 5.32", "response", True),
         ("the withdrawn Spearman is in the letter",
          "0.635", "response", True),
-        ("the withdrawn Stage 3 error is in the letter",
-         "0.816 rather than 0.84", "response", True),
+        ("Stage 3's 0.84 is retired in the letter",
+         "Stage 3's error of 0.84 was described as a "
+         "leave-one-substructure-out result and is not one", "response", True),
         # One validation status, propagated 2026-09-06. The phrase "three
         # validated substructure families" meant three different things in
         # the abstract, Table III and the conclusion, and Table IV's
