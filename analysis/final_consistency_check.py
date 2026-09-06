@@ -428,6 +428,45 @@ def main():
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
+        # One anchor cohort, propagated 2026-09-06. Figure 3 drew the
+        # deposited 96-row table while Sec. III.A and Table III reported both
+        # cohorts and the abstract reported only the deposited one. The figure
+        # now draws the repaired 70, and the size-preserving clustered null is
+        # applied to all three families rather than to two of them.
+        ("the abstract leads with the repaired anchors",
+         "on the repaired anchor cohort sample form explains 81%",
+         "manuscript", True),
+        ("the deposited anchors kept beside them in the abstract",
+         "against 37%, 49% and 12% on the anchors as deposited",
+         "manuscript", True),
+        ("the caption's stale deposited-panel claim",
+         "The panels here plot the anchors as deposited", "manuscript", False),
+        ("the caption names the cohort it draws",
+         "the 70 of the 96 per-paper anchor records of Table I that carry no "
+         "withdrawal", "manuscript", True),
+        ("the stale marker count in the caption",
+         "The 56 collapse to the 37 markers drawn", "manuscript", False),
+        ("the withdrawn MgB2 labelling floor",
+         "admits three distinct labellings", "manuscript", False),
+        ("the size-preserving null applied to all three",
+         "the MgB2-class cell admits a single labelling", "manuscript", True),
+        ("the exact permutation probabilities are given",
+         "0.25 for the iron chalcogenide cell, which is its floor",
+         "manuscript", True),
+        ("the enumeration is deposited",
+         "analysis/anchor_form_permutation.py", "manuscript", True),
+        ("the stale MgB2 permutation sentence",
+         "Given the MgB2-class cohort size (n = 15 physical samples)",
+         "manuscript", False),
+        ("the letter's false unchanged-anchor-count claim",
+         "The anchor count behind Figure 3 and the candidate compound count "
+         "do not move", "response", False),
+        ("the letter states that the anchor count moves",
+         "Twenty-six of the 96 per-paper anchor rows carry a withdrawal",
+         "response", True),
+        ("the letter's per-family floors",
+         "the MgB2-class cell returns 1 whatever its separation", "response",
+         True),
     ]
     for name, token, doc, want in repaired:
         hit = token in T[doc]

@@ -12,11 +12,15 @@ through a whole revision, and how the copy in figures/ kept asserting 65, 40,
 
 Three checks, in the order a stale figure gets there:
 
-  1. Three of the five figures regenerate from the current deposit to the same
-     pixels as the committed PNG: 1, 2 and 5. Say three and not five. Figure 3
-     is excluded because its width depends on which Helvetica the renderer
-     resolves, and Figure 4 has no generator in this deposit at all, so
-     NEITHER of those two has its numeric content checked by anything here.
+  1. All five figures regenerate from the current deposit to the same pixels
+     as the committed PNG. This said three for a long time, and the two
+     exclusions were real: Figure 4 had no generator in this deposit, and
+     Figure 3 was the only figure claiming Helvetica, which this container
+     does not resolve. Figure 4 gained analysis/manuscript_figure_4.py on
+     2026-09-06 and Figure 3 was redrawn the same day in Nimbus Sans, the
+     family the other four are already in, so neither exclusion survives. The
+     Figure 3 stamp check below is kept anyway: it says whether the deposit
+     has moved under a committed render without needing a plotting stack.
      This one check is conditional on where it is run: it compares pixels only
      in the environment recorded in figures/render_env.json, and reports "n/a"
      elsewhere. See the comment above SIZE_TOLERANCE for why, and for what
@@ -67,6 +71,16 @@ from PIL import Image
 GENERATED = [
     (1, "analysis/manuscript_figure_1.py", "figures/manuscript_figure_1.png"),
     (2, "analysis/manuscript_figure_2.py", "figures/manuscript_figure_2.png"),
+    # Figure 3 joined this list on 2026-09-06. It was exempt because it was the
+    # only figure claiming Helvetica, which this container does not resolve, so
+    # it could not be compared pixel for pixel and was checked through its stamp
+    # instead. The other four regenerate here bit-for-bit, which means they were
+    # committed from a container resolving Nimbus Sans, so the typeface Figure 3
+    # was being held to was the one inconsistency in the set. It is now drawn in
+    # the same family as the rest and is checked the same way as the rest. The
+    # stamp check below is kept: it catches a deposit that has moved under a
+    # committed render without needing a plotting stack to say so.
+    (3, "analysis/figure_4_source.py", "figures/manuscript_figure_3.png"),
     (4, "analysis/manuscript_figure_4.py", "figures/figure_4_anchor_count.png"),
     (5, "analysis/manuscript_figure_5.py", "figures/manuscript_figure_5.png"),
 ]
@@ -310,9 +324,11 @@ def main():
     print("figures against the deposit\n")
     # Pinned, so a figure quietly dropping off this list fails here rather
     # than passing as one fewer thing checked. It was 3 until Figure 4 was
-    # redrawn on 2026-09-06 and could be checked against its generator.
+    # redrawn on 2026-09-06 and could be checked against its generator, and 4
+    # until Figure 3 was redrawn on the repaired anchor cohort the same day and
+    # stopped being the only figure in a typeface this container cannot draw.
     check("the regeneration list still holds %d figures" % len(GENERATED),
-          len(GENERATED) == 4, "figures %s"
+          len(GENERATED) == 5, "figures %s"
           % ", ".join(str(n) for n, _, _ in GENERATED))
 
     # Whether a regenerated figure may be compared with the committed one at
@@ -365,15 +381,29 @@ def main():
     stamp_path = os.path.join("figures", "manuscript_figure_3.stamp.json")
     if os.path.exists(stamp_path):
         import json
-        stamp = json.load(open(stamp_path))["drawn_from"]
-        vd = pd.read_csv(os.path.join(
-            "data", "phase_3_p31_variance_decomposition.csv"))
+        _s = json.load(open(stamp_path))
+        stamp = _s["drawn_from"]
+        # Which deposited decomposition the stamp must agree with. Figure 3
+        # draws the repaired anchor cohort, and comparing a repaired render
+        # against the deposited decomposition reported three false drifts, so
+        # the cohort travels with the stamp and selects the file here. A stamp
+        # written before the cohort key existed is a deposited render.
+        _cohort = _s.get("cohort", "deposited")
+        _vd_name = {"deposited": "phase_3_p31_variance_decomposition.csv",
+                    "repaired": "phase_3_p31_variance_decomposition_repaired.csv",
+                    }.get(_cohort)
+        if _vd_name is None:
+            check("Figure 3's stamp names a known cohort", False,
+                  "stamp cohort %r is neither deposited nor repaired" % _cohort)
+            _vd_name = "phase_3_p31_variance_decomposition.csv"
+        vd = pd.read_csv(os.path.join("data", _vd_name))
         per = vd[vd.scope == "per_substructure"].set_index("substructure")
         drift = {k: (v, float(per.loc[k, "ratio_between_total"]))
                  for k, v in stamp.items()
                  if k in per.index
                  and abs(v - float(per.loc[k, "ratio_between_total"])) > 5e-4}
-        check("Figure 3's committed render matches the current deposit",
+        check("Figure 3's committed render matches the current deposit "
+              "(%s cohort)" % _cohort,
               not drift,
               "; ".join("%s shows %.4f, deposit %.4f; redraw with "
                         "analysis/figure_4_source.py where Helvetica is "

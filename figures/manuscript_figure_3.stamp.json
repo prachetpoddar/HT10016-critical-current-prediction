@@ -1,9 +1,10 @@
 {
  "drawn_from": {
-  "conventional_AlB2": 0.1159,
-  "iron_chalcogenide_11": 0.3737,
-  "iron_pnictide_122": 0.4877
+  "conventional_AlB2": 0.0442,
+  "iron_chalcogenide_11": 0.809,
+  "iron_pnictide_122": 0.3743
  },
- "font": "Helvetica",
- "note": "Ratios the committed figures/manuscript_figure_3.png displays. Written by analysis/figure_4_source.py on a render in the deposited typeface, and checked against the deposit by analysis/check_figures.py. Do not edit by hand."
+ "cohort": "repaired",
+ "font": "Nimbus Sans",
+ "note": "Ratios the committed figures/manuscript_figure_3.png displays, and the anchor cohort they were drawn from. Written by analysis/figure_4_source.py on a render in an accepted typeface, and checked against the matching deposited decomposition by analysis/check_figures.py. Do not edit by hand."
 }

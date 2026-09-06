@@ -1,0 +1,7 @@
+cohort,substructure,n_samples,n_papers,sample_forms,eta_squared,unclustered_labellings,unclustered_p,unclustered_floor,clustered_labellings,clustered_p,clustered_floor
+deposited,iron_chalcogenide_11,12,7,polycrystal 2; single_crystal 7; thin_film 3,0.373664,7920,0.1192,0.0001,40.0,0.25,0.025
+deposited,iron_pnictide_122,10,7,polycrystal 1; single_crystal 6; thin_film 3,0.487678,840,0.1595,0.0012,,,
+deposited,conventional_AlB2,15,4,bulk 5; wire 10,0.115886,3003,0.2085,0.0003,1.0,1.0,1.0
+repaired,iron_chalcogenide_11,5,4,single_crystal 2; thin_film 3,0.809011,10,0.1,0.1,4.0,0.25,0.25
+repaired,iron_pnictide_122,5,5,single_crystal 2; thin_film 3,0.374292,10,0.3,0.1,10.0,0.3,0.1
+repaired,conventional_AlB2,13,3,bulk 5; wire 8,0.044159,1287,0.4872,0.0008,1.0,1.0,1.0

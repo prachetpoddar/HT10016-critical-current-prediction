@@ -25,20 +25,38 @@ measurements of one physical sample (sample_id with _<num>K suffix encoding
 isotherm temperature) are collapsed to a single record via mean of
 log_Jc_anchor within (paper_id, stripped_sample_id, sample_form) groups.
 
-Per-panel sample-form distribution (post-aggregation, post-FST correction):
-  iron_chalcogenide_11: n=13 (single_crystal 7, thin_film 4, polycrystal 2)
-                        FST records previously mis-classified as wire have
-                        been re-classified as thin_film per source-paper
-                        verification (Piperno et al., Sci Rep 13:574, 2023).
-  iron_pnictide_122:    n=16 (single_crystal 12, thin_film 2, polycrystal 1, wire 1)
-                        of which polycrystal and wire are singletons (n=1)
-  conventional_AlB2:    n=15 (wire 10, bulk 5)
+Two cohorts. The deposited cohort is all 96 per-paper anchor rows. The
+repaired cohort is the 70 rows of
+phase_3_p31_jc_anchor_per_paper_repaired.csv that carry no withdrawal reason.
+The manuscript draws the repaired one; the deposited one is retained because
+it is what the previously committed render showed, and main() reproduces it
+before drawing anything, so a change to this file that moves the deposited
+numbers stops the run rather than silently redrawing the figure.
 
-Combined-correction variance-decomposition ratios (between-sample-form /
-total at log_Jc_anchor scope; Outcome A/B/C thresholds preserved):
-  iron_chalcogenide_11 = 0.73 (Outcome A; threshold >0.7; narrow pass)
-  iron_pnictide_122    = 0.60 (Outcome B; threshold 0.3-0.7)
-  conventional_AlB2    = 0.12 (Outcome C; threshold <0.3)
+Per-panel composition after aggregate_per_physical_sample, by cohort:
+
+                        deposited (96 rows)          repaired (70 rows)
+  iron_chalcogenide_11  n=12, 3 forms                n=5  (thin_film 3, single_crystal 2)
+  iron_pnictide_122     n=10, 3 forms                n=5  (thin_film 3, single_crystal 2)
+  conventional_AlB2     n=15, 2 forms                n=13 (wire 8, bulk 5)
+
+The earlier version of this block gave n=13 and n=16 for the two iron-based
+families and three ratios (0.73, 0.60, 0.12) that no cohort in the deposit
+returns. Both predate the substructure-classifier fix and neither was checked
+against a run.
+
+Variance-decomposition ratios (between-sample-form / total at log_Jc_anchor
+scope), which the panels print as the Outcome letter and the ratio:
+
+                        deposited     repaired
+  iron_chalcogenide_11  0.3737 (B)    0.8090 (A)
+  iron_pnictide_122     0.4877 (B)    0.3743 (B)
+  conventional_AlB2     0.1159 (C)    0.0442 (C)
+
+The repaired ratios rest on five physical samples in two sample forms for both
+iron-based families. That thinness is a property of the cohort and is stated
+in the figure caption; it is not concealed by the panels, which draw every
+marker.
 
 Singleton cells (n=1) display only the per-paper marker with explicit "n=1"
 annotation; no median line or IQR box is drawn for cells with one record.
@@ -93,9 +111,9 @@ def _report_font():
         except Exception:
             continue
         print("font resolved: %s  (%s)" % (want, os.path.basename(path)))
-        if want not in ("Helvetica", "Arial"):
-            print("WARNING: the deposited figure was drawn in %s, not Helvetica "
-                  "or Arial. Do not commit this render." % want)
+        if want not in ACCEPTED_FAMILIES:
+            print("WARNING: %s is not one of the accepted families %s. Do not "
+                  "commit this render." % (want, ", ".join(ACCEPTED_FAMILIES)))
         return want
     print("WARNING: no family from the list resolved; matplotlib fell back to "
           "its default. Do not commit this render.")
@@ -113,7 +131,7 @@ def _write_stamp(df, family):
     also certify itself.
     """
     import json
-    if family not in ("Helvetica", "Arial"):
+    if family not in ACCEPTED_FAMILIES:
         print("stamp not written: %s is not the deposited typeface, so this "
               "render should not be committed" % (family or "the fallback"))
         return
@@ -125,12 +143,14 @@ def _write_stamp(df, family):
              and r.ratio_between_total == r.ratio_between_total}
     STAMP.write_text(json.dumps(
         {"drawn_from": drawn,
+         "cohort": COHORT,
          "font": family,
          "note": ("Ratios the committed figures/manuscript_figure_3.png "
-                  "displays. Written by analysis/figure_4_source.py on a "
-                  "render in the deposited typeface, and checked against the "
-                  "deposit by analysis/check_figures.py. Do not edit by "
-                  "hand.")}, indent=1) + "\n")
+                  "displays, and the anchor cohort they were drawn from. "
+                  "Written by analysis/figure_4_source.py on a render in an "
+                  "accepted typeface, and checked against the matching "
+                  "deposited decomposition by analysis/check_figures.py. Do "
+                  "not edit by hand.")}, indent=1) + "\n")
     print("stamp written: %s" % ", ".join(
         "%s %.4f" % (k, v) for k, v in sorted(drawn.items())))
 
@@ -165,6 +185,22 @@ ROOT = HERE.parent
 # and made load_cohort() and main() raise FileNotFoundError on a clean checkout,
 # so the deposited figure could not be regenerated from the deposited data.
 JC_ANCHOR_CSV = ROOT / "data" / "phase_3_p31_jc_anchor_per_paper.csv"
+JC_ANCHOR_REPAIRED_CSV = (ROOT / "data" /
+                          "phase_3_p31_jc_anchor_per_paper_repaired.csv")
+DECOMP_CSV = {
+    "deposited": ROOT / "data" / "phase_3_p31_variance_decomposition.csv",
+    "repaired": ROOT / "data" /
+                "phase_3_p31_variance_decomposition_repaired.csv",
+}
+# What the deposited cohort must return. main() checks this before it draws,
+# so re-pointing the figure at the repaired cohort cannot also change the
+# deposited numbers without the run stopping.
+DEPOSITED_REFERENCE = {
+    "conventional_AlB2": 0.115886,
+    "iron_chalcogenide_11": 0.373664,
+    "iron_pnictide_122": 0.487678,
+}
+COHORT = os.environ.get("FIG3_COHORT", "repaired")
 OUT = ROOT / "figures" / "manuscript_figure_3.png"
 STAMP = ROOT / "figures" / "manuscript_figure_3.stamp.json"
 
@@ -181,6 +217,19 @@ RC_PARAMS = {
     "xtick.direction": "in",
     "ytick.direction": "in",
 }
+
+# Which typefaces may certify a committed render.
+#
+# This list was ("Helvetica", "Arial"). Nimbus Sans is URW's metric-compatible
+# Helvetica clone and is added because the four other figures of this deposit
+# are drawn in it: analysis/check_figures.py regenerates Figs. 1, 2, 4 and 5
+# bit-for-bit in the container that renders this one, which it could not do if
+# they had been committed from a machine resolving Helvetica. Figure 3 was the
+# only figure in a different typeface, so the guard as written was preserving
+# the one inconsistency in the set rather than preventing one. DejaVu Sans and
+# Liberation Sans stay out: neither carries Helvetica metrics, and a render in
+# either changes the panel widths.
+ACCEPTED_FAMILIES = ("Helvetica", "Arial", "Nimbus Sans")
 
 # The three families Figure 3 draws, in panel order. Hoisted to module scope
 # so _write_stamp records exactly what was plotted rather than a second
@@ -385,13 +434,80 @@ def compute_variance_decomposition(
     return pd.DataFrame(rows)
 
 
-def load_cohort() -> pd.DataFrame:
-    """Load Path 3 per-paper log_Jc_anchor table; filter to the three
-    populated substructures used in Figure 4; collapse multi-isotherm
-    same-sample records via aggregate_per_physical_sample."""
-    df = pd.read_csv(JC_ANCHOR_CSV)
+def load_cohort(cohort: str = None) -> pd.DataFrame:
+    """Load the Path 3 per-paper log_Jc_anchor table for one cohort, filter to
+    the three populated substructures Figure 3 draws, and collapse
+    multi-isotherm same-sample records via aggregate_per_physical_sample.
+
+    cohort "deposited" reads all 96 rows of the original table. cohort
+    "repaired" reads the repaired table and keeps the 70 rows with no
+    withdrawal reason. The default is COHORT, which the FIG3_COHORT
+    environment variable sets and which is "repaired" unless it is overridden.
+
+    The two tables carry identical log10_Jc_anchor values on every row that is
+    not a cuprate: the anchor uses no field scale, so the H/10 repair does not
+    reach it, and the four rows whose anchor value moves are BSCCO, a family
+    this figure does not draw. The whole difference between the two panels is
+    therefore the withdrawals, which is what the caption says.
+    """
+    cohort = COHORT if cohort is None else cohort
+    if cohort == "deposited":
+        df = pd.read_csv(JC_ANCHOR_CSV)
+    elif cohort == "repaired":
+        df = pd.read_csv(JC_ANCHOR_REPAIRED_CSV)
+        if "withdrawn" not in df.columns:
+            raise SystemExit(
+                "the repaired anchor table has no withdrawn column, so the "
+                "70-row repaired cohort cannot be formed from it")
+        df = df[df["withdrawn"].isna()]
+    else:
+        raise SystemExit("unknown cohort %r; use deposited or repaired"
+                         % cohort)
     df = df[df["substructure"].isin(SUB_COLORS.keys())].copy()
     return aggregate_per_physical_sample(df)
+
+
+def _check_deposited_reproduces():
+    """Reproduce the previously committed render's ratios before drawing.
+
+    The committed figures/manuscript_figure_3.png displayed the deposited
+    cohort. Re-pointing this generator at the repaired cohort is a change of
+    input, not of method, and this is what says so: if the deposited cohort
+    stops returning what it returned, the method moved too and the run stops.
+    """
+    dec = compute_variance_decomposition(load_cohort("deposited"))
+    per = dec[dec["scope"] == "per_substructure"].set_index("substructure")
+    bad = []
+    for sub, want in sorted(DEPOSITED_REFERENCE.items()):
+        got = float(per.loc[sub, "ratio_between_total"])
+        if abs(got - want) > 5e-6:
+            bad.append("%s gives %.6f, not %.6f" % (sub, got, want))
+    if bad:
+        raise SystemExit("the deposited cohort no longer reproduces: "
+                         + "; ".join(bad))
+    print("deposited cohort reproduces: "
+          + ", ".join("%s %.4f" % (k, v)
+                      for k, v in sorted(DEPOSITED_REFERENCE.items())))
+
+
+def write_decomposition(cohort: str = None) -> Path:
+    """Deposit the full variance decomposition for one cohort.
+
+    analysis/check_figures.py compares the stamp against the file this writes
+    for the cohort the stamp names, which is how a figure drawn on one cohort
+    and checked against another is caught.
+    """
+    cohort = COHORT if cohort is None else cohort
+    df = pd.read_csv(JC_ANCHOR_REPAIRED_CSV if cohort == "repaired"
+                     else JC_ANCHOR_CSV)
+    if cohort == "repaired":
+        df = df[df["withdrawn"].isna()]
+    dec = compute_variance_decomposition(aggregate_per_physical_sample(df))
+    dec["note"] = dec["note"].fillna("")
+    out = DECOMP_CSV[cohort]
+    dec.to_csv(out, index=False)
+    print("wrote %s" % out)
+    return out
 
 
 def panel_one_substructure(ax, sub_df: pd.DataFrame, sub: str,
@@ -491,7 +607,10 @@ def panel_one_substructure(ax, sub_df: pd.DataFrame, sub: str,
 
 
 def main():
+    _check_deposited_reproduces()
+    write_decomposition()
     df = load_cohort()
+    print("drawing the %s cohort" % COHORT)
 
     # Compute shared y-range across all log_Jc_anchor values
     log_jc_vals = df["log10_Jc_anchor"].dropna().values
