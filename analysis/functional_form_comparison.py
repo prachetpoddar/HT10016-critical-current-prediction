@@ -95,6 +95,20 @@ MIN_HOLDOUT = 5         # a two-point average must not weigh as much as MgB2
 EXP_BOUND = 50.0        # no physical exponent is near this
 N_WITHDRAWN = 11
 N_WITHDRAWN_ROWS = 997
+# The eighteen sources opened and compared against their printed figures in
+# audit/cohortA_all_eighteen_read_20260904.md, every one of which was found
+# defective. None of them is in the withdrawal ledger: the project's answer to
+# them was reextraction, not withdrawal, and fourteen carry a repaired point
+# file under data/reextraction. Table II's input predates all of that, so it
+# holds all eighteen in the form the screen rejected, and the withdrawal filter
+# removes eleven different papers. The comparison is therefore also run with
+# these removed.
+SCREEN_FAILED = (
+    "0806.2839v1", "0903.0004v2", "0906.0444v1", "0907.0147v2",
+    "1002.0208v2", "1009.4896v1", "1104.0477v2", "1108.0407v1",
+    "1111.3923v1", "1502.05345v1", "1611.08455v1", "1903.00866v2",
+    "2012.13723v3", "2207.06629v1", "2305.10034v1", "2308.10492v1",
+    "2510.10264v1", "2511.19058v1")
 MIN_GUARD_COMPOUNDS = 8
 SEEDS = tuple(range(42, 62))
 
@@ -546,6 +560,27 @@ def bound_sensitivity(frame, label):
     EXP_BOUND = keep
 
 
+def screen_filter(d):
+    """Drop the eighteen sources that failed the read against their figures.
+
+    Asserted rather than assumed: all eighteen have to be present in the input,
+    because the point of the cohort is that Table II was computed before any of
+    them was screened.
+    """
+    keys = {p + ".pdf" for p in SCREEN_FAILED}
+    present = keys & set(d.pdf_name.astype(str))
+    if len(present) != len(SCREEN_FAILED):
+        raise SystemExit("%d of the %d screen-failed sources are in the "
+                         "input; all of them were expected, missing %s"
+                         % (len(present), len(SCREEN_FAILED),
+                            sorted(keys - present)))
+    if keys & set(pd.read_csv(WITHDRAWN).paper_id.astype(str)):
+        raise SystemExit("a screen-failed source is also in the withdrawal "
+                         "ledger; the two sets were disjoint when this was "
+                         "written and the cohorts below assume it")
+    return d[~d.pdf_name.astype(str).isin(keys)]
+
+
 def main():
     for p in (IN, REF, WITHDRAWN):
         if not os.path.exists(p):
@@ -575,7 +610,14 @@ def main():
     print("\n" + hdr)
     print("   " + "-" * (len(hdr) - 3))
     out = []
-    for label, frame in (("as published", d), ("withdrawals removed", dw)):
+    ds = screen_filter(d)
+    print("   the eighteen screen-failed sources remove %d of %d rows and "
+          "%d of %d compounds" % (len(d) - len(ds), len(d),
+                                  d.mp_formula.nunique()
+                                  - ds.mp_formula.nunique(),
+                                  d.mp_formula.nunique()))
+    for label, frame in (("as published", d), ("withdrawals removed", dw),
+                         ("screen-failed removed", ds)):
         for mode in ("point", "curve", "paper"):
             for drop_ill in (False, True):
                 r = report(frame, label, mode, drop_ill)
