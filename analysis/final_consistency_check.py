@@ -513,6 +513,23 @@ def main():
          "the in-corpus baseline of 0.567", "response", True),
         ("the withdrawn 0.1 T medians are in the letter",
          "family medians of 6.00, 5.75 and 5.32", "response", True),
+        # B4, 2026-09-06. The source-paper holdout is the paper's most direct
+        # measurement of the heterogeneity it is about and sat in the last
+        # sentence of Sec. II.C. It is now in the abstract and Sec. I too, and
+        # the letter's two misstatements of it are corrected.
+        ("the unseen-paper result is in the abstract",
+         "no candidate functional form reaches a median error of 0.90 dex on "
+         "an unseen paper", "manuscript", True),
+        ("the unseen-paper result is in the introduction",
+         "Predicting an unseen paper and predicting an unseen measurement are "
+         "not the same problem", "manuscript", True),
+        ("Sec. II.C gives the three holdout errors",
+         "0.903, 0.900 and 0.949 dex", "manuscript", True),
+        ("the letter's unreproducible within-compound range",
+         "0.32 to 0.45 dex", "response", False),
+        ("the letter's misstated factor",
+         "a factor of eight in critical current between predicting an unseen "
+         "measurement", "response", False),
         ("the withdrawn Spearman is in the letter",
          "0.635", "response", True),
         ("Stage 3's 0.84 is retired in the letter",
