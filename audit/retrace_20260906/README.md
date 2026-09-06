@@ -127,3 +127,69 @@ It fails only when the comparator is Stage 1. The sentence's antecedent is the
 out-of-sample median, which is `stage3_abs`, and against that the physicality
 arm ranges from 0.544 to 1.517 and does cross unity. The manuscript is right
 and my rebuttal was wrong.
+
+## The rebuild of claim 1, and what it actually shows
+
+Recorded 2026-09-06. Script `analysis/rebuild_reduced_variable_scaling.py`.
+
+Since `data/reduced_variable_scaling.csv` has no generator and no point-level
+source, the test was rebuilt from `data/reextraction/`, which holds digitised
+temperature, field and critical-current triples with their calibration and
+overlay images, joined to the critical scales in the provenance table. The
+cohort is 6596 points from 27 papers, which is not the manuscript's.
+
+**The rebuild neither confirms nor contradicts the 13.0 and 24.3 figures, and
+an earlier version of this note said it confirmed them. That is withdrawn.**
+
+The answer depends on what one record inside a cell is, and the manuscript
+does not say.
+
+| unit | cells | records | SD reduction | variance reduction |
+|---|---:|---:|---:|---:|
+| every digitised point | 67 | 6057 | 46.22% | 71.08% |
+| one per curve per cell | 53 | 601 | 15.97% | 29.39% |
+| one per paper per cell | 34 | 309 | 8.86% | 16.93% |
+
+The first version of this script used a record key of paper and measurement
+temperature, called it a curve, and reported 8.66 percent, below the
+manuscript and therefore a confirmation. An independent review broke it. Every
+series in `data/reextraction` is a field sweep at one fixed temperature, so
+that key merges distinct samples measured at the same temperature in one
+paper: 19 of 133 groups swallow two to five real curves, and they are exactly
+the papers whose within-paper spread is the physics, irradiated against
+unirradiated, five dopants, four samples. On the real curve key, which is
+paper, source file and series, the figure is 15.97 percent, above the
+manuscript rather than below.
+
+**The deposited records are points, not curves.** The deposited table's cell
+sizes have mean 82 and maximum 594. Against the rebuild's cell sizes a
+two-sample Kolmogorov-Smirnov test cannot distinguish them from the raw
+point-level binning, D 0.13 at p 0.59, and rejects both collapsed units at p
+below 1e-8. So the like-for-like comparison to the published 13.0 is the raw
+row at 46.22 percent, which does not confirm it.
+
+**Two choices the manuscript does not state move the answer further than the
+gap being argued about.** `1611_08455v1` figure 5b is digitised twice, into a
+270-row file and a 553-row file carrying identical values, and nothing says
+which is canonical. Keeping both gives 15.97 percent, dropping one gives 11.77
+and dropping the other 9.09: a 6.9-point swing against a 4.3-point gap to
+13.0. Under leave-one-paper-out the curve-unit figure ranges from 9.99 to
+34.16 percent and exceeds 13.0 in 24 of 27 refits.
+
+**The perturbation moves with it.** On the curve unit, 1 of 400 draws reaches
+30 percent on the standard-deviation scale and 176 of 400 on the variance
+scale, against the manuscript's 0 and 9.
+
+**Half the cohort cannot test the transformation.** Sixteen of the 27 papers
+take their critical field from a shared substructure constant, and 3047 of the
+6596 points sit in papers sharing an identical critical-scale pair with
+another paper. Within those groups reducing the coordinates is one common
+affine rescale and cannot collapse anything the raw coordinates did not.
+
+**What this leaves.** The published arithmetic reproduces exactly and its
+denominator convention is confirmed independently. What the rebuild adds is
+that the statistic is not robust to a convention the manuscript never states:
+a referee who asks what one record is can move the reduction across the 30
+percent adoption threshold without leaving the deposit. That is a
+specification gap in Sec. III.D rather than an arithmetic error, and it is
+fixable by saying what a record is.
