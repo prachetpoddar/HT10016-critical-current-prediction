@@ -222,6 +222,25 @@ def main():
          "Six of the fifteen rest on three points", "manuscript", True),
         ("the variance-ratio cuts", "above 0.7 the family is treated as "
          "sample-form dominant", "manuscript", True),
+        # The 30 percent adoption threshold, withdrawn 2026-09-06. It had no
+        # construction anywhere in the repository, and its own defining
+        # sentence set it twenty times above the benchmark it named. What
+        # replaces it is a test, so both halves are checked: the bar must be
+        # gone from every document, and the two tests that replace it must be
+        # present.
+        ("the withdrawn adoption threshold, main text",
+         "below the 30% adoption threshold", "manuscript", False),
+        ("the withdrawn adoption threshold, Sec. III.D",
+         "the 30% threshold required for adopting universality", "manuscript",
+         False),
+        ("the withdrawn adoption threshold, response letter",
+         "does not clear our 30% threshold", "response", False),
+        ("the rotation test", "rotated to a random angle", "manuscript", True),
+        ("the unnormalized-coordinate test",
+         "67.0% on 42 cells against 39.3% on 73", "manuscript", True),
+        ("the reason the unnormalized grid wins",
+         "separates compounds rather than collapsing them", "manuscript",
+         True),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
