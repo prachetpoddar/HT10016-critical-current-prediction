@@ -255,6 +255,25 @@ def main():
          "at 0.118 and 0.267, which is not a separation", "manuscript", True),
         ("the like-for-like Form 2 to Form 3 margin",
          "0.012 dex rather than 0.092", "manuscript", True),
+        # The propagated uncertainty, repaired 2026-09-06. The printed
+        # beta_T scatter of 1.158 is not reproducible and is the pre-repair
+        # quantity; the correlation caveat pointed the wrong way for this
+        # functional form; and the scope quoted dispatches nothing.
+        ("the unreproducible beta_T scatter", "1.158 in \u03b2T, and 0.920",
+         "manuscript", False),
+        ("the corrected quadrature", "gives 0.27 dex at one sigma",
+         "manuscript", True),
+        ("the MgB2 scope figures",
+         "0.49 dex at 4.2 K and 0.57 dex at 20 K", "manuscript", True),
+        ("the backwards correlation caveat, main text",
+         "read as a lower bound on the structural component", "manuscript",
+         False),
+        ("the backwards correlation caveat, supplement",
+         "should be read as a lower bound on the structural component",
+         "supplement", False),
+        ("the corrected correlation sign",
+         "only a positive correlation between the two exponents raises it",
+         "manuscript", True),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
