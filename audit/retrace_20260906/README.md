@@ -1,0 +1,129 @@
+# Retracing the three negative claims
+
+Recorded 2026-09-06, at the author's request, before deciding to submit.
+
+Scripts `analysis/retrace_variance_decomposition.py` and
+`analysis/retrace_stage_comparison.py`; tables in this directory. An
+independent review of both scripts found nineteen defects, and what follows is
+what survived it.
+
+## Claim 1, universal scaling does not organize the data
+
+**The arithmetic reproduces exactly.** From `data/reduced_variable_scaling.csv`
+the median of the per-cell standard deviations is 1.2382 dex and the global
+standard deviation, reconstructed from the per-cell n, mean and standard
+deviation, is 1.4232 dex. That gives 13.00 percent on the standard-deviation
+scale and 24.31 percent on the variance scale, against 13.0 and 24.3 printed.
+The grid is 9 by 9, 66 cells are populated, and no cell holds fewer than five
+records, all as stated.
+
+**The convention had to be adjudicated.** The reconstruction assumes the
+deposited per-cell standard deviations use ddof = 1. Under ddof = 0 the same
+algebra gives 13.44 and 25.08, and `audit/headline_numbers_recheck.md` records
+that reading as a deposit problem. 13.44 does not round to 13.0, so ddof = 1 is
+the convention the published figures were computed under. This is stated here
+rather than assumed.
+
+**Three things cannot be checked from the deposit.**
+
+No script in the repository generates `data/reduced_variable_scaling.csv`, and
+git carries it only in the release commit 8ad8d43. No point-level table sits
+behind it. So the binning can be checked at its last arithmetic step and
+nowhere earlier.
+
+The table's 5422 records have no counterpart in any deposited census. The
+whole pre-withdrawal corpus is 4146 extracted points across 62 provenance
+rows, and the rows flagged fully fittable carry 2383 points across 32 papers.
+The binning holds more records than either.
+
+The 400-draw critical-field perturbation has no script and no deposited
+output, so the sensitivity statement rests on a computation the deposit does
+not contain.
+
+**A note on the statistic, which runs against the paper's own interest.** The
+median of per-cell standard deviations weights every cell equally, from 5
+records to 594, while the global standard deviation is weighted by record. The
+pooled within-cell standard deviation is 1.3268, which would give 6.8 percent
+and 13.1 percent. Since the paper's conclusion is that the reduction is too
+small to adopt universality, the pooled figure would strengthen it. The
+reported statistic is the one less favourable to the paper's own argument.
+
+## Claim 2, sample form is a required conditioning variable
+
+**All six values reproduce.** Deposited 0.1159, 0.3737 and 0.4877 against the
+printed 0.12, 0.37 and 0.49; repaired 0.0442, 0.8090 and 0.3743 against 0.04,
+0.81 and 0.37. Sample counts 15, 12, 10 and 13, 5, 5.
+
+The collapse to one record per physical sample strips an isotherm suffix from
+`sample_id` and, for the MAGLAB records, from `paper_id` through an enumerated
+map. A general pattern reads `MAGLAB_11_6K` as 11.6 K rather than specimen 11
+at 6 K; this retrace fell into that trap and returned 13 and 11 samples before
+the enumeration was used.
+
+**This retrace is not independent of the published route, and says so.**
+`analysis/figure_4_source.py` already contains the same regex, the same
+enumerated map and the same four grouping keys. The rule was read from it. So
+what is verified is the arithmetic downstream of the rule, not the rule.
+
+**The exact clustered p, and one defect in it.** Enumerating the full support
+gives 0.6667, 0.5143, 0.2857 and 0.8000 on the deposited families, against the
+deposit's sampled 0.6663, 0.5151, 0.28565 and 0.79905. The p floors are 0.17,
+0.007, 0.007 and 0.017 deposited, and 0.33, 0.25 and 0.10 repaired.
+
+For the deposited 122 family the observed statistic is not a member of the
+null's support. One paper carries two sample forms, the clustered null gives
+each paper one label, and the per-record eta squared of 0.4877 is a value no
+arrangement of the null can produce; the null's own identity arrangement gives
+0.5092. Both p values are now reported: 0.2857 against the per-record
+statistic and 0.1857 against the null-consistent one. The deposit carries the
+first. Neither is near significance, so no conclusion moves.
+
+**Two deposited tables disagree on the same quantity.**
+`data/phase_3_p58_variance_stability.csv` gives 0.4029 on 13 samples and
+0.5599 on 11 for the chalcogenide and 122 families, because it strips only
+`sample_id` and not `paper_id`. Its own docstring says the method follows
+`figure_4_source.py` exactly and that the permutation is clustered on the
+source paper; it does neither.
+
+## Claim 3, conditioning reduces cross-family exponent error
+
+**All four values reproduce.** From `audit/multi_stage_loso.csv`, 12.2948 and
+14.8812 across the seven families and 1.1908 and 0.5479 on the three
+physicality-passing families, against 12.3, 14.9, 1.19 and 0.55.
+
+**The unconditioned arm is Stage 1**, a monolithic regression on one
+compositional descriptor, which lacks family conditioning as well as
+sample-form conditioning. The comparison the manuscript labels "without
+sample-form conditioning" therefore differs from the conditioned arm in two
+respects, not one.
+
+**The deposited table carries a better control than either arm.**
+`stage3_abs`, the substructure-aggregate median, averages 9.0065 across the
+seven families, below both 12.2948 and 14.8812.
+`audit/a10_baseline_trace.py` states this in its own docstring and the
+manuscript does not carry the number.
+
+**The four numbers are computed on the deposited cohort.**
+`audit/a10_on_repaired_cohort.csv` gives 12.0150 and 16.5085, and 1.5581 and
+0.8857, on the repaired cohort, and 1.5645 and 0.6694 on the admitted one. No
+other cohort produces the four quoted values. Table III's scope cell for this
+row names neither cohort and says "matched five-family cohort" while the
+result reports seven families and three.
+
+**A claim of mine that did not survive review.** I reported that the direction
+of this comparison depends on which of four conditional readings is used.
+`stage2_nearest_family_abs` and `stage2_nearest_no_form_abs` are numerically
+identical on every fold, so there are three readings and not four, and the
+second is the no-form control rather than a rival conditional predictor. Their
+equality is evidence that form conditioning contributes nothing, which
+supports the manuscript. The apparent win of the nearest reading on the
+seven-family arm is also carried by one fold: `cuprate_RBCO`'s target sits at
+the fitter's 30.0 ceiling and its nearest family is pinned at the same
+ceiling, giving an error of 8e-9. Dropping that fold reverses it.
+
+**A second claim of mine that did not survive.** I reported that "removing any
+single family moves the comparison across unity" fails on the physicality arm.
+It fails only when the comparator is Stage 1. The sentence's antecedent is the
+out-of-sample median, which is `stage3_abs`, and against that the physicality
+arm ranges from 0.544 to 1.517 and does cross unity. The manuscript is right
+and my rebuttal was wrong.
