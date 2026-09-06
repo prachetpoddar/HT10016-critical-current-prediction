@@ -5,3 +5,24 @@ _to_delete/
 
 # working backups the edit scripts used to write; git is the backup
 *.pre_label_fit
+
+# Credential-shaped files, so a stray one cannot be committed by accident.
+# Nothing of this kind has ever been in this repository; the entries are here
+# to keep it that way, since the repository is public and history is forever.
+.env
+.env.*
+.envrc
+.netrc
+credentials
+credentials.*
+secrets
+secrets.*
+*.pem
+*.p12
+*.pfx
+*.key
+id_rsa
+id_ed25519
+.npmrc
+.pypirc
+service_account*.json
