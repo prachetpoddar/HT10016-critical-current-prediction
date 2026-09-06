@@ -241,6 +241,20 @@ def main():
         ("the reason the unnormalized grid wins",
          "separates compounds rather than collapsing them", "manuscript",
          True),
+        # Table II and the form selection, rebuilt 2026-09-06. The published
+        # margin does not separate Forms 2 and 3 once they are scored on the
+        # same rows and the same compounds, so the section no longer claims
+        # it does, and the caption no longer says the splits are identical.
+        ("Form 3 adopted on the Table II margin",
+         "Form 3 was adopted on that empirical basis", "manuscript", False),
+        ("the caption's identical-splits claim",
+         "identical splits across forms", "manuscript", False),
+        ("the reason Form 3 is adopted",
+         "the only one of the three that separates", "manuscript", True),
+        ("Form 3 against Form 2 stated as no separation",
+         "at 0.118 and 0.267, which is not a separation", "manuscript", True),
+        ("the like-for-like Form 2 to Form 3 margin",
+         "0.012 dex rather than 0.092", "manuscript", True),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
