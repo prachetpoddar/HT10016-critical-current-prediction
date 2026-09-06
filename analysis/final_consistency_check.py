@@ -131,6 +131,28 @@ def main():
         ("contributing papers", 50,
          int((~live.second_identifier_for_the_same_paper.astype(bool)).sum())),
     ]
+    # The candidate side, added 2026-09-06 with A4. Supplement Sec. 9 gave the
+    # iron chalcogenide family 55 candidates against Table IV's 49, and both
+    # documents gave it seven paper-reported anchors beside 24 reference-table
+    # ones, which is 31 against a family of 29 compounds. A record here is a
+    # block of nine grid tuples, which is the basis Table IV and Sec. 9 use.
+    dn = pd.read_csv(os.path.join("data",
+                                  "phase_3_p57_de_novo_predictions.csv"))
+    fam = dn.groupby("substructure")
+    cbasis = dn.drop_duplicates(["compound_formula", "substructure"])
+    exact = cbasis[cbasis.Hc2_anchor_type == "exact"]
+    facts += [
+        ("iron chalcogenide candidate records", 49,
+         int(len(fam.get_group("iron_chalcogenide_11")) / 9)),
+        ("MgB2-class candidate records", 105,
+         int(len(fam.get_group("conventional_AlB2")) / 9)),
+        ("122-type candidate records", 79,
+         int(len(fam.get_group("iron_pnictide_122")) / 9)),
+        ("iron chalcogenide paper-reported anchors", 5,
+         int((exact.substructure == "iron_chalcogenide_11").sum())),
+        ("non-refused targets at 1 T", 0,
+         int(((dn.H_T == 1.0) & dn.refusal_flag.isna()).sum())),
+    ]
     for name, printed, computed in facts:
         ok = printed == computed
         print("   %-30s document %5d   tables %5d   %s"
@@ -424,6 +446,24 @@ def main():
         ("Sec. II.D states the gap in the gates",
          "a family that cannot be assessed on an axis is not refused on that "
          "axis", "manuscript", True),
+        # Stale candidate accounting removed 2026-09-06, A4.
+        ("the stale iron chalcogenide candidate count",
+         "The 11-type iron chalcogenide has 55 candidates", "supplement",
+         False),
+        ("the stale paper-reported anchor count",
+         "seven anchors are paper-reported", "supplement", False),
+        ("Table IV's anchor provenance agrees with the deposit",
+         "Five paper-reported anchors and 24 reference-table anchors",
+         "manuscript", True),
+        ("the withdrawn 1 T scope-sensitivity cohort",
+         "For the 11-type iron chalcogenide, 53 non-refused candidates are "
+         "evaluated", "supplement", False),
+        ("Sec. 12 is marked withdrawn",
+         "12. Prediction-scope sensitivity, withdrawn", "supplement", True),
+        ("Sec. 12 says why",
+         "holds no non-refused row at 1 T in any family", "supplement", True),
+        ("the stale field span under Table S6",
+         "0.22 dex from 0.1 to 5 T", "supplement", False),
         ("the reproducibility standard is stated",
          "every printed count is asserted against the deposited tables",
          "response", True),
