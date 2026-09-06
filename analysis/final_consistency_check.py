@@ -518,8 +518,8 @@ def main():
         # sentence of Sec. II.C. It is now in the abstract and Sec. I too, and
         # the letter's two misstatements of it are corrected.
         ("the unseen-paper result is in the abstract",
-         "no candidate functional form reaches a median error of 0.90 dex on "
-         "an unseen paper", "manuscript", True),
+         "no form reaches a median error of 0.90 dex on an unseen paper",
+         "manuscript", True),
         ("the unseen-paper result is in the introduction",
          "Predicting an unseen paper and predicting an unseen measurement are "
          "not the same problem", "manuscript", True),
@@ -530,6 +530,29 @@ def main():
         ("the letter's misstated factor",
          "a factor of eight in critical current between predicting an unseen "
          "measurement", "response", False),
+        # B1, B3, B6, 2026-09-06, from Hossain's readiness actions.
+        ("the abstract states the prior question",
+         "which measurements may be compared, and whether the scale used to "
+         "normalize them was measured on the same specimen", "manuscript",
+         True),
+        ("the abstract separates the surviving findings",
+         "Three findings survive.", "manuscript", True),
+        ("the deposited ratios are out of the abstract",
+         "on 13, against 37%, 49% and 12%", "manuscript", False),
+        ("the abstract keeps the confounding qualification",
+         "those ratios define an operational rule rather than an established "
+         "sample-form effect", "manuscript", True),
+        ("the introduction states both halves of the question",
+         "does the scale used to normalize them belong to the specimen that "
+         "was measured", "manuscript", True),
+        ("Sec. III.F points back to the second half",
+         "which is the second half of the question set out in Section I",
+         "manuscript", True),
+        ("the letter's unscoped generalization claim",
+         "Nothing generalizes across source papers", "response", False),
+        ("the letter scopes it to eight compounds",
+         "on the eight compounds that draw on more than one source",
+         "response", True),
         ("the withdrawn Spearman is in the letter",
          "0.635", "response", True),
         ("Stage 3's 0.84 is retired in the letter",
@@ -558,9 +581,9 @@ def main():
         # now draws the repaired 70, and the size-preserving clustered null is
         # applied to all three families rather than to two of them.
         ("the abstract leads with the repaired anchors",
-         "on the repaired anchor cohort sample form explains 81%",
+         "on the repaired anchor cohort sample form explains 81%, 37% and 4%",
          "manuscript", True),
-        ("the deposited anchors kept beside them in the abstract",
+        ("Table III keeps both anchor cohorts",
          "against 37%, 49% and 12% on the anchors as deposited",
          "manuscript", True),
         ("the caption's stale deposited-panel claim",
