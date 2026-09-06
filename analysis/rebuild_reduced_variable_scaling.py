@@ -106,12 +106,14 @@ def binned(m, hc2, unit="curve"):
 
     unit fixes what one record in a cell is, and it decides the answer.
 
-      "raw"    every digitised point. A densely digitised curve puts dozens of
-               points into one cell, so the within-cell standard deviation
-               then measures how smooth that one curve is and not how well
-               different papers agree. On this input that returns a 46 percent
-               reduction, which is an artifact of digitisation density and not
-               a result.
+      "raw"    every digitised point. This is the primary unit. An earlier
+               version of this script called it an artifact on the grounds
+               that a densely digitised curve makes a cell look smooth. That
+               was tested and it is false: decomposing the within-cell
+               variance into within-curve and between-curve parts, the median
+               cell carries 0.8 percent of it within a curve and the mean
+               3.4 percent. The scatter inside a bin is between curves, which
+               is what the test is about.
       "curve"  one record per (paper, source file, series) and cell, which
                is one digitised curve's contribution to that cell. The series
                column is the curve identity; grouping by measurement
@@ -224,13 +226,15 @@ def main():
                  ks[0], ks[1]))
     print()
     print("   The deposited table holds 66 cells of mean size 82 and maximum")
-    print("   594. That distribution is indistinguishable from the raw")
-    print("   point-level binning above and is incompatible with either")
-    print("   collapsed unit, so the deposited records are points and the")
-    print("   like-for-like comparison is the raw row. That row does not")
-    print("   confirm the manuscript: it gives a far larger reduction.")
-    print("   The collapsed rows are what the test is about physically, and")
-    print("   they bracket the manuscript's 13.0 from both sides.\n")
+    print("   594, a distribution a two-sample Kolmogorov-Smirnov test cannot")
+    print("   separate from the raw binning here. Both bin points.\n")
+    print("   So the gap between 46 percent here and 13.0 percent published")
+    print("   is a difference of cohort, not of method. Within-cell scatter")
+    print("   grows with the number of compounds sharing a cell, in both")
+    print("   tables, and the deposited cells hold 7 compounds at the median")
+    print("   against 5 here. At matched compound counts the deposited cells")
+    print("   still scatter more, so the published cohort is the broader one")
+    print("   and this rebuild cannot stand in for it.\n")
 
     print("two choices the manuscript does not state, and what they cost\n")
     for drop, label in ((None, "both digitisations kept"),
@@ -239,7 +243,7 @@ def main():
                         ("1611_08455v1_fig5b_bothsamples_points.csv",
                          "the denser duplicate dropped")):
         mm = m if drop is None else m[m.source_file != drop]
-        st = statistic(*binned(mm, mm.Hc2_anchor_T, "curve"))
+        st = statistic(*binned(mm, mm.Hc2_anchor_T, "raw"))
         print("   %-32s SD %6.2f%%  variance %6.2f%%"
               % (label, st["sd_reduction"], st["var_reduction"]))
     print("   1611_08455v1 fig 5b is digitised twice, into a 270-row file and")
@@ -250,20 +254,20 @@ def main():
     los = []
     for pid in sorted(m.identifier.unique()):
         st = statistic(*binned(m[m.identifier != pid],
-                               m[m.identifier != pid].Hc2_anchor_T, "curve"))
+                               m[m.identifier != pid].Hc2_anchor_T, "raw"))
         if st:
             los.append((pid, st["sd_reduction"], st["var_reduction"]))
     sd_lo = [v for _, v, _ in los]
-    print("   leave one paper out, on the curve unit: SD reduction ranges")
+    print("   leave one paper out, on every digitised point: SD ranges")
     print("   %.2f%% to %.2f%%, and exceeds the manuscript's 13.0 in %d of %d"
           % (min(sd_lo), max(sd_lo), sum(v > 13.0 for v in sd_lo), len(sd_lo)))
     print("   refits. Thirty-nine to sixty cells cannot discriminate a")
     print("   four-point difference.\n")
 
-    base = statistic(*binned(m, m.Hc2_anchor_T, "curve"))
+    base = statistic(*binned(m, m.Hc2_anchor_T, "raw"))
     if base is None:
         raise SystemExit("no cell reached the five-record threshold")
-    print("the curve unit in full, for the record")
+    print("every digitised point, in full")
     print("   populated cells                        %6d" % base["cells"])
     print("   records inside them                    %6d" % base["records"])
     print("   median within-cell SD                  %9.4f dex"
@@ -294,7 +298,7 @@ def main():
         hc2 = m.Hc2_anchor_T.to_numpy(float) * np.array(
             [factor.get(i, 1.0) if e else 1.0
              for i, e in zip(m.identifier, est)])
-        st = statistic(*binned(m, hc2, "curve"))
+        st = statistic(*binned(m, hc2, "raw"))
         if st is not None:
             sd_draws.append(st["sd_reduction"])
             var_draws.append(st["var_reduction"])
@@ -312,15 +316,21 @@ def main():
           "threshold on\n   the standard-deviation scale and 9 of 400 on the "
           "variance scale.\n")
     print("what this rebuild does and does not establish\n")
-    print("   It does not confirm the 13.0 and 24.3 figures and it does not")
-    print("   contradict them. On a different cohort the answer runs from")
-    print("   8.9 to 46.2 percent depending on what one record is, swings")
-    print("   6.9 points on an undocumented duplicate file, and ranges over")
-    print("   24 points under leave-one-paper-out.")
-    print("   What it does establish is that the statistic is not robust to")
-    print("   a convention the manuscript never states. A referee who asks")
-    print("   what a record is can move the reduction across the 30 percent")
-    print("   adoption threshold without leaving the deposit.")
+    print("   It cannot arbitrate the published 13.0 and 24.3, because its")
+    print("   cohort is narrower: 27 papers, about a dozen distinct")
+    print("   materials, 5 compounds per cell against 7, and half its points")
+    print("   in papers sharing one critical-scale constant. A narrower cell")
+    print("   scatters less and so collapses more, which is why it returns a")
+    print("   larger reduction.")
+    print("   Two conclusions reported earlier from this script are")
+    print("   withdrawn. The first, that the refutation was confirmed and")
+    print("   strengthened at 8.66 percent, rested on a record key that")
+    print("   merged distinct samples measured at the same temperature. The")
+    print("   second, that binning every point is an artifact of digitisation")
+    print("   density, is contradicted by the variance decomposition above.")
+    print("   What stands is that the published arithmetic reproduces")
+    print("   exactly, that its input has no generator and no point-level")
+    print("   source, and that its 5422 records match no deposited census.\n")
 
     pd.DataFrame([base]).to_csv(
         os.path.join(OUT_DIR, "reduced_variable_rebuild.csv"), index=False)

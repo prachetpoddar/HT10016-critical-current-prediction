@@ -138,11 +138,28 @@ temperature, field and critical-current triples with their calibration and
 overlay images, joined to the critical scales in the provenance table. The
 cohort is 6596 points from 27 papers, which is not the manuscript's.
 
-**The rebuild neither confirms nor contradicts the 13.0 and 24.3 figures, and
-an earlier version of this note said it confirmed them. That is withdrawn.**
+**The rebuild cannot arbitrate the 13.0 and 24.3 figures, and two conclusions
+reported from it have been withdrawn.**
 
-The answer depends on what one record inside a cell is, and the manuscript
-does not say.
+### Withdrawn: that the rebuild confirmed and strengthened the refutation
+
+The first version reported 8.66 percent, below the manuscript, and called the
+refutation confirmed. Its record key was paper and measurement temperature.
+Every series in `data/reextraction` is a field sweep at one fixed temperature,
+so that key merges distinct samples measured at the same temperature in one
+paper: 19 of 133 groups swallow two to five real curves, and they are exactly
+the papers whose within-paper spread is the physics, irradiated against
+unirradiated, five dopants, four samples.
+
+### Withdrawn: that binning every digitised point is a density artifact
+
+The second version reported the raw point figure of 46.22 percent as an
+artifact, on the argument that a densely digitised curve makes a cell look
+smooth. That was tested and it is false. Decomposing the within-cell variance
+into within-curve and between-curve parts, the median cell carries 0.8 percent
+of its variance within a single curve and the mean 3.4 percent. The scatter
+inside a bin is between curves, which is exactly what the test is about.
+Binning every point is the right primary unit.
 
 | unit | cells | records | SD reduction | variance reduction |
 |---|---:|---:|---:|---:|
@@ -150,46 +167,32 @@ does not say.
 | one per curve per cell | 53 | 601 | 15.97% | 29.39% |
 | one per paper per cell | 34 | 309 | 8.86% | 16.93% |
 
-The first version of this script used a record key of paper and measurement
-temperature, called it a curve, and reported 8.66 percent, below the
-manuscript and therefore a confirmation. An independent review broke it. Every
-series in `data/reextraction` is a field sweep at one fixed temperature, so
-that key merges distinct samples measured at the same temperature in one
-paper: 19 of 133 groups swallow two to five real curves, and they are exactly
-the papers whose within-paper spread is the physics, irradiated against
-unirradiated, five dopants, four samples. On the real curve key, which is
-paper, source file and series, the figure is 15.97 percent, above the
-manuscript rather than below.
+### What the gap actually is
 
-**The deposited records are points, not curves.** The deposited table's cell
-sizes have mean 82 and maximum 594. Against the rebuild's cell sizes a
-two-sample Kolmogorov-Smirnov test cannot distinguish them from the raw
-point-level binning, D 0.13 at p 0.59, and rejects both collapsed units at p
-below 1e-8. So the like-for-like comparison to the published 13.0 is the raw
-row at 46.22 percent, which does not confirm it.
+A cell's internal scatter grows with the number of compounds sharing it, in
+both tables. The deposited cells hold seven compounds at the median and this
+rebuild's hold five, and at matched compound counts the deposited cells still
+scatter more: 1.265 against 1.018 dex for cells holding five or more
+compounds, 1.013 against 0.785 for cells holding three or four.
 
-**Two choices the manuscript does not state move the answer further than the
-gap being argued about.** `1611_08455v1` figure 5b is digitised twice, into a
-270-row file and a 553-row file carrying identical values, and nothing says
-which is canonical. Keeping both gives 15.97 percent, dropping one gives 11.77
-and dropping the other 9.09: a 6.9-point swing against a 4.3-point gap to
-13.0. Under leave-one-paper-out the curve-unit figure ranges from 9.99 to
-34.16 percent and exceeds 13.0 in 24 of 27 refits.
+So the difference between 46 percent here and 13.0 percent published is a
+difference of cohort and not of method. This rebuild covers 27 papers and
+about a dozen distinct materials, and half its points sit in papers that share
+a single substructure critical-scale constant, so its cells are narrower and
+collapse more. It cannot stand in for the published cohort.
 
-**The perturbation moves with it.** On the curve unit, 1 of 400 draws reaches
-30 percent on the standard-deviation scale and 176 of 400 on the variance
-scale, against the manuscript's 0 and 9.
+### What still stands
 
-**Half the cohort cannot test the transformation.** Sixteen of the 27 papers
-take their critical field from a shared substructure constant, and 3047 of the
-6596 points sit in papers sharing an identical critical-scale pair with
-another paper. Within those groups reducing the coordinates is one common
-affine rescale and cannot collapse anything the raw coordinates did not.
+The published arithmetic reproduces exactly and its denominator convention is
+independently confirmed. Its input table has no generator and no point-level
+source anywhere in the repository or in git history, and its 5422 records
+match no deposited census: the whole pre-withdrawal corpus is 4146 extracted
+points and the rows flagged fully fittable carry 2383. The 400-draw
+perturbation has no script and no deposited output.
 
-**What this leaves.** The published arithmetic reproduces exactly and its
-denominator convention is confirmed independently. What the rebuild adds is
-that the statistic is not robust to a convention the manuscript never states:
-a referee who asks what one record is can move the reduction across the 30
-percent adoption threshold without leaving the deposit. That is a
-specification gap in Sec. III.D rather than an arithmetic error, and it is
-fixable by saying what a record is.
+One sensitivity is worth recording even though it did not change the verdict.
+On a cell set held fixed across densities, thinning each curve sixteenfold
+moves the reduction from 39.7 to 26.6 percent, because whole curves drop out
+of cells as they thin rather than because curves are smooth. And
+`1611_08455v1` figure 5b is digitised twice into files carrying identical
+values, with nothing marking either canonical.
