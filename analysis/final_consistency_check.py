@@ -411,6 +411,20 @@ def main():
         ("the reproducibility standard is stated",
          "every printed count is asserted against the deposited tables",
          "response", True),
+        # One validation status, propagated 2026-09-06. The phrase "three
+        # validated substructure families" meant three different things in
+        # the abstract, Table III and the conclusion, and Table IV's
+        # validating-axis column contradicted Sec. III.E's own prose.
+        ("the ambiguous validated-families phrase",
+         "three validated substructure families", "manuscript", False),
+        ("the temperature-axis test named in the abstract",
+         "clear the compound leave-one-out threshold on the temperature axis",
+         "manuscript", True),
+        ("the dispatching family stated as not assessable",
+         "not assessable on the axis where the test can be run", "manuscript",
+         True),
+        ("Table IV no longer claims a field axis",
+         "Field only", "manuscript", False),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
