@@ -405,9 +405,25 @@ def main():
         # no apology attached.
         ("the letter states what the paper establishes",
          "What the paper establishes", "response", True),
+        # The fourth claim used to read "declines to predict outside its
+        # validated scope", which the paper's own conclusion contradicts two
+        # sentences later: the one family that emits is not assessable on the
+        # axis where the test can be run. The gates screen the calibrated
+        # window, not family validation.
+        ("the withdrawn validated-scope refusal claim",
+         "declines to predict outside its validated scope", "response", False),
         ("the four claims are in the letter's opening",
-         "The framework declines to predict outside its validated scope",
-         "response", True),
+         "The framework declines to predict outside the window its exponents "
+         "were calibrated over", "response", True),
+        ("the letter says which families the gates cannot screen",
+         "nothing refuses a family that could not be assessed", "response",
+         True),
+        ("the manuscript's stale validated-scope gate claim",
+         "prevent predictions outside the validated scope", "manuscript",
+         False),
+        ("Sec. II.D states the gap in the gates",
+         "a family that cannot be assessed on an axis is not refused on that "
+         "axis", "manuscript", True),
         ("the reproducibility standard is stated",
          "every printed count is asserted against the deposited tables",
          "response", True),
