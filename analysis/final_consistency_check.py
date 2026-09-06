@@ -336,6 +336,32 @@ def main():
         ("the source holdout connected to the thesis",
          "reaches a median error below 0.9 dex, against 0.32 to 0.45 dex",
          "manuscript", True),
+        # The response letter brought up to the manuscript, 2026-09-06. It
+        # had kept only the half of the separation's history that flattered
+        # it, and six of the audit's corrections were absent from it.
+        ("the letter's one-sided separation history",
+         "correcting the anchors makes the separation stronger", "response",
+         False),
+        ("the pre-withdrawal value in the letter",
+         "the fraction is 0.107 with a probability of 0.355", "response",
+         True),
+        ("the compound-level null in the letter",
+         "966 distinct ways of forming three families", "response", True),
+        ("the audit's five defects in the letter",
+         "found five more defects and we correct all of them", "response",
+         True),
+        ("Stage 3 corrected in the letter",
+         "0.816 rather than 0.84", "response", True),
+        ("the propagation corrected in the letter",
+         "0.27 dex rather than 0.29", "response", True),
+        # The description was withdrawn in one paragraph and repeated in
+        # another, well away from it, inside the Referee A response.
+        ("the second, stale copy of the withdrawn description",
+         "the one result in this paper that improved under every correction "
+         "we made", "response", False),
+        ("the retraction of it, in the referee response",
+         "the audit section below withdraws that description", "response",
+         True),
         ("the supplement's exponent-error label",
          "baseline. These are dimensionless exponent errors.", "supplement",
          False),
