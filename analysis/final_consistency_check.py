@@ -192,6 +192,52 @@ def main():
         if hit:
             fails.append("%s still present in the %s" % (name, doc))
 
+    # The nine repairs of 2026-09-06. Each is a value or a phrase that was
+    # verified against the deposit and then attacked by an independent
+    # reviewer, so an edit that reintroduces the old form should fail here
+    # rather than reach a referee a second time.
+    print("\nthe repairs of 2026-09-06\n")
+    repaired = [
+        # (name, token, document, must_be_present)
+        ("Stage 3 quoted as a leave-one-out error",
+         "giving a leave-one-substructure-out error of 0.84", "manuscript",
+         False),
+        ("the genuine Stage 3 value", "the Stage 3 error is 0.816",
+         "manuscript", True),
+        ("the K-anchor error labelled an exponent error",
+         "1.592 exponent error", "manuscript", False),
+        ("the K-anchor error labelled dex", "1.592 dex in log10 Jc",
+         "manuscript", True),
+        # The token is the comparison, not the number: the sentence that
+        # retires 0.567 has to name it, so a bare "0.567" test fires on the
+        # retirement itself. That false positive was left in place long enough
+        # to confirm the check fires at all.
+        ("the untraced in-corpus baseline",
+         "2.81 times the in-corpus baseline", "manuscript", False),
+        ("the regime composition behind 45.2 percent",
+         "the improvement is 2.3%", "manuscript", True),
+        ("the MgB2 rms transcription", "an rms of 6.3 in log10 Jc and one "
+         "resting on three points", "manuscript", False),
+        ("the six three-point MgB2 fits",
+         "Six of the fifteen rest on three points", "manuscript", True),
+        ("the variance-ratio cuts", "above 0.7 the family is treated as "
+         "sample-form dominant", "manuscript", True),
+        ("the supplement's exponent-error label",
+         "baseline. These are dimensionless exponent errors.", "supplement",
+         False),
+    ]
+    for name, token, doc, want in repaired:
+        hit = token in T[doc]
+        ok = hit == want
+        print("   %-46s %-12s %s" % (name, doc,
+                                     ("present, ok" if want else "absent, ok")
+                                     if ok else
+                                     ("MISSING, FAIL" if want
+                                      else "PRESENT, FAIL")))
+        if not ok:
+            fails.append("%s: %s in the %s"
+                         % (name, "missing" if want else "still present", doc))
+
     print("\nresult")
     for f in fails:
         print("   FAIL %s" % f)

@@ -61,14 +61,16 @@ m1 = t.loc["K=1, three monotonic", "mae"]
 m1lo, m1hi = t.loc["K=1, three monotonic", ["ci_lo","ci_hi"]]
 f1, f1lo, f1hi = t.loc["K=1, all four", ["mae","ci_lo","ci_hi"]]
 f3, f3lo, f3hi = t.loc["K=3, all four", ["mae","ci_lo","ci_hi"]]
-TC_ONLY, IN_CORPUS = 1.166, 0.567
+# The in-corpus baseline of 0.567 that an earlier version drew here has been
+# removed. It is not derivable from anything in the deposit, it appeared only
+# as this literal and once in the manuscript, and it was drawn on an axis
+# carrying dex while being described as an exponent error.
+TC_ONLY = 1.166
 red = 100*(m1-m3)/m1
 
 fig,ax=plt.subplots(figsize=(3.5,3.3))
 ax.axhline(TC_ONLY, ls=(0,(6,3)), lw=1.0, color=GREY, zorder=1)
-ax.axhline(IN_CORPUS, ls=(0,(1.5,2.5)), lw=1.0, color=GREY, zorder=1)
 ax.text(1.42, TC_ONLY*1.02, "$T_c$-only baseline", fontsize=7.4, color="#5A616C", ha="left", va="bottom")
-ax.text(1.42, IN_CORPUS*1.02, "in-corpus baseline", fontsize=7.4, color="#5A616C", ha="left", va="bottom")
 
 # the unmatched four-compound pair the earlier version reported, kept visible
 ax.plot([1.06,3.06],[f1,f3], "-", lw=1.2, color=GREY, alpha=0.55, zorder=2)
@@ -95,12 +97,19 @@ ax.annotate("%.1f%% reduction\non the matched cohort" % red,
 
 ax.set_xticks([1,3]); ax.set_xlim(0.72,3.66)
 ax.set_xlabel("anchor measurements per candidate, $K$", fontsize=8.6)
-ax.set_ylabel("pooled error in the field exponent", fontsize=8.6)
+# The quantity is |predicted_log_Jc - actual_log_Jc| from
+# analysis/external_anchor_count.py, which is dex. An earlier version of this
+# label called it an exponent error, which is the convention Sec. II.A sets
+# out and which this figure then contradicted.
+ax.set_ylabel("pooled error in log$_{10}$ $J_c$ (dex)", fontsize=8.6)
 ax.set_ylim(0.30, 2.45)
 ax.tick_params(labelsize=7.8)
 for sp in ("top","right"): ax.spines[sp].set_visible(False)
 os.makedirs("figures", exist_ok=True)
 fig.tight_layout()
-fig.savefig(os.path.join("figures","figure_4_anchor_count.png"), dpi=300)
+# 400 dpi: the image this replaces in the document was 1358 px across a 3.5
+# inch figure, so a 300 dpi render would embed at a lower resolution than the
+# one it replaces at the same printed size.
+fig.savefig(os.path.join("figures","figure_4_anchor_count.png"), dpi=400)
 print("written figures/figure_4_anchor_count.png   matched %.3f -> %.3f (%.1f%%)"
       % (m1, m3, red))
