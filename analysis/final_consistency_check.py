@@ -153,6 +153,35 @@ def main():
         ("non-refused targets at 1 T", 0,
          int(((dn.H_T == 1.0) & dn.refusal_flag.isna()).sum())),
     ]
+    # The headline counts named in the closing readiness note, asserted against
+    # the deposit in one place so the freeze can be checked rather than
+    # remembered. Four of the eight are already above; these are the rest,
+    # with the refusal statistics the dispatch accounting quotes.
+    anch = pd.read_csv(os.path.join(
+        "data", "phase_3_p31_jc_anchor_per_paper_repaired.csv"))
+    _rf = dn.refusal_flag.fillna("").astype(str)
+    facts += [
+        ("compound labels", 35, int(live.compound.nunique())),
+        ("extracted points", 3303,
+         int(pd.to_numeric(live.n_Jc_points, errors="coerce").sum())),
+        ("repaired anchors behind Fig. 3", 70,
+         int(anch.withdrawn.isna().sum())),
+        ("candidate compounds", 183, int(dn.compound_formula.nunique())),
+        ("compounds dispatched", 84,
+         int(dn[dn.refusal_flag.isna()].compound_formula.nunique())),
+        ("emitted prediction targets", 163,
+         int(dn.refusal_flag.isna().sum())),
+        ("refused, below the reduced-field bound", 1054,
+         int((_rf == "H_below_validated_reduced_field").sum())),
+        ("refused, no critical-field anchor", 540,
+         int((_rf == "Hc2_unavailable").sum())),
+        ("refused, target above Tc", 207,
+         int((_rf == "T_above_Tc").sum())),
+        ("refused, above the reduced-temperature bound", 93,
+         int((_rf == "T_above_validated_reduced_temperature").sum())),
+        ("refused, family fails field-axis validation", 40,
+         int((_rf == "family_fails_field_axis_validation").sum())),
+    ]
     for name, printed, computed in facts:
         ok = printed == computed
         print("   %-30s document %5d   tables %5d   %s"
@@ -385,8 +414,14 @@ def main():
         # The token is the count and the fact, not the sentence that carried
         # them: the compaction of 2026-09-06 rewrote this paragraph and the
         # longer phrasing this check used to require went with it.
-        ("the audit's five defects in the letter",
-         "found five more defects", "response", True),
+        # The letter no longer counts the audit's passes; it reports one
+        # finished audit, because "five more" followed by "seven more" reads as
+        # an audit still expanding.
+        ("the audit is reported as finished",
+         "Our final reproducibility audit identified the following additional "
+         "inconsistencies", "response", True),
+        ("the audit is not counted in passes",
+         "found five more defects", "response", False),
         ("Stage 3 corrected in the letter",
          "Under genuine withholding it is 0.816", "response", True),
         ("the propagation corrected in the letter",
@@ -492,9 +527,9 @@ def main():
         # second pass, made after the tables were frozen.
         ("the pass is no longer called final",
          "A final pass over every reported quantity", "response", False),
-        ("the second pass is reported",
-         "A second pass, made after the tables were frozen, found seven more",
-         "response", True),
+        ("the audit is not described as still expanding",
+         "A second pass, made after the tables were frozen", "response",
+         False),
         ("the second pass names the null correction",
          "that family admits one labelling and its probability is "
          "identically 1", "response", True),
@@ -553,6 +588,37 @@ def main():
         ("the letter scopes it to eight compounds",
          "on the eight compounds that draw on more than one source",
          "response", True),
+        # The closing wording items, 2026-09-07. Wording only, no numbers move.
+        ("one formulation for the sample-form claim",
+         "Sample form defines an operational conditioning regime in the "
+         "present corpus.", "manuscript", True),
+        ("the required-conditioning-variable phrasing is gone",
+         "required conditioning variable", "manuscript", False),
+        ("the caption no longer requires sample-form conditioning",
+         "requiring sample-form-conditioned prediction", "manuscript", False),
+        ("Fig. 1 states what the gates do",
+         "with axis-specific validation status carried with the output",
+         "manuscript", True),
+        ("Fig. 1 no longer claims validation gates",
+         "only when the validation gates are satisfied", "manuscript", False),
+        ("Fig. 5 carries the validation status",
+         "Family-scope critical-current envelopes with axis-specific "
+         "validation status", "manuscript", True),
+        ("Fig. 5 no longer says validated substructures",
+         "envelopes for validated candidate substructures", "manuscript",
+         False),
+        ("the field axis is inconclusive in Table III",
+         "Inconclusive at the present corpus size and provenance quality",
+         "manuscript", True),
+        ("the recovers-signal interpretation is gone",
+         "Conditioning recovers signal that pooled regression treats as noise",
+         "manuscript", False),
+        ("the conclusion's two-fold field claim is gone",
+         "reduces the cross-family field-exponent error by at most about "
+         "two-fold", "manuscript", False),
+        ("the conclusion states the field axis as inconclusive",
+         "On the field axis the effect of conditioning is inconclusive",
+         "manuscript", True),
         ("the withdrawn Spearman is in the letter",
          "0.635", "response", True),
         ("Stage 3's 0.84 is retired in the letter",
