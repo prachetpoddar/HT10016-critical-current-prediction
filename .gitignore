@@ -26,3 +26,12 @@ id_ed25519
 .npmrc
 .pypirc
 service_account*.json
+
+# Intermediate revisions of the three documents. The lineage ran to fifty-two
+# stages, each writing a full set, and the .docx snapshots reached 113 MB of a
+# 156 MB repository without carrying anything a reader needs: every stage is in
+# the git history, and the submitted set is tracked in out_final52/. Untracked
+# here rather than deleted, so a local working tree keeps them.
+out/
+out_*/
+!out_final52/
