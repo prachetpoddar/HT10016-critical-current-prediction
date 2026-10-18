@@ -11,6 +11,64 @@ the paper applies a screen at the reporting layer rather than inside the
 dispatch routine, that screen is written out in `audit/`, so no printed number
 depends on a step that exists only in the prose.
 
+## Where everything is
+
+If you have come here from the paper and want one thing, it is probably one of
+these four.
+
+| you want | open |
+|---|---|
+| the extracted dataset | `data/`, and `data/phase_3_p31_jc_anchor_per_paper_repaired.csv` first |
+| the predictions the paper reports | `data/phase_3_p57_de_novo_predictions.csv` |
+| the code that produced a number | `analysis/`, indexed by section in the table below |
+| the evidence behind a correction the paper reports on itself | `audit/` |
+
+The documents in `out_final52/` are the three files as submitted to the
+journal, kept here so that a claim can be read next to the file behind it.
+Source articles are not redistributed, for the reason given under What is not
+here below.
+
+    HT10016-critical-current-prediction/
+      README.md            this file
+      environment.yml      the environment the deposited results were produced in
+      data/                the extracted dataset, 144 files
+        phase_3_p31_jc_anchor_per_paper*.csv      critical-current anchors
+        phase_3_form3_fits_partial_cohortB_v2.csv field-axis fits
+        phase_3_p44_post_UCLA_beta_T_fits*.csv    temperature-axis fits
+        phase_3_p31_variance_decomposition*.csv   the conditioning diagnostic
+        phase_3_p57_de_novo_predictions.csv       the candidate dispatch table
+        provenance_table_fitcohort_full.csv       one row per source paper
+        external_validation/                      the four out-of-corpus cuprates
+        extraction_examples/                      four worked extractions
+        reextraction/                             the sampled re-extraction
+      analysis/            every script that reads or writes the tables, 199 files
+      audit/               the evidence behind each self-reported correction, 247 files
+      figures/             the deposited figures and the assets behind them, 62 files
+      specs/               one digitisation spec per source figure, 29 files
+      out_final52/         the three documents as submitted
+      LICENSE              CC BY 4.0 for data and documentation, MIT for code
+
+Files ending `.pre_classifier_fix`, and the dated subdirectories of `audit/`,
+are earlier states kept on purpose so that a correction can be checked against
+what it replaced. They are not working copies.
+
+## Which part of the paper rests on which files
+
+| section | data | code |
+|---|---|---|
+| II.A, data extraction layer | `specs/`, `data/extraction_examples/` | `analysis/manuscript_figure_s1_extraction_examples.py` |
+| II.B, anchors and substructure labels | `data/provenance_table_fitcohort_full.csv`, `audit/hc2_anchor_provenance.csv` | `analysis/apply_jc_anchor_repairs.py` |
+| II.C, aggregation architecture | `data/phase_3_p31_jc_anchor_per_paper_repaired.csv` | `analysis/figure_4_source.py` |
+| II.D, runtime and refusal logic | `data/phase_3_p57_de_novo_predictions.csv` | `analysis/phase_3_p57_de_novo_predictions.py` and the three steps after it |
+| III.A, variance decomposition | `data/phase_3_p31_variance_decomposition_repaired.csv`, `data/anchor_form_permutation.csv` | `analysis/figure_4_source.py`, `analysis/anchor_form_permutation.py` |
+| III.B, external validation and the anchor gate | `data/external_validation/` | `analysis/external_anchor_count.py` |
+| III.C, family-level applicability bound | `data/phase_3_p47_compound_leave_out_MAE.csv` | `analysis/compound_leave_one_out.py` |
+| III.D, ranking and universal scaling | `data/functional_form_input.csv`, `data/reduced_variable_scaling.csv` | `analysis/functional_form_comparison.py`, `analysis/scaling_collapse_test.py` |
+| III.E, candidate dispatch | `data/phase_3_p57_de_novo_predictions.csv`, `audit/reporting_layer_exclusions.csv` | `analysis/rebuild_dispatch.py` |
+| III.F, limitations and the anchor repair | `audit/anchor_repairs.csv`, `audit/withdrawn_records.csv`, `audit/withdrawn_beta_T_papers.csv` | `analysis/withdraw_records.py` |
+
+The figure generators are listed separately under Figures below.
+
 ## Reproducing, in five commands
 
 Run from the repository root. `pandas`, `numpy` and `matplotlib` are the only
@@ -163,6 +221,9 @@ field-axis fits individually, 52 kept and 42 dropped with the reason for each.
 - `final_consistency_check.py`, `check_claims_against_deposit.py`,
   `check_figures.py`, `verify_deposit.py` and `rebuild_dispatch.py` are the
   verification surface described above.
+- `readme_counts.py --check README.md` and `check_readme_paths.py` hold this
+  file to the deposit. The first checks every count in it, the second checks
+  that every path it names exists.
 - `build_reporting_exclusions.py` regenerates the reporting-layer screens.
 - `cross_model_agreement.py` runs a second independent reader over the vision
   cache and records field-level agreement with the first pass. It needs an API
