@@ -35,3 +35,12 @@ service_account*.json
 out/
 out_*/
 !out_final52/
+
+# Drafts that come back from the senior author and from co-author review, with
+# their tracked changes, their highlighting and their review comments still in
+# them. The rule above excludes intermediate revisions for size and for noise;
+# these are excluded for a second reason, which is that the comments in them
+# belong to the people who wrote them, and this repository is public and cited
+# from the paper's data-availability statement. Untracked rather than deleted,
+# so a local working tree keeps them.
+hossain/
