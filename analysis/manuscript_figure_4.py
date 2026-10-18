@@ -96,12 +96,12 @@ ax.annotate("%.1f%% reduction\non the matched cohort" % red,
                             connectionstyle="arc3,rad=0.15"))
 
 ax.set_xticks([1,3]); ax.set_xlim(0.72,3.66)
-ax.set_xlabel("anchor measurements per candidate, $K$", fontsize=8.6)
+ax.set_xlabel("Anchor measurements per candidate, $K$", fontsize=8.6)
 # The quantity is |predicted_log_Jc - actual_log_Jc| from
 # analysis/external_anchor_count.py, which is dex. An earlier version of this
 # label called it an exponent error, which is the convention Sec. II.A sets
 # out and which this figure then contradicted.
-ax.set_ylabel("pooled error in log$_{10}$ $J_c$ (dex)", fontsize=8.6)
+ax.set_ylabel("Pooled error in log$_{10}$ $J_c$ (dex)", fontsize=8.6)
 ax.set_ylim(0.30, 2.45)
 ax.tick_params(labelsize=7.8)
 for sp in ("top","right"): ax.spines[sp].set_visible(False)
