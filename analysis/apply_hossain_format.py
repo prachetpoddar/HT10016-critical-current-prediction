@@ -31,7 +31,9 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt
 
 FIG4 = "figures/figure_4_anchor_count.png"
-FIG4_WIDTH_IN = 4.60
+# Superseded the same day by analysis/resize_figure_4.py, which takes it to
+# 0.60 of that on each axis. Kept in step so a rerun does not undo it.
+FIG4_WIDTH_IN = 2.76
 EDGES = ("top", "left", "bottom", "right", "insideH", "insideV")
 
 
