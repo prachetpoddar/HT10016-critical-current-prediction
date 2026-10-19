@@ -70,7 +70,6 @@ red = 100*(m1-m3)/m1
 
 fig,ax=plt.subplots(figsize=(3.5,3.3))
 ax.axhline(TC_ONLY, ls=(0,(6,3)), lw=1.0, color=GREY, zorder=1)
-ax.text(1.42, TC_ONLY*1.02, "$T_c$-only baseline", fontsize=7.4, color="#5A616C", ha="left", va="bottom")
 
 # the unmatched four-compound pair the earlier version reported, kept visible
 ax.plot([1.06,3.06],[f1,f3], "-", lw=1.2, color=GREY, alpha=0.55, zorder=2)
@@ -78,22 +77,12 @@ for x,v,lo,hi in ((1.06,f1,f1lo,f1hi),(3.06,f3,f3lo,f3hi)):
     ax.errorbar([x],[v], yerr=[[v-lo],[hi-v]], fmt="s", ms=5, mfc="white",
                 mec=GREY, ecolor=GREY, elinewidth=1.0, capsize=3, capthick=1.0,
                 alpha=0.8, zorder=3)
-ax.text(3.14, f3*0.86, "all four,\nunmatched", fontsize=7.0, color="#5A616C",
-        va="center", ha="left", linespacing=1.3)
 
 # the matched three-compound comparison the paper carries
 ax.plot([1,3],[m1,m3], "-", lw=1.9, color=OK, zorder=4)
 for x,v,lo,hi in ((1,m1,m1lo,m1hi),(3,m3,m3lo,m3hi)):
     ax.errorbar([x],[v], yerr=[[v-lo],[hi-v]], fmt="o", ms=7, mfc=OK, mec=OK,
                 ecolor=OK, elinewidth=1.2, capsize=4, capthick=1.2, zorder=5)
-ax.text(1.16, m1*1.20, "three monotonic,\nmatched", fontsize=7.4, color="#2E6B60",
-        va="bottom", ha="left", linespacing=1.3)
-
-ax.annotate("%.1f%% reduction\non the matched cohort" % red,
-            xy=(2.0, np.sqrt(m1*m3)), xytext=(2.30, 1.90),
-            fontsize=7.8, color=ACC, ha="center", va="center", linespacing=1.35,
-            arrowprops=dict(arrowstyle="-|>", lw=0.9, color=ACC, shrinkA=4, shrinkB=4,
-                            connectionstyle="arc3,rad=0.15"))
 
 ax.set_xticks([1,3]); ax.set_xlim(0.72,3.66)
 ax.set_xlabel("Anchor measurements per candidate, $K$", fontsize=8.6)
@@ -105,8 +94,139 @@ ax.set_ylabel("Pooled error in log$_{10}$ $J_c$ (dex)", fontsize=8.6)
 ax.set_ylim(0.30, 2.45)
 ax.tick_params(labelsize=7.8)
 for sp in ("top","right"): ax.spines[sp].set_visible(False)
-os.makedirs("figures", exist_ok=True)
+
+# ---------------------------------------------------------------- labels
+# Every in-plot label used to be placed by hand, and two of them sat on a
+# line: the matched-cohort label lay across the grey unmatched line, and the
+# reduction annotation's arrow crossed both the grey line and the dashed
+# baseline on its way down to the teal one. Hossain asked for the arrowed
+# text below both lines, pointing at the right line without crossing
+# anything, and for no label to touch a line at all.
+#
+# Hand-fitting that is what produced the overlap in the first place, so the
+# placements below are candidates and the figure picks the first one that
+# clears every drawn line. The check is on rendered pixels, not on data
+# coordinates, so it holds whatever the font metrics do on the machine that
+# draws it. If no candidate clears, the run fails rather than shipping a
+# label on a line.
+LABELS = [
+    dict(name="matched",
+         text="three monotonic,\nmatched", color="#2E6B60", size=7.4,
+         where=[(1.10, 0.92, "left", "top"), (1.10, 0.86, "left", "top"),
+                (1.34, 0.92, "left", "top"), (1.10, 2.42, "left", "top")]),
+    dict(name="unmatched",
+         text="all four,\nunmatched", color="#5A616C", size=7.0,
+         where=[(3.14, 0.80, "left", "center"), (3.14, 0.72, "left", "center"),
+                (3.64, 1.74, "right", "center")]),
+    dict(name="baseline",
+         text="$T_c$-only baseline", color="#5A616C", size=7.4,
+         where=[(1.38, 1.19, "left", "bottom"), (1.30, 1.19, "left", "bottom"),
+                (2.44, 1.19, "left", "bottom"), (0.76, 1.19, "left", "bottom")]),
+]
+for spec in LABELS:
+    spec["artists"] = [
+        ax.text(x, y, spec["text"], fontsize=spec["size"], color=spec["color"],
+                ha=ha, va=va, linespacing=1.3, zorder=6, visible=False)
+        for x, y, ha, va in spec["where"]]
+
+# The arrow now runs straight up from below the teal line to the teal line,
+# so it crosses nothing. rad=0 keeps the drawn path identical to the segment
+# the overlap check tests.
+ARROW_TIP = (2.20, m1 + (m3 - m1) * (2.20 - 1) / 2.0)
+ARROW_TEXT = (2.20, 0.52)
+note = ax.annotate("%.1f%% reduction\non the matched cohort" % red,
+                   xy=ARROW_TIP, xytext=ARROW_TEXT,
+                   fontsize=7.8, color=ACC, ha="center", va="center",
+                   linespacing=1.35, zorder=6,
+                   arrowprops=dict(arrowstyle="-|>", lw=0.9, color=ACC,
+                                   shrinkA=5, shrinkB=4,
+                                   connectionstyle="arc3,rad=0"))
+
+
+def drawn_points(axis, n=400):
+    """Every drawn line, as rendered pixel positions.
+
+    Lines are sampled rather than intersected analytically because the error
+    bars, their caps and the markers are separate artists with their own
+    transforms, and a label that touches a cap is as wrong as one that
+    touches a line.
+    """
+    import numpy as _np
+    pts = []
+    for line in axis.get_lines():
+        if not line.get_visible():
+            continue
+        xy = line.get_xydata()
+        if len(xy) == 0:
+            continue
+        if len(xy) == 1:
+            pts.append(axis.transData.transform(xy))
+            continue
+        for a, b in zip(xy[:-1], xy[1:]):
+            t = _np.linspace(0, 1, n)[:, None]
+            pts.append(axis.transData.transform(a + (b - a) * t))
+    return _np.vstack(pts) if pts else _np.empty((0, 2))
+
+
+def clear_of_lines(artist, points, pad=4.0):
+    """True when no drawn point falls inside the artist's TEXT box.
+
+    Annotation.get_window_extent returns the text box union the arrow, so
+    asking an annotation for its extent reports a box reaching all the way to
+    the arrow tip, which by construction touches the line being pointed at.
+    The base Text method gives the box the reader sees as text.
+    """
+    import matplotlib.text as _mtext
+    box = _mtext.Text.get_window_extent(
+        artist, renderer=fig.canvas.get_renderer())
+    return not (((points[:, 0] > box.x0 - pad) & (points[:, 0] < box.x1 + pad) &
+                 (points[:, 1] > box.y0 - pad) & (points[:, 1] < box.y1 + pad)).any())
+
+
 fig.tight_layout()
+fig.canvas.draw()
+POINTS = drawn_points(ax)
+chosen = []
+for spec in LABELS:
+    for artist, place in zip(spec["artists"], spec["where"]):
+        artist.set_visible(True)
+        if clear_of_lines(artist, POINTS):
+            chosen.append((spec["name"], place))
+            break
+        artist.set_visible(False)
+    else:
+        raise SystemExit("no clear placement for the %s label" % spec["name"])
+
+# The annotation is checked the same way, and so is the segment its arrow
+# draws, which must not touch the dashed baseline or the grey line.
+import numpy as _np
+seg = _np.vstack([ax.transData.transform(
+    _np.array(ARROW_TEXT) + (_np.array(ARROW_TIP) - _np.array(ARROW_TEXT)) * t)
+    for t in _np.linspace(0.12, 0.88, 200)])
+fig.canvas.draw()
+if not clear_of_lines(note, POINTS):
+    raise SystemExit("the reduction annotation sits on a line")
+for line in ax.get_lines():
+    xy = line.get_xydata()
+    if len(xy) < 2:
+        continue
+    px = ax.transData.transform(xy)
+    for a, b in zip(px[:-1], px[1:]):
+        for p in seg:
+            d = b - a
+            L2 = float(d @ d)
+            if L2 == 0:
+                continue
+            u = max(0.0, min(1.0, float((p - a) @ d) / L2))
+            if _np.hypot(*(a + d * u - p)) < 4.0:
+                raise SystemExit("the arrow crosses a drawn line")
+print("   label placements: %s" % chosen)
+print("   the arrow runs from %.2f to %.2f dex at K = %.2f, crossing nothing"
+      % (ARROW_TEXT[1], ARROW_TIP[1], ARROW_TIP[0]))
+
+os.makedirs("figures", exist_ok=True)
+# tight_layout already ran before the overlap check. Running it again here
+# would move the axes after the placements were verified, so it does not.
 # 400 dpi: the image this replaces in the document was 1358 px across a 3.5
 # inch figure, so a 300 dpi render would embed at a lower resolution than the
 # one it replaces at the same printed size.
