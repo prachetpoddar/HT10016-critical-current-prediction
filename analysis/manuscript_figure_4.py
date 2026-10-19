@@ -118,11 +118,16 @@ LABELS = [
          text="all four,\nunmatched", color="#5A616C", size=7.0,
          where=[(3.14, 0.80, "left", "center"), (3.14, 0.72, "left", "center"),
                 (3.64, 1.74, "right", "center")]),
-    dict(name="baseline",
-         text="$T_c$-only baseline", color="#5A616C", size=7.4,
-         where=[(1.38, 1.19, "left", "bottom"), (1.30, 1.19, "left", "bottom"),
-                (2.44, 1.19, "left", "bottom"), (0.76, 1.19, "left", "bottom")]),
 ]
+
+# The baseline label is an annotation rather than a plain label. Sitting
+# beside the dashed line put it on the upper cap of the four-compound
+# uncertainty bound, so it moves up into clear space and points back down at
+# the line it names.
+BASELINE_PLACES = [((3.18, 1.86), (3.40, 1.19)),
+                   ((3.05, 2.05), (3.34, 1.19)),
+                   ((2.30, 2.12), (2.62, 1.19)),
+                   ((1.45, 2.26), (1.70, 1.19))]
 for spec in LABELS:
     spec["artists"] = [
         ax.text(x, y, spec["text"], fontsize=spec["size"], color=spec["color"],
@@ -134,37 +139,59 @@ for spec in LABELS:
 # the overlap check tests.
 ARROW_TIP = (2.20, m1 + (m3 - m1) * (2.20 - 1) / 2.0)
 ARROW_TEXT = (2.20, 0.52)
-note = ax.annotate("%.1f%% reduction\non the matched cohort" % red,
-                   xy=ARROW_TIP, xytext=ARROW_TEXT,
-                   fontsize=7.8, color=ACC, ha="center", va="center",
-                   linespacing=1.35, zorder=6,
-                   arrowprops=dict(arrowstyle="-|>", lw=0.9, color=ACC,
-                                   shrinkA=5, shrinkB=4,
-                                   connectionstyle="arc3,rad=0"))
+
+
+def arrowed(text, tip, at, color, size):
+    return ax.annotate(text, xy=tip, xytext=at, fontsize=size, color=color,
+                       ha="center", va="center", linespacing=1.35, zorder=6,
+                       arrowprops=dict(arrowstyle="-|>", lw=0.9, color=color,
+                                       shrinkA=5, shrinkB=4,
+                                       connectionstyle="arc3,rad=0"))
+
+
+note = arrowed("%.1f%% reduction\non the matched cohort" % red,
+               ARROW_TIP, ARROW_TEXT, ACC, 7.8)
+baselines = [arrowed("$T_c$-only baseline", tip, at, "#5A616C", 7.4)
+             for at, tip in BASELINE_PLACES]
+for b in baselines:
+    b.set_visible(False)
+
+
+def segments(axis):
+    """Every drawn line and error bar, in data coordinates.
+
+    axis.get_lines() is NOT enough and the first version of this check used
+    only that. errorbar draws its vertical bars as a LineCollection, which
+    get_lines() does not return, so the bars were invisible to the check and
+    the baseline label sat on an uncertainty bound with the figure reporting
+    itself clear. The caps and markers are Line2D and were covered; the bars
+    were not. Collections are read here as well.
+    """
+    out = []
+    for line in axis.get_lines():
+        if line.get_visible() and len(line.get_xydata()):
+            out.append(line.get_xydata())
+    for coll in axis.collections:
+        if not coll.get_visible():
+            continue
+        for seg in coll.get_segments():
+            if len(seg):
+                out.append(seg)
+    return out
 
 
 def drawn_points(axis, n=400):
-    """Every drawn line, as rendered pixel positions.
-
-    Lines are sampled rather than intersected analytically because the error
-    bars, their caps and the markers are separate artists with their own
-    transforms, and a label that touches a cap is as wrong as one that
-    touches a line.
-    """
+    """Those segments, as rendered pixel positions."""
     import numpy as _np
     pts = []
-    for line in axis.get_lines():
-        if not line.get_visible():
-            continue
-        xy = line.get_xydata()
-        if len(xy) == 0:
-            continue
+    for xy in segments(axis):
         if len(xy) == 1:
             pts.append(axis.transData.transform(xy))
             continue
         for a, b in zip(xy[:-1], xy[1:]):
             t = _np.linspace(0, 1, n)[:, None]
-            pts.append(axis.transData.transform(a + (b - a) * t))
+            pts.append(axis.transData.transform(_np.asarray(a)
+                                                + (_np.asarray(b) - _np.asarray(a)) * t))
     return _np.vstack(pts) if pts else _np.empty((0, 2))
 
 
@@ -197,29 +224,52 @@ for spec in LABELS:
     else:
         raise SystemExit("no clear placement for the %s label" % spec["name"])
 
-# The annotation is checked the same way, and so is the segment its arrow
-# draws, which must not touch the dashed baseline or the grey line.
+# Each annotation is checked the same way, and so is the segment its arrow
+# draws. An arrow may touch only the line it points at, and only at its tip,
+# so the sampled span stops short of both ends.
 import numpy as _np
-seg = _np.vstack([ax.transData.transform(
-    _np.array(ARROW_TEXT) + (_np.array(ARROW_TIP) - _np.array(ARROW_TEXT)) * t)
-    for t in _np.linspace(0.12, 0.88, 200)])
-fig.canvas.draw()
-if not clear_of_lines(note, POINTS):
-    raise SystemExit("the reduction annotation sits on a line")
-for line in ax.get_lines():
-    xy = line.get_xydata()
-    if len(xy) < 2:
-        continue
-    px = ax.transData.transform(xy)
-    for a, b in zip(px[:-1], px[1:]):
-        for p in seg:
+
+
+def arrow_path(at, tip):
+    return _np.vstack([ax.transData.transform(
+        _np.array(at) + (_np.array(tip) - _np.array(at)) * t)
+        for t in _np.linspace(0.12, 0.88, 200)])
+
+
+def crosses_anything(path, exclude=None):
+    for xy in segments(ax):
+        if len(xy) < 2:
+            continue
+        if exclude is not None and _np.allclose(xy, exclude):
+            continue
+        px = ax.transData.transform(_np.asarray(xy))
+        for a, b in zip(px[:-1], px[1:]):
             d = b - a
             L2 = float(d @ d)
             if L2 == 0:
                 continue
-            u = max(0.0, min(1.0, float((p - a) @ d) / L2))
-            if _np.hypot(*(a + d * u - p)) < 4.0:
-                raise SystemExit("the arrow crosses a drawn line")
+            for p in path:
+                u = max(0.0, min(1.0, float((p - a) @ d) / L2))
+                if _np.hypot(*(a + d * u - p)) < 4.0:
+                    return True
+    return False
+
+
+fig.canvas.draw()
+if not clear_of_lines(note, POINTS) or crosses_anything(
+        arrow_path(ARROW_TEXT, ARROW_TIP)):
+    raise SystemExit("the reduction annotation sits on or crosses a line")
+
+for artist, (at, tip) in zip(baselines, BASELINE_PLACES):
+    artist.set_visible(True)
+    fig.canvas.draw()
+    if clear_of_lines(artist, POINTS) and not crosses_anything(
+            arrow_path(at, tip)):
+        chosen.append(("baseline", at + tip))
+        break
+    artist.set_visible(False)
+else:
+    raise SystemExit("no clear placement for the baseline annotation")
 print("   label placements: %s" % chosen)
 print("   the arrow runs from %.2f to %.2f dex at K = %.2f, crossing nothing"
       % (ARROW_TEXT[1], ARROW_TIP[1], ARROW_TIP[0]))
