@@ -21,14 +21,17 @@ settles something:
   "the first author checked the outputs by hand ... for all 23 fully fittable
   compounds of the pre-withdrawal cohort and for every disagreement the
   second reader raised"
-      the answer to her question about who checked, and its scope;
+      the answer to her question about who checked, and its scope. This one
+      does not stay in the disclosure. It moves into Sec. II.A, beside the
+      sentence that already escalates reader disagreements to manual reading,
+      which is where APS puts AI use in conducting research and where a
+      reader looking for the verification protocol will be;
 
   "The authors directed, reviewed and revised that work" and "the authors
   take full responsibility for all content, analysis and conclusions"
       the accountability APS asks for, and deliberately plural.
 
-So this lands at six sentences rather than the three a first draft reached,
-and at 150 words rather than 112. The difference is those four phrases.
+So this lands at four sentences and about 115 words, against 306 before.
 """
 
 import copy
@@ -51,27 +54,38 @@ NEW = (
     "and the verification audit of Section II.A was run by Claude Opus 5 and "
     "Claude Sonnet 5 (Anthropic) [36], under fixed per-figure prompts that "
     "are deposited with the data. The models located axes and scales, "
-    "digitized data-point coordinates, and read printed labels and captions. "
-    "They performed no fitting, aggregation, validation or prediction. Every "
-    "output was rechecked by a second model, and the first author checked "
-    "the outputs by hand against the source figures for all 23 fully "
-    "fittable compounds of the pre-withdrawal cohort and for every "
-    "disagreement the second reader raised. Large language models assisted "
-    "in structuring the analysis scripts, the authors directed, reviewed and "
-    "revised that work, and the authors take full responsibility for all "
-    "content, analysis and conclusions."
+    "digitized data-point coordinates, and read printed labels and captions; "
+    "they performed no fitting, aggregation, validation or prediction, and "
+    "Section II.A states how their output was verified. Large language "
+    "models assisted in structuring the analysis scripts, the authors "
+    "directed, reviewed and revised that work, and the authors take full "
+    "responsibility for all content, analysis and conclusions."
 )
+
+# The sentence that leaves the disclosure, and where it lands. The anchor is
+# the sentence in Sec. II.A that already escalates a disagreement between the
+# two readers to manual reading, so the named checker and the scope of the
+# check sit with the protocol they belong to.
+IIA_ANCHOR = ("Disagreements between the two readers were escalated to "
+              "manual reading against the source figure.")
+IIA_ADDED = (" The first author checked the outputs by hand against the "
+             "source figures for all 23 fully fittable compounds of the "
+             "pre-withdrawal cohort and for every disagreement the second "
+             "reader raised.")
 
 KEPT = [
     "Curve-level extraction was performed by a single model, GPT-4o (OpenAI)",
     "A second independent reader, Claude Opus 4.8 (Anthropic)",
-    "the first author checked the outputs by hand against the source figures",
-    "for all 23 fully fittable compounds of the pre-withdrawal cohort and for "
-    "every disagreement the second reader raised",
-    "The authors directed, reviewed and revised that work" .replace("The", "the"),
+    "the authors directed, reviewed and revised that work",
     "the authors take full responsibility for all content, analysis and "
     "conclusions",
 ]
+
+# These two have to survive the move, somewhere in the manuscript.
+MOVED = ["the first author checked the outputs by hand against the source "
+         "figures",
+         "for all 23 fully fittable compounds of the pre-withdrawal cohort "
+         "and for every disagreement the second reader raised"]
 
 
 def bounds(doc):
@@ -81,6 +95,19 @@ def bounds(doc):
     end = next(i for i, p in enumerate(ps[start + 1:], start + 1)
                if p.text.strip().upper().startswith(NEXT))
     return start, end
+
+
+def move_the_check(path):
+    """Put the manual-check sentence into Sec. II.A, once."""
+    from runs import replace
+    doc = docx.Document(path)
+    if any(IIA_ADDED.strip() in p.text for p in doc.paragraphs):
+        return False
+    hit = [p for p in doc.paragraphs if IIA_ANCHOR in p.text]
+    assert len(hit) == 1, (path, len(hit))
+    replace(hit[0], IIA_ANCHOR, IIA_ANCHOR + IIA_ADDED)
+    doc.save(path)
+    return True
 
 
 def apply(path, marked):
@@ -129,6 +156,11 @@ def verify(path, marked):
     assert body[0].text == NEW, body[0].text[:70]
     for phrase in KEPT:
         assert phrase in NEW, phrase[:40]
+    # the sentence is capitalised where it now begins, so compare case-blind
+    whole = " ".join(p.text for p in doc.paragraphs).lower()
+    for phrase in MOVED:
+        assert phrase.lower() in whole, "lost in the move: %s" % phrase[:40]
+        assert phrase.lower() not in NEW.lower(), phrase[:40]
     if marked:
         from docx.enum.text import WD_COLOR_INDEX
         assert all(r.font.highlight_color == WD_COLOR_INDEX.YELLOW
@@ -140,8 +172,12 @@ if __name__ == "__main__":
     for path, marked in (("out_final60/HT10016_revised_final60.docx", False),
                          ("out_final60/HT10016_revised_final60_HIGHLIGHTED.docx",
                           True)):
+        moved = move_the_check(path)
         removed = apply(path, marked)
         verify(path, marked)
+        print("%-46s manual-check sentence %s Sec. II.A"
+              % (path.split("/")[-1],
+                 "moved into" if moved else "already in"))
         print("%-46s %d paragraph(s) removed, now %d words in %d sentences"
               % (path.split("/")[-1], removed, len(NEW.split()),
                  len(re.findall(r"[.!?](?:\s|$)", NEW))))
