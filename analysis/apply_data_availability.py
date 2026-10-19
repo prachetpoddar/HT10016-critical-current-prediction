@@ -63,8 +63,11 @@ def section_bounds(doc):
     ps = doc.paragraphs
     start = next(i for i, p in enumerate(ps)
                  if p.text.strip().upper().startswith(HEADING))
+    # the next heading of any kind, not the named one: stopping at a named
+    # later heading deletes whatever sections sit between the two
     end = next(i for i, p in enumerate(ps[start + 1:], start + 1)
-               if p.text.strip().upper().startswith(NEXT))
+               if p.style.name.startswith("Heading") and p.text.strip())
+    assert end > start
     return start, end
 
 

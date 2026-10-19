@@ -89,11 +89,20 @@ MOVED = ["the first author checked the outputs by hand against the source "
 
 
 def bounds(doc):
+    """(heading index, index of the NEXT heading of any kind).
+
+    This used to stop at NEXT, the named heading that follows the section in
+    the running order. ACKNOWLEDGMENTS sits between the two, so removing
+    everything in that span deleted it, with two named colleagues, an NSF
+    award, a DARPA award and two compute allocations. A section ends where
+    the next heading begins, whatever that heading says.
+    """
     ps = doc.paragraphs
     start = next(i for i, p in enumerate(ps)
                  if p.text.strip().upper().startswith(HEADING))
     end = next(i for i, p in enumerate(ps[start + 1:], start + 1)
-               if p.text.strip().upper().startswith(NEXT))
+               if p.style.name.startswith("Heading") and p.text.strip())
+    assert end > start
     return start, end
 
 
