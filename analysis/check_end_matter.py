@@ -40,11 +40,14 @@ FUNDING = ["Alexander Balandin", "Aashman Mehta", "#2610404", "#D26AC50023",
            "Claude Opus 4.8 (Anthropic) [36]",
            "Claude Opus 5 and Claude Sonnet 5 (Anthropic) [36]",
            "they are deposited with the data",
-           "Large language models assisted in structuring the analysis "
-           "scripts",
-           "The authors directed, reviewed and revised that work",
-           "the authors take full responsibility for all content, analysis "
-           "and conclusions",
+           # The script assistance and the accountability sentence were in
+           # the acknowledgement until 2026-10-19, when the authors replaced
+           # that section with their own text and dropped both. Pinning them
+           # here would fail on the paper they want, so they are not pinned;
+           # what remains of the disclosure is in Sec. II.A and is pinned
+           # above. Nothing in the paper now says who is responsible for the
+           # model-assisted work.
+           "MSH acknowledges Anthropic's AI for Science program",
            "All curve grouping, fitting, aggregation, validation and "
            "prediction are performed by deterministic code"]
 

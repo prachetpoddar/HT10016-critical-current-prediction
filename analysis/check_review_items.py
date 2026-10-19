@@ -70,8 +70,7 @@ for k in KEPT:
 check("Chowdhury 1","manual check attributed to the first author",
       "first author checked the outputs by hand" in MAN.replace("The first","the first")
       and "the authors checked the outputs by hand" not in MAN)
-for k in ["authors directed, reviewed and revised that work",
-          "the authors take full responsibility for all content",
+for k in [
           "reported by the authors",
           "for all 23 fully fittable compounds of the pre-withdrawal cohort"]:
     check("Chowdhury 1","plural use kept: "+k[:46], norm(k) in MAN)

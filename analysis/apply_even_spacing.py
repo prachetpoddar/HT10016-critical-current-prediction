@@ -44,13 +44,26 @@ CAPTION_AFTER = 18.0
 
 
 def neutralise_blanks(doc):
-    """An empty paragraph contributes one line and nothing else."""
+    """An empty paragraph contributes one line and nothing else.
+
+    That includes list numbering. The separator blanks inserted inside the
+    numbered inference procedure of Sec. II.D kept the list's numPr, so Word
+    numbered them: the procedure printed as 1., 2., 3., 4. with every odd
+    number on an empty line and every step on an even one. Changing the style
+    does not remove numbering, which is a direct paragraph property.
+    """
+    from docx.oxml.ns import qn as _qn
     changed = 0
     for p in doc.paragraphs:
         if p.text.strip():
             continue
         f = p.paragraph_format
         touched = False
+        pPr = p._p.find(_qn("w:pPr"))
+        if pPr is not None:
+            for numPr in pPr.findall(_qn("w:numPr")):
+                pPr.remove(numPr)
+                touched = True
         if p.style.name != "Normal":
             p.style = doc.styles["Normal"]
             touched = True
@@ -92,11 +105,15 @@ def even_headings(doc):
 
 
 def verify(path):
+    from docx.oxml.ns import qn as _qn
     doc = docx.Document(path)
     for p in doc.paragraphs:
         f = p.paragraph_format
         if not p.text.strip():
             assert p.style.name == "Normal", p.style.name
+            pPr = p._p.find(_qn("w:pPr"))
+            assert pPr is None or pPr.find(_qn("w:numPr")) is None, \
+                "an empty paragraph is still numbered"
             assert f.space_before is None and f.space_after is None
             assert f.alignment is None
         if p.text.strip().startswith("FIG. "):
