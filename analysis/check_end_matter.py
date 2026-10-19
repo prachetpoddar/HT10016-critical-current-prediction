@@ -25,14 +25,28 @@ import sys
 import docx
 
 ORDER = ["IV. CONCLUSION",
-         "ARTIFICIAL INTELLIGENCE USE DISCLOSURE",
          "ACKNOWLEDGMENTS",
          "DATA AVAILABILITY",
          "REFERENCES"]
 
-# award and allocation identifiers, which no edit has a reason to touch
+# Award and allocation identifiers, which no edit has a reason to touch, and
+# the AI-use disclosure, which on 2026-10-19 stopped being a section of its
+# own and was placed where APS puts it, in Sec. II.A and the acknowledgement.
+# Content that no longer has a heading of its own is the easiest kind to lose,
+# so it is pinned by text rather than by section.
 FUNDING = ["Alexander Balandin", "Aashman Mehta", "#2610404", "#D26AC50023",
-           "PHY260151", "NAIRR260036"]
+           "PHY260151", "NAIRR260036",
+           "GPT-4o (OpenAI)",
+           "Claude Opus 4.8 (Anthropic) [36]",
+           "Claude Opus 5 and Claude Sonnet 5 (Anthropic) [36]",
+           "they are deposited with the data",
+           "Large language models assisted in structuring the analysis "
+           "scripts",
+           "The authors directed, reviewed and revised that work",
+           "the authors take full responsibility for all content, analysis "
+           "and conclusions",
+           "All curve grouping, fitting, aggregation, validation and "
+           "prediction are performed by deterministic code"]
 
 
 def check(path):
@@ -62,12 +76,12 @@ def check(path):
 
     for phrase in FUNDING:
         if phrase not in whole:
-            bad.append("funding text gone: %s" % phrase)
+            bad.append("required text gone: %s" % phrase)
 
     for line in bad:
         print("   FAIL %s" % line)
     if not bad:
-        print("   ok   %d heading(s) in order, %d funding string(s) present"
+        print("   ok   %d heading(s) in order, %d required string(s) present"
               % (len(seen), len(FUNDING)))
     return not bad
 
