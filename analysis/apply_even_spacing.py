@@ -43,6 +43,40 @@ TARGETS = ["out_final60/HT10016_revised_final60.docx",
 CAPTION_AFTER = 18.0
 
 
+def holds_drawing(p):
+    """A paragraph with a picture in it is content, not a separator.
+
+    The first version of this pass called a paragraph blank when its text was
+    empty, and a paragraph whose only content is an image has no text. So it
+    stripped the centring and the 12 pt / 6 pt spacing from all five figure
+    paragraphs and left every figure ranged left. It showed on Figure 4
+    first, because at 2.76 inches it does not fill the column.
+    """
+    from docx.oxml.ns import qn as _qn
+    return bool(p._p.findall(".//" + _qn("w:drawing")))
+
+
+FIGURE_BEFORE = 12.0
+FIGURE_AFTER = 6.0
+
+
+def even_figures(doc):
+    """The five figure paragraphs, centred, with their own spacing."""
+    changed = 0
+    for p in doc.paragraphs:
+        if not holds_drawing(p):
+            continue
+        f = p.paragraph_format
+        if (p.alignment != WD_ALIGN_PARAGRAPH.CENTER
+                or f.space_before is None or f.space_before.pt != FIGURE_BEFORE
+                or f.space_after is None or f.space_after.pt != FIGURE_AFTER):
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            f.space_before = Pt(FIGURE_BEFORE)
+            f.space_after = Pt(FIGURE_AFTER)
+            changed += 1
+    return changed
+
+
 def neutralise_blanks(doc):
     """An empty paragraph contributes one line and nothing else.
 
@@ -55,7 +89,7 @@ def neutralise_blanks(doc):
     from docx.oxml.ns import qn as _qn
     changed = 0
     for p in doc.paragraphs:
-        if p.text.strip():
+        if p.text.strip() or holds_drawing(p):
             continue
         f = p.paragraph_format
         touched = False
@@ -109,6 +143,11 @@ def verify(path):
     doc = docx.Document(path)
     for p in doc.paragraphs:
         f = p.paragraph_format
+        if holds_drawing(p):
+            assert p.alignment == WD_ALIGN_PARAGRAPH.CENTER, "a figure is not centred"
+            assert f.space_before is not None and f.space_before.pt == FIGURE_BEFORE
+            assert f.space_after is not None and f.space_after.pt == FIGURE_AFTER
+            continue
         if not p.text.strip():
             assert p.style.name == "Normal", p.style.name
             pPr = p._p.find(_qn("w:pPr"))
@@ -134,8 +173,9 @@ if __name__ == "__main__":
         blanks = neutralise_blanks(doc)
         caps = even_captions(doc)
         heads = even_headings(doc)
+        figs = even_figures(doc)
         doc.save(path)
         assert [p.text for p in docx.Document(path).paragraphs] == before
         verify(path)
-        print("%-54s %3d blank(s) neutralised, %d caption(s), %d heading(s)"
-              % (path.split("/")[-1], blanks, caps, heads))
+        print("%-54s %3d blank(s), %d caption(s), %d heading(s), %d figure(s)"
+              % (path.split("/")[-1], blanks, caps, heads, figs))
