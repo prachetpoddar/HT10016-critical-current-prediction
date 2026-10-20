@@ -20,6 +20,29 @@ read as new.
 The reference list follows the rule the authors set: an entry is marked only
 when the entry itself is new, never because its number moved.
 
+Equations and tables are handled as their own kinds, because neither is made
+of w:t runs that a sentence walk can see. An equation lives in OMML, whose
+text sits in m:t inside m:r, so the first version of this pass marked only
+the "(n)" beside the equation and never the mathematics. An equation is
+marked whole or not at all, which is what the authors asked for. Newness is
+decided on the equation's flattened text: the submitted manuscript carries
+no OMML at all and exactly one equation, written inline as text, so eleven
+of the twelve current equations are new and Eq. (2) is not.
+
+Table cells are paragraphs too, but doc.paragraphs does not return them, so
+the first version left whatever marks the cells already carried: between 67
+and 92 per cent of each table, from the old toolchain, which is why they
+looked partly marked. Marking them sentence by sentence was no better,
+because a one-word cell such as "Count" or "934" finds a match somewhere in
+the submitted text and stays plain inside an otherwise marked table.
+
+So a table is marked by the ROW, which is the record a reader compares.
+Scoring each of the 27 current rows against the 16 rows of the submitted
+tables, the closest scores 0.81 and nothing reaches 0.9, so no row survives
+the revision unchanged and every row is marked. The threshold is set at 0.95
+rather than at the measured gap, because a row whose numbers moved is a row
+that changed.
+
 Sentence splitting protects the abbreviations this corpus is full of, Sec.,
 Fig., Eq., Ref., et al. and initials, because splitting "Sec. III.F" into two
 sentences would mark half a pointer and leave the other half plain.
@@ -100,6 +123,45 @@ def is_old(sentence, exact, pool):
     return best >= SIMILAR
 
 
+MATH = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+
+
+def math_text(p_el):
+    return re.sub(r"\s+", "", "".join(
+        t.text or "" for t in p_el.iter("{%s}t" % MATH)))
+
+
+def is_equation(p_el):
+    return (p_el.find("{%s}oMath" % MATH) is not None
+            or p_el.find("{%s}oMathPara" % MATH) is not None)
+
+
+def compact(s):
+    s = re.sub(r"[\s\u2009\u200b]", "", s.lower())
+    return re.sub(r"[^a-z0-9=+\-/(),.]", "", s.replace("\u2212", "-"))
+
+
+def mark_all_runs(p_el, on):
+    """Every run in the paragraph, OMML runs included."""
+    runs = list(p_el.iter(qn("w:r"))) + list(p_el.iter("{%s}r" % MATH))
+    for r in runs:
+        rPr = r.find(qn("w:rPr"))
+        if rPr is None:
+            if not on:
+                continue
+            rPr = OxmlElement("w:rPr")
+            # inside an m:r the w:rPr follows m:rPr, which must stay first
+            at = 1 if r.find("{%s}rPr" % MATH) is not None else 0
+            r.insert(at, rPr)
+        for h in rPr.findall(qn("w:highlight")):
+            rPr.remove(h)
+        if on:
+            h = OxmlElement("w:highlight")
+            h.set(qn("w:val"), "yellow")
+            rPr.append(h)
+    return len(runs)
+
+
 def clear_marks(paragraph):
     for r in paragraph._p.iter(qn("w:r")):
         rPr = r.find(qn("w:rPr"))
@@ -173,11 +235,21 @@ def reference_entries(path):
     return out
 
 
+def table_paragraphs(doc):
+    for t in doc.tables:
+        for row in t.rows:
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    yield p
+
+
 def main():
     base = baseline_sentences()
     exact = {norm(s) for s in base}
     pool = [k for k in exact if k]
     old_refs = set(reference_entries(BASELINE).values())
+    bdoc = docx.Document(BASELINE)
+    baseline_compact = [compact(p.text) for p in bdoc.paragraphs if p.text.strip()]
 
     doc = docx.Document(TARGET)
     ps = doc.paragraphs
@@ -197,6 +269,19 @@ def main():
                     mark_span(p, 0, len(text))
                     marked += 1
             continue
+        if is_equation(p._p):
+            total += 1
+            eq = compact(math_text(p._p))
+            # 0.80, from the measurement: Eq. (2), the one equation the
+            # submitted manuscript carries, scores 0.886 against it and the
+            # next closest scores 0.627, so the cut sits in that gap.
+            hit = any(difflib.SequenceMatcher(None, eq, b).ratio() >= 0.80
+                      for b in baseline_compact if abs(len(b) - len(eq))
+                      < max(len(eq), 1))
+            if not hit:
+                mark_all_runs(p._p, True)
+                marked += 1
+            continue
         at = 0
         for s in sentences(text):
             k = text.find(s, at)
@@ -208,6 +293,24 @@ def main():
                 mark_span(p, k, len(s))
                 marked += 1
             at = k + len(s)
+    # tables, marked by the row
+    base_rows = []
+    for t in bdoc.tables:
+        for r in t.rows:
+            k = norm(" | ".join(c.text.strip() for c in r.cells))
+            if k:
+                base_rows.append(k)
+    for t in doc.tables:
+        for row in t.rows:
+            k = norm(" | ".join(c.text.strip() for c in row.cells))
+            best = max((difflib.SequenceMatcher(None, k, b).ratio()
+                        for b in base_rows), default=0.0) if k else 1.0
+            on = best < 0.95
+            total += 1
+            marked += 1 if on else 0
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    mark_all_runs(p._p, on)
     doc.save(TARGET)
     return marked, total
 
@@ -231,6 +334,28 @@ def verify():
             h = None if rPr is None else rPr.find(qn("w:highlight"))
             states.add(h is not None)
         assert len(states) <= 1, "a reference is partly marked: %s" % p.text[:18]
+    for p in ps:
+        if not is_equation(p._p):
+            continue
+        states = set()
+        for r in list(p._p.iter(qn("w:r"))) + list(p._p.iter("{%s}r" % MATH)):
+            rPr = r.find(qn("w:rPr"))
+            h = None if rPr is None else rPr.find(qn("w:highlight"))
+            states.add(h is not None)
+        assert len(states) <= 1, \
+            "an equation is partly marked: %s" % p.text.strip()[:12]
+    for t in doc.tables:
+        for row in t.rows:
+            states = set()
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    for r in p._p.iter(qn("w:r")):
+                        if not "".join(x.text or "" for x in r.iter(qn("w:t"))):
+                            continue
+                        rPr = r.find(qn("w:rPr"))
+                        h = None if rPr is None else rPr.find(qn("w:highlight"))
+                        states.add(h is not None)
+            assert len(states) <= 1, "a table row is partly marked"
 
 
 if __name__ == "__main__":
