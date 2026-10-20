@@ -145,10 +145,46 @@ from docx.oxml.ns import qn
 import strip_highlights
 from sentence_split import sentences, spans
 
-BASELINE = "/root/.claude/uploads/d7862995-def6-55d5-961b-73005a2438f5/" \
-           "10c70489-prachet_paper_prx_v22_1.docx"
+UPLOADS = "/root/.claude/uploads/d7862995-def6-55d5-961b-73005a2438f5/"
+
+# The manuscript. Module-level names are kept because the tests and the
+# other passes address this set by them.
+BASELINE = UPLOADS + "10c70489-prachet_paper_prx_v22_1.docx"
 TARGET = "out_final60/HT10016_revised_final60_HIGHLIGHTED.docx"
 CLEAN = "out_final60/HT10016_revised_final60.docx"
+
+# The supplemental material, whose submitted copy the authors supplied on
+# 2026-10-20. It has no display equations, no reference list and no Heading
+# styles: its sections are numbered body paragraphs ("3. Substructure
+# classification rules"), so the heading arm matches on that shape instead.
+# It more than doubled in the revision, 2,472 words to 5,911 and one table
+# to seven, so most of it marks.
+SUPP_BASELINE = UPLOADS + "5ab8d5d1-SUPPLEMENTAL_MATERIAL_final.docx"
+SUPP_TARGET = "out_final60/SUPPLEMENTAL_MATERIAL_revised_final60_HIGHLIGHTED.docx"
+SUPP_CLEAN = "out_final60/SUPPLEMENTAL_MATERIAL_revised_final60.docx"
+
+NUMBERED_HEADING = re.compile(r"^\d{1,2}\.\s+[A-Z]")
+
+
+class DocumentSet:
+    """One submitted copy, one clean copy, one marked copy, and the arms
+    that apply to them."""
+
+    def __init__(self, name, baseline, clean, target,
+                 equations=True, references=True, styled_headings=True):
+        self.name = name
+        self.baseline = baseline
+        self.clean = clean
+        self.target = target
+        self.equations = equations
+        self.references = references
+        self.styled_headings = styled_headings
+
+    def is_heading(self, p):
+        if self.styled_headings:
+            return p.style.name.startswith("Heading")
+        t = p.text.strip()
+        return bool(NUMBERED_HEADING.match(t)) and len(t.split()) <= 12
 
 MATH = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 MR = "{%s}r" % MATH
@@ -223,9 +259,9 @@ def is_old(sentence, units, usets):
     return cov >= COVER and cov * len(t) >= MATCHED
 
 
-def submitted_units():
-    """Sentences and paragraphs of the submitted manuscript, as token lists."""
-    doc = docx.Document(BASELINE)
+def submitted_units(path=None):
+    """Sentences and paragraphs of the submitted copy, as token lists."""
+    doc = docx.Document(path or BASELINE)
     out = []
     for p in doc.paragraphs:
         if not p.text.strip():
@@ -362,7 +398,7 @@ def mark_span(p_el, at, length):
 
 # ------------------------------------------------------------- the entries
 
-def headings(path):
+def headings(path=None):
     """Normalised heading text of a document.
 
     The submitted manuscript styles every paragraph Normal, so its headings
@@ -372,9 +408,9 @@ def headings(path):
     leave a heading plain, never mark one that did not change.
     """
     out = set()
-    for p in docx.Document(path).paragraphs:
+    for p in docx.Document(path or BASELINE).paragraphs:
         t = p.text.strip()
-        if t and len(t.split()) <= 8:
+        if t and len(t.split()) <= 10:
             out.add(heading_key(t))
     out.discard("")
     return out
@@ -384,8 +420,7 @@ def heading_key(text):
     return norm(re.sub(r"^(?:[IVXLC]+|[A-Z])\.\s*", "", text.strip()))
 
 
-def is_heading(p):
-    return p.style.name.startswith("Heading")
+
 
 
 def reference_entries(path):
@@ -403,26 +438,31 @@ def row_key(row):
 
 # ------------------------------------------------------------------ the pass
 
-def build():
+def build(ds):
     """Strip the clean copy, then write the marked copy as a copy of it."""
-    strip_highlights.strip(CLEAN, drop_page_breaks=True)
-    shutil.copyfile(CLEAN, TARGET)
+    strip_highlights.strip(ds.clean, drop_page_breaks=True)
+    shutil.copyfile(ds.clean, ds.target)
 
 
-def main():
-    build()
-    units, usets = submitted_units()
-    old_refs = set(reference_entries(BASELINE).values())
-    old_headings = headings(BASELINE)
-    bdoc = docx.Document(BASELINE)
+MANUSCRIPT = None        # bound below, once DocumentSet instances exist
+
+
+def main(ds=None):
+    ds = ds or MANUSCRIPT
+    build(ds)
+    units, usets = submitted_units(ds.baseline)
+    old_refs = set(reference_entries(ds.baseline).values())
+    old_headings = headings(ds.baseline)
+    bdoc = docx.Document(ds.baseline)
     base_eq = [compact(p.text) for p in bdoc.paragraphs if p.text.strip()]
     base_rows = [k for t in bdoc.tables for r in t.rows
                  if (k := row_key(r))]
 
-    doc = docx.Document(TARGET)
+    doc = docx.Document(ds.target)
     ps = doc.paragraphs
-    refs_at = next(i for i, p in enumerate(ps)
-                   if p.text.strip().upper().startswith("REFERENCES"))
+    refs_at = next((i for i, p in enumerate(ps)
+                    if p.text.strip().upper().startswith("REFERENCES")),
+                   len(ps))
     tally = {"body": [0, 0], "heading": [0, 0], "reference": [0, 0],
              "equation": [0, 0], "table row": [0, 0]}
 
@@ -431,7 +471,7 @@ def main():
         text = paragraph_text(el)
         if not text.strip():
             continue
-        if i >= refs_at:
+        if i >= refs_at and ds.references:
             m = re.match(r"^\[(\d+)\]\s*(.+)$", text.strip())
             if not m:
                 continue
@@ -440,13 +480,13 @@ def main():
                 mark_span(el, 0, len(text))
                 tally["reference"][0] += 1
             continue
-        if is_heading(p) and i < refs_at:
+        if ds.is_heading(p) and i < refs_at:
             tally["heading"][1] += 1
             if heading_key(text) not in old_headings:
                 mark_span(el, 0, len(text))
                 tally["heading"][0] += 1
             continue
-        if is_display_equation(el):
+        if ds.equations and is_display_equation(el):
             tally["equation"][1] += 1
             eq = compact(math_text(el))
             hit = any(difflib.SequenceMatcher(None, eq, b).ratio() >= EQUATION
@@ -477,7 +517,7 @@ def main():
                 for cell in row.cells:
                     for p in cell.paragraphs:
                         mark_all_runs(p._p, True)
-    doc.save(TARGET)
+    doc.save(ds.target)
     return tally
 
 
@@ -516,7 +556,9 @@ def full_text(path):
     return out
 
 
-def verify():
+def verify(ds=None):
+    ds = ds or MANUSCRIPT
+    CLEAN, TARGET = ds.clean, ds.target
     # 1. The clean copy carries no marks at all, anywhere.
     assert strip_highlights.count(CLEAN) == 0, \
         "the clean copy carries %d marks" % strip_highlights.count(CLEAN)
@@ -563,8 +605,9 @@ def verify():
 
     # 6. Whole-unit marking: each reference entry, each display equation and
     #    each table row is marked all over or not at all.
-    refs_at = next(i for i, p in enumerate(ps)
-                   if p.text.strip().upper().startswith("REFERENCES"))
+    refs_at = next((i for i, p in enumerate(ps)
+                    if p.text.strip().upper().startswith("REFERENCES")),
+                   len(ps))
     for p in ps[refs_at:]:
         if re.match(r"^\[\d+\]", p.text.strip()):
             assert len(set(marks_in(p._p))) <= 1, \
@@ -574,7 +617,7 @@ def verify():
             assert len(set(marks_in(p._p))) <= 1, \
                 "an equation is partly marked: %s" % p.text.strip()[:12]
     for p in ps[:refs_at]:
-        if is_heading(p) and p.text.strip():
+        if ds.is_heading(p) and p.text.strip():
             assert len(set(marks_in(p._p))) <= 1, \
                 "a heading is partly marked: %s" % p.text.strip()[:30]
     for t in doc.tables:
@@ -586,10 +629,22 @@ def verify():
             assert len(states) <= 1, "a table row is partly marked"
 
 
+MANUSCRIPT = DocumentSet("manuscript", BASELINE, CLEAN, TARGET)
+SUPPLEMENT = DocumentSet("supplement", SUPP_BASELINE, SUPP_CLEAN, SUPP_TARGET,
+                         equations=False, references=False,
+                         styled_headings=False)
+SETS = {"manuscript": MANUSCRIPT, "supplement": SUPPLEMENT}
+
+
 if __name__ == "__main__":
-    tally = main()
-    verify()
-    for kind in ("body", "heading", "equation", "table row", "reference"):
-        m, t = tally[kind]
-        print("%-10s %4d of %4d marked (%3.0f%%)"
-              % (kind, m, t, 100.0 * m / t if t else 0))
+    import sys as _sys
+    chosen = [SETS[a] for a in _sys.argv[1:]] or list(SETS.values())
+    for ds in chosen:
+        tally = main(ds)
+        verify(ds)
+        print(ds.name)
+        for kind in ("body", "heading", "equation", "table row", "reference"):
+            m, t = tally[kind]
+            if t:
+                print("  %-10s %4d of %4d marked (%3.0f%%)"
+                      % (kind, m, t, 100.0 * m / t))

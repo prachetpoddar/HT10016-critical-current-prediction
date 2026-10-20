@@ -327,27 +327,22 @@ def test_display_equation_test():
 
 # ----------------------------------------------------------- the mutations
 
-def _reload(path):
-    """Point the module at a copy and give back the originals."""
-    keep = (arm.CLEAN, arm.TARGET)
-    arm.CLEAN, arm.TARGET = path[0], path[1]
-    return keep
-
-
-def _planted(mutate, clean_too=False):
-    """Copy the delivered pair, mutate one, and require verify() to fail."""
+def _planted(mutate, clean_too=False, ds=None):
+    """Copy a delivered pair, mutate one, and require verify() to fail."""
+    ds = ds or arm.MANUSCRIPT
     c = SCRATCH + "/mut_clean.docx"
     t = SCRATCH + "/mut_marked.docx"
-    shutil.copyfile(arm.CLEAN, c)
-    shutil.copyfile(arm.TARGET, t)
+    shutil.copyfile(ds.clean, c)
+    shutil.copyfile(ds.target, t)
     mutate(c if clean_too else t)
-    keep = _reload((c, t))
+    planted = arm.DocumentSet(
+        "planted", ds.baseline, c, t,
+        equations=ds.equations, references=ds.references,
+        styled_headings=ds.styled_headings)
     try:
-        arm.verify()
+        arm.verify(planted)
     except AssertionError:
         return
-    finally:
-        arm.CLEAN, arm.TARGET = keep
     raise AssertionError("verify() passed the mutation")
 
 
@@ -539,9 +534,33 @@ def test_the_grader_runs():
 
 
 def test_delivered_pair():
-    """Covers: the files on disk pass, which is the claim that ships."""
-    assert strip_highlights.count(arm.CLEAN) == 0
-    arm.verify()
+    """Covers: the files on disk pass, which is the claim that ships.
+
+    Both sets, because the supplement run once wrote its own document into
+    the manuscript's marked path: main() saved to the module constant
+    rather than to the set it had been given, and nothing but this noticed.
+    """
+    for ds in arm.SETS.values():
+        assert strip_highlights.count(ds.clean) == 0, \
+            "%s: the clean copy carries marks" % ds.name
+        arm.verify(ds)
+
+
+def test_each_set_writes_its_own_files():
+    """Covers: a run of one set cannot touch another set's files.
+
+    The defect this exists for: main(SUPPLEMENT) saved the supplement into
+    the manuscript's marked path, because one save call still named the
+    module constant. Checks the first paragraph of each marked copy against
+    its own clean copy rather than trusting the path.
+    """
+    for ds in arm.SETS.values():
+        a = docx.Document(ds.clean).paragraphs[0].text.strip()
+        b = docx.Document(ds.target).paragraphs[0].text.strip()
+        assert a == b, "%s: marked copy opens with %r, clean with %r" \
+            % (ds.name, b[:60], a[:60])
+    paths = [ds.target for ds in arm.SETS.values()]
+    assert len(paths) == len(set(paths)), "two sets share a marked path"
 
 
 if __name__ == "__main__":
